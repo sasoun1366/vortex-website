@@ -92,6 +92,38 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 59
+  },
+  "VX-261006-8595": {
+   "code": "VX-261006-8595",
+   "ts": 1791288569420,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-wrap-001",
+     "name": "مچ‌بند تمرین ورتکس",
+     "size": "",
+     "qty": 1,
+     "price": 690000
+    }
+   ],
+   "totals": {
+    "sub": 690000,
+    "ship": 180000,
+    "total": 870000
+   },
+   "buyer": {
+    "name": "تست پرداخت",
+    "phone": "09121112233"
+   },
+   "note": "",
+   "payRef": "55443322",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "paycheck",
+   "tracking": "",
+   "photoFileId": ""
   }
  }
 }
