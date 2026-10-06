@@ -249,6 +249,7 @@ function setLang(lang) {
   renderChrome();
   applyI18n();
   renderCart();
+  FX.counters(false);
   if ($("#featured-grid")) renderFeatured("#featured-grid");
   if ($("#shop-grid")) { renderCatFilters(); renderShop(); }
   if (document.body.dataset.page === "home" && $("#soon-grid")) renderSoon();
@@ -330,6 +331,7 @@ function renderCatFilters() {
 
 function renderShop() {
   const host = $("#shop-grid"); if (!host) return;
+  host.classList.remove("animating"); void host.offsetWidth; host.classList.add("animating");
   const list = state.filter === "all" ? VORTEX.products : VORTEX.products.filter(p => p.cat === state.filter);
   host.innerHTML = list.length
     ? list.map(productCard).join("")
@@ -345,7 +347,7 @@ function bindGrid(host) {
     e.preventDefault();
     const p = productById(b.dataset.add);
     if (p.sizes && p.sizes.length) openProduct(p.id);   // needs a size first
-    else addToCart(p.id, "", 1);
+    else addToCart(p.id, "", 1, b);
   }));
   $$("[data-open]", host).forEach(b => b.addEventListener("click", e => {
     e.preventDefault();
@@ -395,7 +397,7 @@ function openProduct(id) {
   $("#modal-add").addEventListener("click", () => {
     const p2 = productById(modalSel.id);
     if (p2.sizes && p2.sizes.length && !modalSel.size) { toast(t("m_size_required")); return; }
-    addToCart(modalSel.id, modalSel.size === "-" ? "" : modalSel.size, modalSel.qty);
+    addToCart(modalSel.id, modalSel.size === "-" ? "" : modalSel.size, modalSel.qty, $("#modal-content img"));
     closeAll();
   });
 
@@ -404,12 +406,13 @@ function openProduct(id) {
 }
 
 /* ---------- cart --------------------------------------------------------- */
-function addToCart(id, size, qty) {
+function addToCart(id, size, qty, srcEl) {
   state.orderDone = null;      // شروع سبد جدید → پنل موفقیت بسته می‌شود
   const found = state.cart.find(i => i.id === id && i.size === size);
   if (found) found.qty = Math.min(20, found.qty + qty);
   else state.cart.push({ id, size, qty });
   saveCart(); renderCart(); toast(t("toast_added"));
+  if (srcEl) { try { FX.flyToCart(srcEl); FX.cartBump(); } catch (e) {} }
 }
 
 function setQty(idx, qty) {
@@ -468,6 +471,7 @@ function renderCart() {
 
   const sub = cartSubtotal(), ship = shippingFor(sub), total = sub + ship;
   const c = VORTEX.config;
+  animateTotal(total);
   const remain = c.freeShipOver - sub;
   const hint = ship === 0
     ? `<div class="order-note" style="color:var(--olive-300)">${ICON.check ? "✓ " : ""}${t("ship_free_hint")}</div>`
@@ -477,7 +481,7 @@ function renderCart() {
     <div class="totals">
       <div class="r"><span>${t("cart_sub")}</span><span>${money(sub, state.lang)}</span></div>
       <div class="r"><span>${t("cart_ship")}</span><span>${ship === 0 ? t("cart_free") : money(ship, state.lang)}</span></div>
-      <div class="r total"><span>${t("cart_total")}</span><b>${money(total, state.lang)}</b></div>
+      <div class="r total"><span>${t("cart_total")}</span><b id="total-value">${money(total, state.lang)}</b></div>
     </div>
     ${hint}
     <details class="buyer-box">
@@ -589,6 +593,22 @@ function setBuyer(k, v) {
   localStorage.setItem("vx-buyer", JSON.stringify(b));
 }
 
+/* شمارش نرم مبلغ نهایی */
+let lastTotal = null;
+function animateTotal(total) {
+  const el = $("#total-value");
+  if (!el) return;
+  if (lastTotal === null || lastTotal === total || typeof FX === "undefined") { el.textContent = money(total, state.lang); lastTotal = total; return; }
+  const from = lastTotal, to = total, t0 = performance.now(), dur = 520;
+  lastTotal = total;
+  (function tick(now) {
+    const k = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - k, 3);
+    el.textContent = money(from + (to - from) * eased, state.lang);
+    if (k < 1) requestAnimationFrame(tick); else el.textContent = money(to, state.lang);
+  })(t0);
+}
+
 /* ---------- order text --------------------------------------------------- */
 function orderText() {
   const sub = cartSubtotal(), ship = shippingFor(sub), total = sub + ship;
@@ -648,11 +668,301 @@ function toast(msg) {
 let io;
 function observeReveal(scope = document) {
   const els = $$(".reveal", scope);
+  els.forEach((el, i) => { if (!el.style.getPropertyValue("--d") && !el.dataset.d && i < 12) el.style.setProperty("--d", (i % 6) * 70 + "ms"); });
   if (!("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("in")); return; }
   io = io || new IntersectionObserver(entries => {
     entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
   }, { rootMargin: "0px 0px -8% 0px", threshold: .06 });
   els.forEach(e => io.observe(e));
+}
+
+
+/* ==========================================================================
+   FX — لایهٔ جلوه‌های بصری: گرداب ذرات، تیلت سه‌بعدی، نورافکن، شمارنده،
+        پرواز تصویر به سبد خرید، پارالاکس و نوار پیشرفت اسکرول
+   ========================================================================== */
+const FX = (() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+  /* ---------- گرداب ذرات در هیرو (canvas) ---------- */
+  function vortex() {
+    const c = $("#vortex-canvas");
+    if (!c || reduce) return;
+    const ctx = c.getContext("2d", { alpha: true });
+    let w = 0, h = 0, dpr = 1, parts = [], raf = null, running = false, t = 0;
+    const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+
+    const isSmall = () => window.innerWidth < 720;
+    const count = () => (isSmall() ? 38 : 96);
+
+    function resize() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = c.clientWidth; h = c.clientHeight;
+      c.width = Math.floor(w * dpr); c.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function seed(n) {
+      parts = Array.from({ length: n }, () => {
+        const rr = 60 + Math.random() * Math.max(w, h) * 0.62;
+        return {
+          a: Math.random() * Math.PI * 2,
+          r: rr,
+          r0: rr,
+          s: 0.0016 + Math.random() * 0.0038,
+          pull: 0.16 + Math.random() * 0.5,
+          sz: 0.7 + Math.random() * 1.9,
+          o: 0.12 + Math.random() * 0.5,
+          hue: Math.random()
+        };
+      });
+    }
+    function frame() {
+      if (!running) return;
+      t += 0.006;
+      pointer.x += (pointer.tx - pointer.x) * 0.045;
+      pointer.y += (pointer.ty - pointer.y) * 0.045;
+
+      ctx.clearRect(0, 0, w, h);
+      const cx = w * 0.62, cy = h * 0.44;
+      ctx.globalCompositeOperation = "lighter";
+
+      for (const p of parts) {
+        p.a += p.s;
+        p.r -= p.pull;
+        if (p.r < 18) { p.r = p.r0; p.a = Math.random() * Math.PI * 2; }
+
+        const wob = Math.sin(t * 1.6 + p.r * 0.01) * 12;
+        const x = cx + Math.cos(p.a) * (p.r + wob) + pointer.x * 22 * (1 - p.r / (p.r0 + 1));
+        const y = cy + Math.sin(p.a) * (p.r + wob) * 0.62 + pointer.y * 20 * (1 - p.r / (p.r0 + 1));
+
+        const fade = clamp(p.r / (p.r0 * 0.9), 0.15, 1);
+        const alpha = p.o * fade;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, p.sz * 9);
+        g.addColorStop(0, `rgba(211,223,169,${alpha})`);
+        g.addColorStop(0.35, `rgba(124,140,75,${alpha * 0.75})`);
+        g.addColorStop(1, "rgba(124,140,75,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, p.sz * 9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = "source-over";
+      raf = requestAnimationFrame(frame);
+    }
+    function start() { if (running || reduce) return; running = true; frame(); }
+    function stop()  { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+
+    resize(); seed(count());
+    window.addEventListener("resize", () => { resize(); seed(count()); }, { passive: true });
+    if (canHover) {
+      window.addEventListener("mousemove", e => {
+        pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+        pointer.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+      }, { passive: true });
+    }
+    document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+    const host = document.querySelector(".hero");
+    if (host && "IntersectionObserver" in window) {
+      new IntersectionObserver(en => en[0].isIntersecting ? start() : stop(), { threshold: 0.04 }).observe(host);
+    } else { start(); }
+  }
+
+  /* ---------- تیلت سه‌بعدی + نورافکن ---------- */
+  function pointerFx() {
+    let active = null, mx = 0, my = 0, cx = 0, cy = 0, raf = null;
+    const targets = ".card, .cat-card, .cta-band";
+
+    function setVars(el, x, y) {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", ((x - r.left) / r.width * 100) + "%");
+      el.style.setProperty("--my", ((y - r.top) / r.height * 100) + "%");
+    }
+    function loop() {
+      cx += (mx - cx) * 0.14; cy += (my - cy) * 0.14;
+      if (active) {
+        const r = active.getBoundingClientRect();
+        const nx = (cx - r.left) / r.width, ny = (cy - r.top) / r.height;
+        active.style.transform =
+          `perspective(900px) rotateY(${(nx - .5) * 7}deg) rotateX(${(.5 - ny) * 7}deg) translateY(-5px)`;
+      }
+      raf = (active || Math.abs(mx - cx) > .6) ? requestAnimationFrame(loop) : null;
+    }
+    document.addEventListener("mousemove", e => {
+      const el = e.target.closest ? e.target.closest(targets) : null;
+      if (el) setVars(el, e.clientX, e.clientY);
+      if (!canHover) return;
+      mx = e.clientX; my = e.clientY;
+      if (el !== active) {
+        if (active) { active.style.transform = ""; active.classList.remove("is-tilting"); }
+        active = el;
+        if (active) active.classList.add("is-tilting");
+        if (!raf) raf = requestAnimationFrame(loop);
+      }
+    }, { passive: true });
+    document.addEventListener("mouseleave", () => {
+      if (active) { active.style.transform = ""; active.classList.remove("is-tilting"); active = null; }
+    });
+    document.addEventListener("mouseover", e => {
+      const el = e.target.closest ? e.target.closest(targets) : null;
+      if (el && canHover) el.classList.add("is-tilting");
+    }, { passive: true });
+  }
+
+  /* ---------- نور دنبال‌کنندهٔ موس (دسکتاپ) ---------- */
+  function cursorGlow() {
+    if (!canHover || reduce) return;
+    const d = document.createElement("div");
+    d.id = "vx-cursor";
+    document.body.appendChild(d);
+    Object.assign(d.style, {
+      position: "fixed", zIndex: 140, pointerEvents: "none", width: "420px", height: "420px",
+      borderRadius: "50%", opacity: "0", transition: "opacity .4s",
+      background: "radial-gradient(circle,rgba(124,140,75,.16),transparent 62%)",
+      filter: "blur(6px)", mixBlendMode: "screen"
+    });
+    let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y;
+    window.addEventListener("mousemove", e => {
+      tx = e.clientX; ty = e.clientY; d.style.opacity = "1";
+    }, { passive: true });
+    document.addEventListener("mouseleave", () => d.style.opacity = "0");
+    (function loop() {
+      x += (tx - x) * 0.09; y += (ty - y) * 0.09;
+      d.style.transform = `translate(${x - 210}px, ${y - 210}px)`;
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------- پارالاکس هیرو + header + پیشرفت اسکرول ---------- */
+  function scrollFx() {
+    const hero = $(".hero");
+    const bar = $("#vx-progress i");
+    const header = $(".site-header");
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const y = window.scrollY || 0;
+      if (hero && !reduce) {
+        const p = clamp(y / Math.max(1, hero.offsetHeight), 0, 1);
+        hero.style.setProperty("--parallax", (p * 90).toFixed(1) + "px");
+        if (p > 0.02) hero.style.setProperty("--heroFade", String(1 - p * 0.4));
+      }
+      if (bar) {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        bar.style.width = (max > 0 ? clamp(y / max, 0, 1) * 100 : 0) + "%";
+      }
+      if (header) header.classList.toggle("is-scrolled", y > 12);
+    }
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener("resize", update, { passive: true });
+    update();
+  }
+
+  /* ---------- شمارندهٔ اعداد ---------- */
+  function counters(animate = true) {
+    $$("[data-count]").forEach(el => {
+      const target = Number(el.dataset.count) || 0;
+      const suffix = el.dataset.suffixKey ? t(el.dataset.suffixKey) : (el.dataset.suffix || "");
+      const fmt = n => new Intl.NumberFormat(state.lang === "fa" ? "fa-IR" : "en-US").format(Math.round(n)) + suffix;
+      if (!animate || reduce || el.dataset.done) { el.textContent = fmt(target); return; }
+      el.dataset.done = "1";
+      const dur = 1200, t0 = performance.now();
+      (function tick(now) {
+        const k = clamp((now - t0) / dur, 0, 1);
+        const eased = 1 - Math.pow(1 - k, 3);
+        el.textContent = fmt(target * eased);
+        if (k < 1) requestAnimationFrame(tick); else el.textContent = fmt(target);
+      })(t0);
+    });
+  }
+
+  /* ---------- پرواز تصویر محصول به سبد ---------- */
+  function flyToCart(srcEl) {
+    const cartBtn = $("#cart-open");
+    if (!srcEl || !cartBtn || reduce) return;
+    const img = srcEl.tagName === "IMG"
+      ? srcEl
+      : (srcEl.querySelector("img") || (srcEl.closest(".card, .cat-card, .modal-grid") || document).querySelector("img"));
+    if (!img) return;
+    const from = img.getBoundingClientRect(), to = cartBtn.getBoundingClientRect();
+    const node = img.cloneNode(true);
+    node.className = "vx-fly";
+    const size = Math.min(120, from.width * 0.5);
+    Object.assign(node.style, {
+      left: from.left + from.width / 2 - size / 2 + "px",
+      top: from.top + from.height / 2 - size / 2 + "px",
+      width: size + "px", height: size + "px"
+    });
+    document.body.appendChild(node);
+    requestAnimationFrame(() => {
+      const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+      const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+      node.style.transform = `translate(${dx}px, ${dy}px) scale(.22) rotate(14deg)`;
+      node.style.opacity = ".15";
+    });
+    setTimeout(() => node.remove(), 900);
+  }
+  function cartBump() {
+    const badge = $("#cart-count"), btn = $("#cart-open");
+    if (badge) { badge.classList.remove("bump"); void badge.offsetWidth; badge.classList.add("bump"); }
+    if (btn) { btn.classList.remove("pulse"); void btn.offsetWidth; btn.classList.add("pulse"); setTimeout(() => btn.classList.remove("pulse"), 750); }
+  }
+
+  /* ---------- انیمیشن ورودِ انیمیشن‌دار آیکون‌ها ---------- */
+  function drawIcons(scope = document) {
+    $$(".check-list li", scope).forEach((li, i) => {
+      li.style.transitionDelay = (i * 90) + "ms";
+      li.classList.add("reveal");
+      li.style.setProperty("--ry", "14px");
+    });
+  }
+
+  /* ---------- راه‌اندازی ---------- */
+  function init() {
+    const bar = document.createElement("div");
+    bar.id = "vx-progress"; bar.innerHTML = "<i></i>";
+    document.body.appendChild(bar);
+
+    vortex(); pointerFx(); cursorGlow(); scrollFx(); counters();
+    drawIcons();
+
+    /* شمارنده‌ها فقط وقتی در دید قرار گرفتند بشمارند */
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (e.isIntersecting) { counters(true); io.disconnect(); }
+      }), { threshold: .3 });
+      const host = $(".hero-stats") || $(".strip");
+      if (host) io.observe(host);
+    }
+  }
+
+  return { init, counters, flyToCart, cartBump, drawIcons };
+})();
+
+/* ---------- گذار نرم بین صفحات ------------------------------------------ */
+function pageTransitions() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a[href]");
+    if (!a) return;
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("tel:")
+        || a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (!/\.html|^\/?$/.test(href)) return;
+    e.preventDefault();
+    const veil = document.createElement("div");
+    Object.assign(veil.style, {
+      position: "fixed", inset: "0", zIndex: 300, pointerEvents: "none",
+      background: "radial-gradient(circle at 50% 50%,rgba(124,140,75,.22),rgba(10,11,8,.94) 70%)",
+      opacity: "0", transition: "opacity .32s cubic-bezier(.22,.61,.36,1)"
+    });
+    document.body.appendChild(veil);
+    requestAnimationFrame(() => { veil.style.opacity = "1"; });
+    setTimeout(() => { location.href = href; }, 300);
+  });
 }
 
 /* ---------- boot -------------------------------------------------------- */
@@ -690,6 +1000,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderCart();
   observeReveal();
+  FX.init();
+  pageTransitions();
 
   /* contact page form → WhatsApp */
   const cf = $("#contact-form");

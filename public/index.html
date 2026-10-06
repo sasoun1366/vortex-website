@@ -35,6 +35,31 @@
     <div class="hero-media">
       <img src="assets/img/hero.jpg" alt="تی‌شرت تمرین ورتکس روی دیوار بتنی" fetchpriority="high">
     </div>
+    <span class="hero-orb hero-orb--1" aria-hidden="true"></span>
+    <span class="hero-orb hero-orb--2" aria-hidden="true"></span>
+    <span class="hero-orb hero-orb--3" aria-hidden="true"></span>
+    <svg class="hero-watermark" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <linearGradient id="wm" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#D3DFA9"/><stop offset=".55" stop-color="#98A962"/>
+          <stop offset="1" stop-color="#3F4A23"/>
+        </linearGradient>
+        <radialGradient id="wmv" x1=".5" y1=".2" x2=".5" y2="1">
+          <stop offset="0" stop-color="#C8D89A"/><stop offset="1" stop-color="#5A6A31"/>
+        </radialGradient>
+      </defs>
+      <g fill="none" stroke="url(#wm)" stroke-linecap="round">
+        <circle cx="100" cy="100" r="94" stroke-width=".45" opacity=".5" stroke-dasharray="118 44"/>
+        <circle cx="100" cy="100" r="80" stroke-width=".55" opacity=".55" stroke-dasharray="96 38" stroke-dashoffset="-26"/>
+        <circle cx="100" cy="100" r="66" stroke-width=".7"  opacity=".6"  stroke-dasharray="74 32"  stroke-dashoffset="-52"/>
+        <circle cx="100" cy="100" r="52" stroke-width=".9"  opacity=".65" stroke-dasharray="54 26"  stroke-dashoffset="-80"/>
+        <circle cx="100" cy="100" r="38" stroke-width="1.1" opacity=".7"  stroke-dasharray="36 20"  stroke-dashoffset="-40"/>
+        <path d="M14 12h26l10 26 10-26h26L56 96H44z" stroke-width="1.2" opacity=".75"
+              transform="translate(38 40) scale(1.05)" />
+      </g>
+      <path d="M62 46h20l18 46 18-46h20L110 158H90z" fill="url(#wmv)" opacity=".55"/>
+    </svg>
+    <canvas id="vortex-canvas" aria-hidden="true"></canvas>
     <div class="container hero-inner">
       <span class="eyebrow" data-i18n="hero_eyebrow">ساخته‌شده برای شدت</span>
       <h1 class="display" data-i18n-html="hero_title">تجهیزات کراس‌فیت،<br><em>ساخته‌شده برای شدت.</em></h1>
@@ -43,10 +68,11 @@
         <a class="btn" href="shop.html" data-i18n="hero_cta1">خرید کالکشن</a>
         <a class="btn btn--ghost" href="about.html" data-i18n="hero_cta2">درباره ورتکس</a>
       </div>
+      <div class="hero-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
       <div class="hero-stats">
-        <div><strong data-i18n="stat1v">۱۲٬۰۰۰+</strong><span data-i18n="stat1l">سفارش ارسال‌شده</span></div>
-        <div><strong data-i18n="stat2v">۹۸٪</strong><span data-i18n="stat2l">رضایت مشتری</span></div>
-        <div><strong data-i18n="stat3v">۲۴ ساعته</strong><span data-i18n="stat3l">پاسخ‌گویی پشتیبانی</span></div>
+        <div data-reveal="scale" class="reveal"><strong data-count="12000" data-suffix-key="stat1suf" data-i18n="stat1v">۱۲٬۰۰۰+</strong><span data-i18n="stat1l">سفارش ارسال‌شده</span></div>
+        <div data-reveal="scale" class="reveal"><strong data-count="98" data-suffix-key="stat2suf" data-i18n="stat2v">۹۸٪</strong><span data-i18n="stat2l">رضایت مشتری</span></div>
+        <div data-reveal="scale" class="reveal"><strong data-i18n="stat3v">۲۴ ساعته</strong><span data-i18n="stat3l">پاسخ‌گویی پشتیبانی</span></div>
       </div>
     </div>
   </section>
@@ -61,8 +87,17 @@
     </div>
   </div>
 
+  <div class="marquee marquee--alt" aria-hidden="true">
+    <div class="marquee-track">
+      <span>تی‌شرت تمرین</span><span>مچ‌بند</span><span>گچ مایع</span><span>کراپ</span>
+      <span>جاکلیدی</span><span>استرپ لیفت</span><span>کمربند وزنه</span><span>کیسه تمرین</span>
+      <span>تی‌شرت تمرین</span><span>مچ‌بند</span><span>گچ مایع</span><span>کراپ</span>
+      <span>جاکلیدی</span><span>استرپ لیفت</span><span>کمربند وزنه</span><span>کیسه تمرین</span>
+    </div>
+  </div>
+
   <!-- ==================== WHY ==================== -->
-  <section class="section">
+  <section class="section section--amb">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow" data-i18n="kick_why">مزیت‌های ورتکس</span>
@@ -70,22 +105,22 @@
         <p data-i18n="why_lead">چهار دلیل ساده که بچه‌های باکس دوباره از ما خرید می‌کنند.</p>
       </div>
       <div class="feats">
-        <div class="feat reveal">
+        <div class="feat reveal" data-reveal="scale">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg>
           <h3 data-i18n="f1t">دوخت صنعتی و متریال مقاوم</h3>
           <p data-i18n="f1d">پارچه‌های سنگین‌وزن، دوخت تخت و درزهای تقویت‌شده.</p>
         </div>
-        <div class="feat reveal">
+        <div class="feat reveal" data-reveal="scale">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5z"/></svg>
           <h3 data-i18n="f2t">طراحی از دل تمرین</h3>
           <p data-i18n="f2d">جزئیات هر محصول با بازخورد ورزشکاران و کوچ‌ها شکل گرفته.</p>
         </div>
-        <div class="feat reveal">
+        <div class="feat reveal" data-reveal="scale">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h11v10H2zM13 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>
           <h3 data-i18n="f3t">ارسال سریع و مطمئن</h3>
           <p data-i18n="f3d">ارسال به سراسر ایران با بسته‌بندی محافظ.</p>
         </div>
-        <div class="feat reveal">
+        <div class="feat reveal" data-reveal="scale">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/><path d="M8 10h8M8 13.5h5"/></svg>
           <h3 data-i18n="f4t">سفارش به ساده‌ترین شکل</h3>
           <p data-i18n="f4d">سبد خریدت را ببند و سفارش را با یک پیام ثبت کن.</p>
@@ -103,7 +138,7 @@
         <p data-i18n="cat_lead">پوشاک، اکسسوری و تجهیزات تمرین — همه با یک هویت واحد.</p>
       </div>
       <div class="grid grid--3">
-        <a class="cat-card reveal" href="shop.html?cat=apparel">
+        <a class="cat-card reveal" data-reveal="scale" href="shop.html?cat=apparel">
           <img src="assets/img/tee.jpg" alt="پوشاک ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_apparel_t">پوشاک</h3>
@@ -111,7 +146,7 @@
             <span class="go" data-i18n="cat_browse">مشاهده دسته</span>
           </div>
         </a>
-        <a class="cat-card reveal" href="shop.html?cat=accessory">
+        <a class="cat-card reveal" data-reveal="scale" href="shop.html?cat=accessory">
           <img src="assets/img/keychain.jpg" alt="اکسسوری ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_accessory_t">اکسسوری</h3>
@@ -119,7 +154,7 @@
             <span class="go" data-i18n="cat_browse">مشاهده دسته</span>
           </div>
         </a>
-        <a class="cat-card reveal" href="shop.html?cat=gear">
+        <a class="cat-card reveal" data-reveal="scale" href="shop.html?cat=gear">
           <img src="assets/img/wrist-wraps.jpg" alt="تجهیزات تمرین ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_gear_t">تجهیزات تمرین</h3>
@@ -150,14 +185,14 @@
   <section class="section" style="padding-top:0">
     <div class="container">
       <div class="split">
-        <div class="split-media reveal">
+        <div class="split-media reveal" data-reveal="start">
           <img src="assets/img/crop-tee.jpg" alt="تی‌شرت کراپ ورتکس — Season 01 / Issue No.6" loading="lazy">
           <div class="tag">
             <span>SEASON 01 · ISSUE No.6</span>
             <small>Vortex drop</small>
           </div>
         </div>
-        <div class="split-body reveal">
+        <div class="split-body reveal" data-reveal="end">
           <span class="eyebrow" data-i18n="story_eyebrow">داستان برند</span>
           <h2 class="display" data-i18n="story_title">از یک باکس، برای همه باکس‌ها</h2>
           <p data-i18n="story_p1">ورتکس از دل تمرین به دنیا آمد. ما ورزشکارانی بودیم که تجهیزات مناسب پیدا نمی‌کردیم.</p>
@@ -187,7 +222,7 @@
   <!-- ==================== COMMUNITY CTA ==================== -->
   <section class="section" style="padding-top:0">
     <div class="container">
-      <div class="cta-band reveal">
+      <div class="cta-band reveal" data-reveal="scale">
         <div>
           <h2 class="display" data-i18n="band_title">به جامعه ورتکس بپیوند</h2>
           <p data-i18n="band_text">کالکشن‌های محدود، افت‌های جدید و رکوردهای بچه‌های باکس را در اینستاگرام و تلگرام ببین.</p>

@@ -15,7 +15,7 @@ const I18N = {
     hero_title: "تجهیزات کراس‌فیت،<br><em>ساخته‌شده برای شدت.</em>",
     hero_lead: "ورتکس پوشاک و تجهیزات تمرین با دوخت صنعتی و متریال مقاوم تولید می‌کند؛ برای باکس، برای رکورد شخصی، برای هر روز تمرین.",
     hero_cta1: "خرید کالکشن", hero_cta2: "درباره ورتکس",
-    stat1v: "۱۲٬۰۰۰+", stat1l: "سفارش ارسال‌شده",
+    stat1v: "۱۲٬۰۰۰+", stat1l: "سفارش ارسال‌شده", stat1suf: "+", stat2suf: "٪",
     stat2v: "۹۸٪",      stat2l: "رضایت مشتری",
     stat3v: "۲۴ ساعته", stat3l: "پاسخ‌گویی پشتیبانی",
 
@@ -131,7 +131,7 @@ const I18N = {
     hero_title: "CrossFit gear,<br><em>built for intensity.</em>",
     hero_lead: "Vortex makes apparel and training gear with industrial stitching and heavy-duty materials — for the box, for the PR, for every single session.",
     hero_cta1: "Shop the collection", hero_cta2: "About Vortex",
-    stat1v: "12K+", stat1l: "Orders shipped",
+    stat1v: "12K+", stat1l: "Orders shipped", stat1suf: "+", stat2suf: "%",
     stat2v: "98%", stat2l: "Customer rating",
     stat3v: "24h", stat3l: "Support response",
 
