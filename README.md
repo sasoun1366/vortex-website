@@ -258,3 +258,36 @@ BOT_TOKEN="123:ABC" CLOUDFLARE_API_TOKEN="xxx" OWNER_CHAT_ID="123456" \
 - **پنل مدیریت سفارش‌ها:** مقدار `ADMIN_URL` را به‌عنوان یک متغیر (`wrangler.jsonc → vars`) بگذار؛ دکمه «🛠 پنل مدیریت» به پیام سفارش اضافه می‌شود.
 - **ذخیرهٔ سفارش‌ها در دیتابیس:** Cloudflare D1 (رایگان) — سفارش‌ها با همان کد قابل جست‌وجو می‌شوند.
 - **پرداخت:** کارت‌به‌کارت یا اتصال درگاه (زرین‌پال) در همان پیام سفارش.
+
+
+---
+
+## ۱۱) برندسازی بات تلگرام ✅ انجام شد
+
+| مورد | مقدار |
+|---|---|
+| عکس پروفایل بات | ✅ لوگوی ورتکس (مشکی + سبز ارتشی) |
+| نام بات | VortexGearBot |
+| توضیحات (About) | «🟢 فروشگاه رسمی ورتکس — پوشاک و تجهیزات کراس‌فیت …» |
+| دکمهٔ منو | 🛒 فروشگاه ورتکس (باز کردن سایت داخل تلگرام) |
+| دستورها | `/start` `/shop` `/id` `/help` |
+
+### فایل‌های آواتار
+```
+brand/bot-avatar.png       1280×1280 (اصلی، برای اینستاگرام/تلگرام)
+brand/bot-avatar-512.jpg   512×512  (استاندارد پروفایل تلگرام)
+scripts/brand/avatar.html  قالب طراحی آواتار (قابل ویرایش)
+scripts/brand/make-avatar.sh  ساخت مجدد آواتار
+```
+
+### تغییر عکس بات در آینده
+```bash
+# راه ۱ — با اسکریپت (بعد از ویرایش scripts/brand/avatar.html):
+bash scripts/brand/make-avatar.sh
+curl -X POST "https://api.telegram.org/bot<BOT_TOKEN>/setMyProfilePhoto" \
+  -F 'photo={"type":"static","photo":"attach://file0"}' \
+  -F "file0=@brand/bot-avatar-512.jpg;type=image/jpeg"
+
+# راه ۲ — ساده‌ترین: در تلگرام به @BotFather → /mybots → بات → Edit Bot → Edit Botpic
+```
+همین دو فایل برای **عکس پروفایل اینستاگرام** و آواتار گروه هم قابل استفاده‌اند.

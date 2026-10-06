@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>
+  @font-face{font-family:'Oswald';src:url('../../public/assets/fonts/oswald-TK3IWkUHHAIjg75cFRf3bXL8LICs1_Fv40pKlN4NNSeSASz7FmlWHYg.woff2') format('woff2');font-weight:600}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:640px;height:640px;background:#0A0B08;overflow:hidden;position:relative;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;
+       font-family:'Oswald',sans-serif}
+  /* درخشش سبز ملایم پشت لوگو */
+  .glow{position:absolute;width:520px;height:520px;border-radius:50%;
+        background:radial-gradient(circle,rgba(124,140,75,.28),transparent 66%);top:-40px}
+  /* خطوط هاشور مثل لیبل محصول */
+  .hatch{position:absolute;bottom:78px;width:170px;height:9px;
+    background-image:repeating-linear-gradient(115deg,#7C8C4B 0 3px,transparent 3px 9px);opacity:.85}
+  .v{position:relative;width:270px;margin-bottom:26px}
+  .word{position:relative;font-weight:600;font-size:84px;letter-spacing:.20em;text-indent:.20em;
+        color:#98A962;text-transform:uppercase;line-height:1}
+  .sub{position:relative;margin-top:14px;font-size:22px;letter-spacing:.34em;text-indent:.34em;
+       color:#5A6A31;text-transform:uppercase}
+</style></head>
+<body>
+  <div class="glow"></div>
+  <svg class="v" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C8D89A"/><stop offset="1" stop-color="#6F8040"/>
+    </linearGradient></defs>
+    <path d="M10 14h22l18 46 18-46h22L60 94H40L10 14z" fill="url(#g)"/>
+  </svg>
+  <div class="word">Vortex</div>
+  <div class="sub">Built for intensity</div>
+  <div class="hatch"></div>
+</body></html>
