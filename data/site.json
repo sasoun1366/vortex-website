@@ -19,22 +19,18 @@
   }
  },
  "texts": {
-  "fa": {
-   "hero_title": "ورتکس — تست پنل مدیریت"
-  },
+  "fa": {},
   "en": {}
  },
- "images": {
-  "gal5": "media/site/gal5.png?v=muww4pwn"
- },
+ "images": {},
  "theme": {
-  "accent": "#C4573A",
+  "accent": "#7C8C4B",
   "bg": "#0A0B08"
  },
  "layout": {
   "order": [
-   "cats",
    "why",
+   "cats",
    "shop",
    "drop",
    "story",
@@ -43,9 +39,7 @@
    "gallery",
    "words"
   ],
-  "hidden": [
-   "soon"
-  ]
+  "hidden": []
  },
- "updated": 1791303984060
+ "updated": 1791304001596
 }
