@@ -6,11 +6,11 @@
  },
  "stock": {
   "tee": {
-   "M": 6,
+   "M": 4,
    "L": 2
   },
   "keychain": {
-   "*": 20
+   "*": 19
   }
  },
  "orders": {
@@ -52,7 +52,7 @@
     "username": "",
     "first_name": ""
    },
-   "status": "paid",
+   "status": "shipped",
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 18,
