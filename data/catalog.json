@@ -3,10 +3,6 @@
  "soon": [],
  "cfg": {},
  "draft": null,
- "overrides": {
-  "vx-tee-001": {
-   "price": 2000000
-  }
- },
+ "overrides": {},
  "hidden": []
 }
