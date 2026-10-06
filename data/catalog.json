@@ -2,7 +2,20 @@
  "products": [],
  "soon": [],
  "cfg": {},
- "draft": null,
+ "draft": {
+  "ts": 1791289754506,
+  "chat": "5034689859",
+  "step": "pick",
+  "d": {
+   "pickIds": [
+    "vx-tee-001",
+    "vx-crop-001"
+   ],
+   "act": "price",
+   "val": 2000000,
+   "size": null
+  }
+ },
  "overrides": {
   "vx-chalk-001": {
    "price": 550000,
