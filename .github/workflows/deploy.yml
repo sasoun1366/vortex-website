@@ -1,8 +1,10 @@
 name: Deploy to Cloudflare
 
-# هر push روی main سایت را خودکار منتشر می‌کند.
-# سکرت‌های لازم در Settings → Secrets and variables → Actions:
-#   CLOUDFLARE_API_TOKEN   (Account → Workers Scripts → Edit)
+# با هر push روی main سایت خودکار منتشر می‌شود.
+# اگر سکرت‌ها ست نشده باشند، این ورک‌فلو بدون خطا رد می‌شود (قرمز نمی‌شود).
+#
+# سکرت‌های لازم → Settings → Secrets and variables → Actions:
+#   CLOUDFLARE_API_TOKEN   (دسترسی: Account → Workers Scripts → Edit)
 #   CLOUDFLARE_ACCOUNT_ID
 on:
   push:
@@ -18,7 +20,19 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy static site to Cloudflare Workers
+
+      - name: بررسی وجود سکرت‌ها
+        id: guard
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+            echo "::warning title=انتشار انجام نشد::سکرت‌های CLOUDFLARE_API_TOKEN و CLOUDFLARE_ACCOUNT_ID تنظیم نشده‌اند. راهنما: README بخش ۹"
+          else
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: انتشار روی Cloudflare
+        if: steps.guard.outputs.ready == 'yes'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
