@@ -1,38 +1,5 @@
 {
- "products": [
-  {
-   "id": "vx-crop-tee-season-12",
-   "cat": "apparel",
-   "img": "media/vx-crop-tee-season-12.jpg",
-   "price": 1250000,
-   "oldPrice": 0,
-   "featured": true,
-   "badge": {
-    "fa": "",
-    "en": ""
-   },
-   "name": {
-    "fa": "تی‌شرت کراپ «فصل ۰۲ / شماره ۱»",
-    "en": "Crop Tee — Season 02 · Issue No.1"
-   },
-   "desc": {
-    "fa": "برش کراپ با چاپ دست‌نویس فصل ۰۲ — تعداد محدود.",
-    "en": "Cropped cut, limited run."
-   },
-   "sizes": [
-    "S",
-    "M",
-    "L"
-   ],
-   "stock": {
-    "S": 2,
-    "M": 3,
-    "L": 2
-   },
-   "ts": 1791289172981,
-   "active": true
-  }
- ],
+ "products": [],
  "soon": [],
  "cfg": {},
  "draft": null
