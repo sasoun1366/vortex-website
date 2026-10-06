@@ -3,12 +3,11 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791290451295,
+  "ts": 1791290468780,
   "chat": "5034689859",
-  "step": "editphoto",
+  "step": "photo",
   "d": {
-   "editId": "vx-tee-001",
-   "photo": ""
+   "featured": true
   }
  },
  "overrides": {
