@@ -8,5 +8,7 @@
    "price": 550000
   }
  },
- "hidden": []
+ "hidden": [
+  "vx-key-001"
+ ]
 }
