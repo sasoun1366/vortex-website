@@ -7,8 +7,21 @@
   "vx-chalk-001": {
    "price": 550000,
    "name": {
-    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر"
-   }
+    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر",
+    "en": ""
+   },
+   "oldPrice": 0,
+   "cat": "gear",
+   "featured": true,
+   "desc": {
+    "fa": "",
+    "en": ""
+   },
+   "badge": {
+    "fa": "",
+    "en": ""
+   },
+   "img": "assets/img/liquid-chalk.jpg"
   }
  },
  "hidden": []
