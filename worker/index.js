@@ -10,6 +10,8 @@
 import { readStore, writeStore, stockFor, stockReport, decStock } from "./store.js";
 import { paymentMessage, addressRequestMessage, parseAddressBlock, addressSummary, customerStatusMessage,
          ownerStockReport, statusFa, statusEn, resolveCfg, maskedCard } from "./flow.js";
+import { readCatalog, toSite, MEDIA_DIR } from "./catalog.js";
+import { admMessage, admCallback, admStart, productList, PRODUCT_HELP } from "./product.js";
 
 const TG = (env) => `${env.TELEGRAM_API_BASE || "https://api.telegram.org"}/bot${env.BOT_TOKEN}`;
 const FA = new Intl.NumberFormat("fa-IR");
@@ -243,6 +245,26 @@ async function handleOrder(request, env) {
   return json({ ok: true, code, notified, payRef: Boolean(order.payRef), status: order.payRef ? "paycheck" : "new", stockWarn: warn.length });
 }
 
+/* ---------- سرو عکس محصولات (از ریپو، با کش لبه) ------------------------ */
+/* محصولاتی که بات اضافه می‌کند عکسشان در media/products/<id>.jpg ریپو ذخیره
+   می‌شود؛ این مسیر همان فایل را با کش طولانی تحویل می‌دهد. */
+async function handleMedia(env, url) {
+  const file = url.pathname.replace(/^\/media\//, "");
+  if (!/^[A-Za-z0-9._-]{1,80}$/.test(file)) return new Response("bad request", { status: 400 });
+  const ext = (file.split(".").pop() || "").toLowerCase();
+  const type = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+  const raw = `https://raw.githubusercontent.com/sasoun1366/vortex-website/main/${MEDIA_DIR}/${file}`;
+  const r = await fetch(raw, { cf: { cacheEverything: true, cacheTtl: 86400 } });
+  if (!r.ok) return new Response("not found", { status: 404 });
+  return new Response(r.body, {
+    headers: {
+      "content-type": type,
+      "cache-control": "public, max-age=31536000, immutable",
+      "access-control-allow-origin": "*",
+    },
+  });
+}
+
 /* ---------- وب‌هوک بات تلگرام ------------------------------------------- */
 async function handleWebhook(request, env) {
   if (!env.BOT_TOKEN || !env.WEBHOOK_SECRET) return json({ ok: false }, 503);
@@ -258,6 +280,10 @@ async function handleWebhook(request, env) {
 
   /* ---------- دکمه‌های مالک روی سفارشها ---------- */
   if (cb) {
+    if (String(cb.data || "").startsWith("pr:")) {   // دکمه‌های مدیریت محصولات
+      await admCallback(env, tg, cb, store);
+      return json({ ok: true });
+    }
     const [action, code] = String(cb.data || "").split(":");
     const o = store.orders[code];
     if (!o) {
@@ -339,6 +365,10 @@ async function handleWebhook(request, env) {
 
   /* ---------- دستورهای مالک ---------- */
   if (isOwner) {
+    /* جریان «افزودن محصول با عکس» (اگر وسط مرحله‌ای باشد، پیام را برمی‌دارد) */
+    if (/^\/(products|list)\b/.test(text)) { await productList(env, tg, chatId, store); return json({ ok: true }); }
+    if (await admMessage(env, tg, chatId, msg, text, store)) return json({ ok: true });
+
     /* /setcard 6037-xxxx-xxxx-1234 [نام صاحب کارت] */
     if (text.startsWith("/setcard")) {
       const m = text.match(/\/setcard\s+([\d\-\s]{8,30})\s*(.*)$/s);
@@ -427,6 +457,8 @@ async function handleWebhook(request, env) {
         "<code>/track VX-... 1234...</code> — ثبت کد رهگیری و اطلاع خودکار به مشتری",
         "<code>/orders</code> — ۱۰ سفارش آخر",
         "<code>/id</code> — شناسهٔ چت",
+        "",
+        PRODUCT_HELP,
       ].join("\n") });
       return json({ ok: true });
     }
@@ -573,6 +605,20 @@ export default {
       return json({ ok: true, card: cfg.card, cardName: cfg.cardName || "" }, 200, { "cache-control": "no-store" });
     }
 
+    if (url.pathname === "/api/products") {
+      const cat = await readCatalog(env);
+      const list = (cat.products || [])
+        .filter((p) => p && p.active !== false && p.id)
+        .sort((a, b) => (b.ts || 0) - (a.ts || 0))
+        .map(toSite);
+      const soon = Array.isArray(cat.soon) ? cat.soon.filter((x) => x && (x.fa || x.en)) : [];
+      return json({ ok: true, count: list.length, products: list, soon });
+    }
+
+    if (url.pathname.startsWith("/media/")) {
+      return handleMedia(env, url);
+    }
+
     if (url.pathname === "/api/stock") {
       const store = await readStore(env);
       return json({ ok: true, stock: store.stock || {} }, 200, { "cache-control": "public, max-age=30" });
@@ -584,7 +630,7 @@ export default {
         bot: Boolean(env.BOT_TOKEN),
         owner: Boolean(env.OWNER_CHAT_ID),
         webhook: Boolean(env.WEBHOOK_SECRET),
-        version: 1,
+        version: 2,
       });
     }
 

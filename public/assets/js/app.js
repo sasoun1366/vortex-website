@@ -325,6 +325,24 @@ function renderCatFilters() {
   }));
 }
 
+/* ---------- کاتالوگ زندهٔ محصولات ----------------------------------------
+   محصولاتی که با بات تلگرام اضافه/عوض می‌شوند از /api/products می‌آیند و
+   روی فهرست ثابت products.js سوار می‌شوند (محصولات بات اول، جدیدترین اول).
+   اگر این درخواست جواب ندهد، سایت با همان فهرست ثابت کار می‌کند. */
+async function loadCatalog() {
+  try {
+    const r = await fetch("api/products", { cache: "no-store" });
+    const d = await r.json();
+    if (!d || !d.ok || !Array.isArray(d.products) || !d.products.length) return false;
+    const live = d.products.filter(p => p && p.id && p.name && Number(p.price) >= 0);
+    if (!live.length) return false;
+    const ids = new Set(live.map(p => p.id));
+    VORTEX.products = live.concat(VORTEX.products.filter(p => !ids.has(p.id)));
+    if (Array.isArray(d.soon) && d.soon.length) VORTEX.soon = d.soon;
+    return true;
+  } catch (e) { return false; }
+}
+
 /* موجودی انبار (از بات/انبارهٔ فروشگاه) — برای نشان‌دادن «ناموجود» */
 let STOCK = null;
 async function loadStock() {
@@ -920,7 +938,14 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
   observeReveal();
   UI.init();
-  loadStock();
+  loadCatalog().then(changed => {
+    if (changed) {
+      if ($("#featured-grid")) renderFeatured("#featured-grid");
+      if ($("#shop-grid")) renderShop();
+      markSoldOut();
+    }
+    loadStock();
+  });
 
   /* contact page form → WhatsApp */
   const cf = $("#contact-form");
