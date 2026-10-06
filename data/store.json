@@ -34,6 +34,34 @@
    "photoFileId": "",
    "ownerMsgId": 22,
    "chatId": 1401116616
+  },
+  "VX-261006-3218": {
+   "code": "VX-261006-3218",
+   "ts": 1791287964498,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-tee-001",
+     "name": "تی‌شرت تمرین ورتکس",
+     "size": "L",
+     "qty": 1,
+     "price": 1480000
+    }
+   ],
+   "totals": {
+    "sub": 1480000,
+    "ship": 180000,
+    "total": 1660000
+   },
+   "buyer": {},
+   "note": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  }
 }
