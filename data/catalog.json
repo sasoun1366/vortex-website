@@ -3,6 +3,13 @@
  "soon": [],
  "cfg": {},
  "draft": null,
- "overrides": {},
+ "overrides": {
+  "vx-chalk-001": {
+   "price": 550000,
+   "name": {
+    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر"
+   }
+  }
+ },
  "hidden": []
 }
