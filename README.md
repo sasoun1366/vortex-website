@@ -8,24 +8,26 @@
 ## ۱) فایل‌ها
 
 ```
-vortex-site/
-├─ index.html          صفحه اصلی (هیرو، مزیت‌ها، دسته‌ها، کالکشن، داستان برند، به‌زودی، CTA)
-├─ shop.html           فروشگاه (فیلتر دسته‌بندی + گرید محصولات + مودال انتخاب سایز)
-├─ about.html          درباره ما (داستان برند، ارزش‌ها، نقل‌قول، گالری)
-├─ contact.html        تماس (واتساپ/تلگرام/ایمیل + فرم + سؤالات پرتکرار)
-├─ robots.txt · sitemap.xml
-├─ 404.html            صفحه خطای ۴۰۴ (برای Cloudflare)
-├─ _headers            هدرهای امنیت و کش (Cloudflare Pages)
-├─ _redirects          آدرس‌های تمیز: /shop /about /contact
-├─ deploy.sh           ساخت پوشه آمادهٔ آپلود
-├─ preview/            اسکرین‌شات‌های نمونه
-└─ assets/
-   ├─ css/style.css    سیستم طراحی (رنگ‌ها، تایپوگرافی، کامپوننت‌ها)
-   ├─ js/products.js   ← تنها فایلی که برای محصولات و تنظیمات ویرایش می‌کنید
-   ├─ js/i18n.js       ← تمام متن‌های فارسی/انگلیسی سایت
-   ├─ js/app.js        منطق سایت (سبد خرید، مودال، دوزبانه، چک‌اوت)
-   ├─ fonts/           فونت‌ها به‌صورت لوکال (Vazirmatn / Oswald / Inter)
-   └─ img/             تصاویر محصولات + لوگو
+vortex-site/                     ← ریشهٔ پروژه = ریشهٔ ریپوی گیت‌هاب
+├─ public/                       ← ★ همین پوشه روی Cloudflare منتشر می‌شود
+│  ├─ index.html                 صفحه اصلی
+│  ├─ shop.html                  فروشگاه (فیلتر + گرید + مودال سایز)
+│  ├─ about.html                 درباره ما
+│  ├─ contact.html               تماس + فرم + سؤالات پرتکرار
+│  ├─ 404.html                   صفحه خطای برندشده
+│  ├─ _headers · _redirects      هدرهای امنیت/کش + آدرس‌های تمیز  (ویژه Cloudflare)
+│  ├─ robots.txt · sitemap.xml   SEO
+│  └─ assets/
+│     ├─ css/style.css           سیستم طراحی (مشکی + سبز ارتشی)
+│     ├─ js/products.js          ← فقط این فایل را برای محصولات/قیمت‌ها ویرایش کن
+│     ├─ js/i18n.js              ← تمام متن‌های فارسی/انگلیسی
+│     ├─ js/app.js               سبد خرید، مودال، دوزبانه، چک‌اوت
+│     ├─ fonts/                  فونت‌های لوکال (Vazirmatn / Oswald / Inter)
+│     └─ img/                    تصاویر محصولات + لوگو
+├─ .github/workflows/deploy.yml  دیپلوی خودکار (مسیر جایگزین، اختیاری)
+├─ deploy.sh                     بررسی/زیپ‌کردن خروجی
+├─ preview/                      اسکرین‌شات‌های نمونه
+└─ README.md
 ```
 
 ## ۲) کارهایی که باید خودت انجام بدهی (۵ دقیقه)
@@ -133,40 +135,47 @@ config: {
 
 ---
 
-## ۹) انتشار روی Cloudflare
+## ۹) انتشار روی Cloudflare با دامنه vortexgear.ir
 
-سایت کاملاً استاتیک است، پس روی **Cloudflare Pages** با پلن رایگان (پهنای باند نامحدود) بالا می‌آید.
-فایل‌های `_headers` و `_redirects` و `404.html` از قبل آماده شده‌اند (کش، هدرهای امنیتی، آدرس‌های تمیز و صفحه ۴۰۴ برندشده).
+سایت کاملاً استاتیک است و روی **Cloudflare Pages** با پلن رایگان (پهنای باند نامحدود) بالا می‌آید.
+خروجی سایت = پوشهٔ `public/`. فایل‌های `_headers`، `_redirects` و `404.html` از قبل آماده‌اند.
 
-### روش ۱ — آپلود با درگ‌اند‌دراپ (ساده‌ترین، بدون نصب چیزی)
-1. به داشبورد Cloudflare برو → **Workers & Pages** → **Create** → تب **Pages** → **Upload assets**
-2. نام پروژه را بگذار: `vortex-gear`
-3. فایل **`vortex-upload.zip`** را داخل کادر بینداز (یا پوشهٔ `vortex-upload` را درگ کن)
-4. **Deploy** → آدرس `https://vortex-gear.pages.dev` آماده است
+### مرحله ۱ — ریپوی گیت‌هاب
+کد در ریپوی گیت‌هاب (شاخهٔ `main`) قرار می‌گیرد. از این به بعد هر تغییری که push شود، خودکار منتشر می‌شود.
 
-> برای پروژه‌های بعدی: همان پروژه → **Create new deployment** → فایل جدید را آپلود کن (نسخه قبلی هم قابل بازگشت است).
+### مرحله ۲ — وصل کردن ریپو به Cloudflare Pages (۵ کلیک، یک‌بار برای همیشه)
+1. داشبورد Cloudflare → **Workers & Pages** → **Create** → تب **Pages** → **Connect to Git**
+2. اجازه دسترسی به گیت‌هاب بده و ریپو را انتخاب کن → **Begin setup**
+3. تنظیمات ساخت را دقیقاً این‌طور بگذار:
+   - **Project name:** `vortexgear`
+   - **Production branch:** `main`
+   - **Framework preset:** `None`
+   - **Build command:** خالی بگذار
+   - **Build output directory:** `public`
+4. **Save and Deploy** → چند ثانیه بعد سایت روی `https://vortexgear.pages.dev` بالا می‌آید.
 
-### روش ۲ — دیپلوی خودکار با Wrangler (خط فرمان)
-```bash
-export CLOUDFLARE_API_TOKEN="توکن اختصاصی"
-export CLOUDFLARE_ACCOUNT_ID="آی‌دی اکانت"
-cd vortex-site && bash deploy.sh
-npx wrangler@4 pages deploy ../vortex-upload --project-name=vortex-gear
-```
-خروجی: یک لینک `https://<hash>.vortex-gear.pages.dev` به‌ازای هر انتشار + دامنه اصلی پروژه.
+> از این پس هر push روی `main` سایت را خودکار آپدیت می‌کند (history انتشارها در تب Deployments قابل بازگشت است).
 
-ساخت توکن: Cloudflare → **My Profile → API Tokens → Create Token → Custom token**
-با دسترسی: `Account` → `Cloudflare Pages` → **Edit**  (همین یک دسترسی کافی است — دسترسی زیاد نده)
-آی‌دی اکانت: در **Workers & Pages** سمت راست صفحه، بخش Account ID.
+### مرحله ۳ — وصل کردن دامنه vortexgear.ir
+1. اگر دامنه در اکانت Cloudflare نیست: **Add a site** → `vortexgear.ir` → پلن **Free**
+2. Cloudflare دو نیم‌سرور می‌دهد (مثل `alina.ns.cloudflare.com`) → در پنل ثبت‌کنندهٔ دامنه (ایرنیک / میهن‌وب / …) این دو را جایگزین نیم‌سرورهای قبلی کن
+3. بعد از فعال شدن دامنه: **Workers & Pages → vortexgear → Custom domains → Set up a custom domain** → `vortexgear.ir`
+   (و در صورت تمایل `www.vortexgear.ir` را هم اضافه کن — ریدایرکت خودکار ساخته می‌شود)
+4. SSL خودکار و رایگان فعال می‌شود؛ معمولاً کمتر از چند دقیقه.
 
-### روش ۳ — اتصال به گیت‌هاب (CI، برای آپدیت‌های بعدی)
-1. پروژه را در یک ریپوی گیت‌هاب بگذار
-2. Pages → **Connect to Git** → ریپو را انتخاب کن
-3. Build command را خالی بگذار و **Build output directory** را `/` (ریشه) قرار بده
-4. از این به بعد هر `git push` خودش سایت را آپدیت می‌کند
+> اگر `*.pages.dev` برای بعضی کاربران ایران باز نشود، سایت با دامنهٔ اختصاصی `vortexgear.ir` بدون مشکل کار می‌کند — این رایج‌ترین دلیل استفاده از دامنهٔ اختصاصی است.
 
-### دامنه اختصاصی
-Pages → پروژه → **Custom domains** → **Set up a custom domain**.
-اگر دامنه‌ات روی Cloudflare است، فقط یک رکورد CNAME ساخته می‌شود و SSL خودکار فعال است.
-بعد از وصل شدن دامنه، آدرس `https://vortex.example` را در سه جا با دامنه خودت عوض کن:
-تگ‌های `og:` و `canonical` در فایل‌های HTML، فایل `robots.txt` و فایل `sitemap.xml`.
+### مسیر جایگزین/اضافه: دیپلوی از GitHub Actions
+اگر نمی‌خواهی از داشبورد وصل شوی، می‌توانی با توکن Cloudflare از GitHub دیپلوی کنی:
+1. توکن بساز: Cloudflare → **My Profile → API Tokens → Create Token → Custom token**
+   با دسترسی `Account` → `Cloudflare Pages` → **Edit** (فقط همین — دسترسی بیشتر نده)
+2. در ریپو: **Settings → Secrets and variables → Actions** دو سکرت بساز:
+   `CLOUDFLARE_API_TOKEN` و `CLOUDFLARE_ACCOUNT_ID` (Account ID در سمت راست صفحه Workers & Pages)
+3. در `.github/workflows/deploy.yml` دو خط `push:` را از کامنت دربیاور
+> ⚠️ اگر از داشبورد به گیت‌هاب وصل شده‌ای، این فایل را حذف کن تا دوبار دیپلوی نشود.
+
+### چک‌لیست بعد از انتشار
+- [ ] `https://vortexgear.ir` باز می‌شود و `/shop` , `/about` , `/contact` هم کار می‌کنند
+- [ ] زبان FA/EN و سبد خرید تست شد
+- [ ] شماره واتساپ/تلگرام در `public/assets/js/products.js` با اطلاعات واقعی عوض شد
+- [ ] آدرس دامنه در تگ‌های `og:`/`canonical` و `robots.txt` و `sitemap.xml` = `https://vortexgear.ir` (انجام شده ✅)
