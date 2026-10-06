@@ -1,9 +1,9 @@
 # ==========================================================================
-# Cloudflare Pages — redirects / pretty URLs
+# VORTEX — ریدایرکت‌ها
+# نکته: آدرس‌های تمیز (/shop , /about , /contact) را فایل wrangler.jsonc با
+#       html_handling = auto-trailing-slash خودکار سرو می‌کند و نیازی به قانون
+#       اینجا ندارد. قانون rewrite داخلی باعث حلقهٔ ۳۰۷ می‌شود — اضافه نکن.
 # ==========================================================================
 
-/shop        /shop.html      200
-/about       /about.html     200
-/contact     /contact.html   200
-/faq         /contact.html#faq 301
-/instagram   https://instagram.com/vortex.gear 302
+/faq         /contact#faq             301
+/instagram   https://instagram.com/vortex.gear  302

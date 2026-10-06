@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==========================================================================
-# VORTEX — ساخت خروجی استاتیک برای Cloudflare Pages
+# VORTEX — بررسی خروجی استاتیک (public/) که روی Cloudflare منتشر می‌شود
 #   public/  همان پوشه‌ای است که به Cloudflare می‌رود (Build output directory)
 # استفاده: bash deploy.sh          → چک و خلاصه ساختار
 #          bash deploy.sh zip      → ساخت vortex-upload.zip برای آپلود دستی

@@ -135,61 +135,54 @@ config: {
 
 ---
 
-## ۹) انتشار روی Cloudflare با دامنه vortexgear.ir
+## ۹) انتشار روی Cloudflare — انجام شد ✅
 
-سایت کاملاً استاتیک است و روی **Cloudflare Pages** با پلن رایگان (پهنای باند نامحدود) بالا می‌آید.
-خروجی سایت = پوشهٔ `public/`. فایل‌های `_headers`، `_redirects` و `404.html` از قبل آماده‌اند.
+سایت **همین حالا آنلاین است**:
 
-### مرحله ۱ — ریپوی گیت‌هاب
-کد در ریپوی گیت‌هاب (شاخهٔ `main`) قرار می‌گیرد. از این به بعد هر تغییری که push شود، خودکار منتشر می‌شود.
+### 🔗 https://vortexgear.s-photography1987.workers.dev
 
-دو اسکریپت آماده در پوشهٔ `scripts/` هست که همین کارها را انجام می‌دهند:
+روش انتشار: **Cloudflare Workers + Static Assets** (هم‌خانوادهٔ Pages؛ پهنای باند نامحدود، SSL خودکار، شبکهٔ جهانی کلودفلر).
+خروجی سایت پوشهٔ `public/` است و با یک دستور منتشر می‌شود:
 
 ```bash
-# ساخت ریپو + پوش کد  (نیاز به توکن گیت‌هاب با دسترسی Contents/Administration/Workflows: Write)
-GITHUB_TOKEN=xxx bash scripts/deploy-github.sh vortex-website
-
-# ساخت پروژه Pages + انتشار فوری سایت  (نیاز به توکن کلودفلر با دسترسی Pages: Edit)
-CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=yyy bash scripts/deploy-cloudflare.sh
-
-# ست کردن سکرت‌های GitHub Actions برای دیپلوی خودکار روی هر push
-GITHUB_TOKEN=xxx REPO=owner/vortex-website CF_API_TOKEN=xxx CF_ACCOUNT_ID=yyy \
-  python3 scripts/set-gh-secrets.py
+export CLOUDFLARE_API_TOKEN="توکن"   # دسترسی: Account → Workers Scripts → Edit
+bash scripts/deploy-cloudflare.sh
 ```
 
-### مرحله ۲ — وصل کردن ریپو به Cloudflare Pages (۵ کلیک، یک‌بار برای همیشه)
-1. داشبورد Cloudflare → **Workers & Pages** → **Create** → تب **Pages** → **Connect to Git**
-2. اجازه دسترسی به گیت‌هاب بده و ریپو را انتخاب کن → **Begin setup**
-3. تنظیمات ساخت را دقیقاً این‌طور بگذار:
-   - **Project name:** `vortexgear`
-   - **Production branch:** `main`
-   - **Framework preset:** `None`
-   - **Build command:** خالی بگذار
-   - **Build output directory:** `public`
-4. **Save and Deploy** → چند ثانیه بعد سایت روی `https://vortexgear.pages.dev` بالا می‌آید.
+فایل `wrangler.jsonc` تنظیمات انتشار را نگه می‌دارد (نام پروژه، مسیر `public`، آدرس‌های تمیز، صفحهٔ ۴۰۴).
 
-> از این پس هر push روی `main` سایت را خودکار آپدیت می‌کند (history انتشارها در تب Deployments قابل بازگشت است).
+| بررسی‌شده روی سایت زنده | نتیجه |
+|---|---|
+| `/` , `/shop` , `/about` , `/contact` | ✅ ۲۰۰ (آدرس‌های تمیز بدون `.html`) |
+| صفحهٔ ۴۰۴ برندشده | ✅ |
+| هدرهای امنیتی و کش (`_headers`) | ✅ فعال |
+| فونت‌های لوکال + تصاویر | ✅ |
+| سبد خرید، مودال سایز، دوزبانه | ✅ بدون خطای کنسول |
+| HTTPS | ✅ |
 
-### مرحله ۳ — وصل کردن دامنه vortexgear.ir
-1. اگر دامنه در اکانت Cloudflare نیست: **Add a site** → `vortexgear.ir` → پلن **Free**
-2. Cloudflare دو نیم‌سرور می‌دهد (مثل `alina.ns.cloudflare.com`) → در پنل ثبت‌کنندهٔ دامنه (ایرنیک / میهن‌وب / …) این دو را جایگزین نیم‌سرورهای قبلی کن
-3. بعد از فعال شدن دامنه: **Workers & Pages → vortexgear → Custom domains → Set up a custom domain** → `vortexgear.ir`
-   (و در صورت تمایل `www.vortexgear.ir` را هم اضافه کن — ریدایرکت خودکار ساخته می‌شود)
-4. SSL خودکار و رایگان فعال می‌شود؛ معمولاً کمتر از چند دقیقه.
-
-> اگر `*.pages.dev` برای بعضی کاربران ایران باز نشود، سایت با دامنهٔ اختصاصی `vortexgear.ir` بدون مشکل کار می‌کند — این رایج‌ترین دلیل استفاده از دامنهٔ اختصاصی است.
-
-### مسیر جایگزین/اضافه: دیپلوی از GitHub Actions
-اگر نمی‌خواهی از داشبورد وصل شوی، می‌توانی با توکن Cloudflare از GitHub دیپلوی کنی:
-1. توکن بساز: Cloudflare → **My Profile → API Tokens → Create Token → Custom token**
-   با دسترسی `Account` → `Cloudflare Pages` → **Edit** (فقط همین — دسترسی بیشتر نده)
+### دیپلوی خودکار (هر push = انتشار خودکار)
+1. کد را روی ریپوی گیت‌هاب بگذار (شاخهٔ `main`)
 2. در ریپو: **Settings → Secrets and variables → Actions** دو سکرت بساز:
-   `CLOUDFLARE_API_TOKEN` و `CLOUDFLARE_ACCOUNT_ID` (Account ID در سمت راست صفحه Workers & Pages)
-3. در `.github/workflows/deploy.yml` دو خط `push:` را از کامنت دربیاور
-> ⚠️ اگر از داشبورد به گیت‌هاب وصل شده‌ای، این فایل را حذف کن تا دوبار دیپلوی نشود.
+   - `CLOUDFLARE_API_TOKEN` — توکنی با دسترسی `Account → Workers Scripts → Edit`
+   - `CLOUDFLARE_ACCOUNT_ID` — `1a8b7576fba621e1a576b5f02009560f`
+   (یا خودکار: `GITHUB_TOKEN=xxx REPO=owner/repo CF_API_TOKEN=xxx CF_ACCOUNT_ID=xxx python3 scripts/set-gh-secrets.py`)
+3. تمام — ورک‌فلوی `.github/workflows/deploy.yml` از این به بعد با هر `git push` سایت را آپدیت می‌کند.
 
-### چک‌لیست بعد از انتشار
-- [ ] `https://vortexgear.ir` باز می‌شود و `/shop` , `/about` , `/contact` هم کار می‌کنند
-- [ ] زبان FA/EN و سبد خرید تست شد
-- [ ] شماره واتساپ/تلگرام در `public/assets/js/products.js` با اطلاعات واقعی عوض شد
-- [ ] آدرس دامنه در تگ‌های `og:`/`canonical` و `robots.txt` و `sitemap.xml` = `https://vortexgear.ir` (انجام شده ✅)
+### وصل کردن دامنهٔ vortexgear.ir
+دامنه الان روی کلودفلر نیست (اکانت فعلاً `luyava.com` و `luyavan8n.com` را دارد):
+
+1. داشبورد کلودفلر → **Add a site** → `vortexgear.ir` → پلن **Free** (پلن رایگان برای این سایت کافی است)
+2. کلودفلر دو نیم‌سرور می‌دهد؛ در پنل ثبت‌کنندهٔ دامنه (ایرنیک/میهن‌وب/…) جایگزین نیم‌سرورهای فعلی کن
+3. بعد از فعال شدن دامنه: **Workers & Pages → vortexgear → Settings → Domains & Routes → Add → Custom domain** → `vortexgear.ir`
+   (و در صورت تمایل `www.vortexgear.ir` را هم اضافه کن)
+4. SSL خودکار فعال می‌شود؛ کمتر از چند دقیقه.
+
+> نکته دربارهٔ ایران: گاهی `*.workers.dev` برای بعضی کاربران داخلی فیلتر است. با دامنهٔ اختصاصی `vortexgear.ir` (که روی کلودفلر است) سایت بدون مشکل باز می‌شود — این مهم‌ترین دلیل وصل کردن دامنه است.
+
+### چک‌لیست
+- [x] سایت آنلاین و تست‌شده
+- [ ] ریپوی گیت‌هاب (شاخهٔ `main`) — مرحلهٔ بعد
+- [ ] سکرت‌های Actions برای دیپلوی خودکار
+- [ ] افزودن `vortexgear.ir` به کلودفلر + تغییر نیم‌سرورها
+- [ ] Attach کردن دامنه به پروژه در بخش Domains & Routes
+- [ ] شمارهٔ واتساپ/تلگرام واقعی در `public/assets/js/products.js`
