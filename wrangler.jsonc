@@ -16,11 +16,11 @@
     "directory": "./public",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
-    "run_worker_first": false        // فایل‌های استاتیک مستقیم از CDN؛ فقط /api/* به Worker می‌رسد
+    "run_worker_first": true      // تا ریدایرکت www→apex و مسیرهای /api/* همیشه اول اجرا شوند        // فایل‌های استاتیک مستقیم از CDN؛ فقط /api/* به Worker می‌رسد
   },
   "observability": { "enabled": true },
   "vars": {
-    "SHOP_URL": "https://vortexgear.s-photography1987.workers.dev"
+    "SHOP_URL": "https://vortexgear.ir"
   }
   // 🔐 سکرت‌ها (رمزنگاری‌شده، در فایل ذخیره نمی‌شوند):
   //    wrangler secret put BOT_TOKEN          → توکن بات از @BotFather
