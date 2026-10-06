@@ -8,3 +8,4 @@ node_modules/
 vortex-upload.zip
 scripts/__pycache__/
 *.pyc
+.dev.vars

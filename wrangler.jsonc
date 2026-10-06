@@ -1,12 +1,21 @@
 {
-  // VORTEX — انتشار سایت استاتیک روی Cloudflare Workers (Static Assets)
+  // VORTEX — سایت + اندپوینت سفارش تلگرام روی Cloudflare Workers
   "name": "vortexgear",
-  "compatibility_date": "2026-10-06",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-05-03",
   "assets": {
+    "binding": "ASSETS",
     "directory": "./public",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
-    "run_worker_first": false
+    "run_worker_first": false        // فایل‌های استاتیک مستقیم از CDN؛ فقط /api/* به Worker می‌رسد
   },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "vars": {
+    "SHOP_URL": "https://vortexgear.s-photography1987.workers.dev"
+  }
+  // 🔐 سکرت‌ها (رمزنگاری‌شده، در فایل ذخیره نمی‌شوند):
+  //    wrangler secret put BOT_TOKEN          → توکن بات از @BotFather
+  //    wrangler secret put OWNER_CHAT_ID      → چت/کانال دریافت سفارش‌ها (با /id در بات پیدا می‌شود)
+  //    wrangler secret put WEBHOOK_SECRET     → یک رشته تصادفی برای امنیت وب‌هوک
 }

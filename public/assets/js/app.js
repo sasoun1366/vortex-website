@@ -35,7 +35,8 @@ const ICON = {
 const state = {
   lang: window.VORTEX_LANG,
   filter: "all",
-  cart: []
+  cart: [],
+  orderDone: null      // کد سفارش پس از ثبت موفق — تا پنل موفقیت نمایش داده شود
 };
 
 try { state.cart = JSON.parse(localStorage.getItem("vx-cart") || "[]") || []; } catch (e) { state.cart = []; }
@@ -233,6 +234,18 @@ function setLang(lang) {
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
 
+  /* داخل تلگرام: تمام‌صفحه، پیش‌پر کردن نام کاربر */
+  const tg = TG_APP();
+  if (tg) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    const u = tgUser();
+    if (u) {
+      const b = getBuyer();
+      if (!b.name) setBuyer("name", [u.first_name, u.last_name].filter(Boolean).join(" "));
+      if (!b.tg)   setBuyer("tg", u.username ? "@" + u.username : String(u.id));
+    }
+  }
+
   renderChrome();
   applyI18n();
   renderCart();
@@ -392,6 +405,7 @@ function openProduct(id) {
 
 /* ---------- cart --------------------------------------------------------- */
 function addToCart(id, size, qty) {
+  state.orderDone = null;      // شروع سبد جدید → پنل موفقیت بسته می‌شود
   const found = state.cart.find(i => i.id === id && i.size === size);
   if (found) found.qty = Math.min(20, found.qty + qty);
   else state.cart.push({ id, size, qty });
@@ -399,6 +413,7 @@ function addToCart(id, size, qty) {
 }
 
 function setQty(idx, qty) {
+  state.orderDone = null;
   if (qty <= 0) state.cart.splice(idx, 1);
   else state.cart[idx].qty = Math.min(20, qty);
   saveCart(); renderCart();
@@ -412,6 +427,13 @@ function renderCart() {
 
   const body = $("#drawer-body"), foot = $("#drawer-foot");
   if (!body) return;
+
+  /* سفارش تازه ثبت شده → پنل موفقیت */
+  if (state.orderDone) {
+    body.innerHTML = orderSuccessHtml(state.orderDone);
+    foot.innerHTML = "";
+    return;
+  }
 
   if (!state.cart.length) {
     body.innerHTML = `<div class="empty">
@@ -483,15 +505,79 @@ function renderCart() {
     window.open(`https://wa.me/${VORTEX.config.whatsapp}?text=${encodeURIComponent(orderText())}`, "_blank", "noopener");
   });
   $("#checkout-tg").addEventListener("click", async () => {
-    await copyText(orderText());
-    toast(t("toast_copied"));
-    window.open(`https://t.me/${VORTEX.config.telegram}`, "_blank", "noopener");
+    const btn = $("#checkout-tg");
+    const html = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = `${ICON.tg} ${t("order_sending")}`;
+    try {
+      const code = await submitOrder();
+      showOrderSuccess(code);
+      toast(t("order_ok_toast"));
+    } catch (e) {
+      btn.disabled = false; btn.innerHTML = html;
+      showOrderFallback();     // اگر سرور در دسترس نبود: متن کپی + باز شدن بات
+    }
   });
   $("#copy-order").addEventListener("click", async () => { await copyText(orderText()); toast(t("toast_copied")); });
-  $("#cart-clear").addEventListener("click", () => { state.cart = []; saveCart(); renderCart(); toast(t("toast_cleared")); });
+  $("#cart-clear").addEventListener("click", () => { state.cart = []; state.orderDone = null; saveCart(); renderCart(); toast(t("toast_cleared")); });
   [["by-name","name"],["by-phone","phone"],["by-addr","addr"]].forEach(([id,k]) => {
     const el = $("#" + id); if (el) el.addEventListener("input", () => setBuyer(k, el.value));
   });
+}
+
+/* ---------- Telegram Mini App helpers ------------------------------------ */
+const TG_APP  = () => (window.Telegram && window.Telegram.WebApp) || null;
+const tgInit  = () => { const a = TG_APP(); return a && a.initData ? a.initData : ""; };
+const tgUser  = () => { const a = TG_APP(); return a && a.initDataUnsafe ? a.initDataUnsafe.user : null; };
+
+/* ---------- ثبت سفارش در بات تلگرام (از طریق Cloudflare Worker) ---------- */
+async function submitOrder() {
+  const items = state.cart.map(i => {
+    const p = productById(i.id);
+    return { id: i.id, name: pick(p.name, state.lang), size: i.size || "", qty: i.qty, price: p.price };
+  });
+  const sub = cartSubtotal(), ship = shippingFor(sub);
+  const res = await fetch("api/order", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      lang: state.lang, items,
+      totals: { sub, ship, total: sub + ship },
+      buyer: getBuyer(),
+      initData: tgInit()
+    })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) throw new Error(data.error || "order_failed");
+  return data.code;
+}
+
+function orderSuccessHtml(code) {
+  const botUrl = `https://t.me/${VORTEX.config.telegram}`;
+  return `
+    <div class="empty" style="padding:2.2rem 1rem">
+      <div style="width:64px;height:64px;margin:0 auto 1.1rem;display:grid;place-items:center;border:1px solid var(--olive);color:var(--olive)">${ICON.check}</div>
+      <h3 style="color:var(--text);font-size:1.15rem">${t("order_ok_title")}</h3>
+      <p style="margin-top:.6rem;font-size:.86rem">${t("order_ok_body")}</p>
+      <div style="margin:1.2rem auto 0;padding:.7rem 1rem;border:1px dashed var(--line-strong);width:fit-content">
+        <span class="field-label">${t("order_ok_code")}</span>
+        <div style="font-family:var(--font-display);font-size:1.25rem;letter-spacing:.08em;color:var(--olive-200)">${code}</div>
+      </div>
+      <div style="display:grid;gap:.6rem;margin-top:1.4rem">
+        <a class="btn btn--block" href="${botUrl}" target="_blank" rel="noopener">${ICON.tg} ${t("order_ok_bot")}</a>
+        <a class="btn btn--block btn--ghost btn--sm" href="shop.html">${t("order_ok_shop")}</a>
+      </div>
+    </div>`;
+}
+
+function showOrderSuccess(code) {
+  state.orderDone = code;
+  state.cart = []; saveCart();
+  renderCart();          // حالا renderCart خودش پنل موفقیت را می‌سازد
+}
+
+function showOrderFallback() {
+  copyText(orderText()).then(() => toast(t("order_fail")));
+  window.open(`https://t.me/${VORTEX.config.telegram}`, "_blank", "noopener");
 }
 
 /* ---------- buyer details (optional, remembered) ------------------------- */
@@ -579,6 +665,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+
+  /* داخل تلگرام: تمام‌صفحه، پیش‌پر کردن نام کاربر */
+  const tg = TG_APP();
+  if (tg) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    const u = tgUser();
+    if (u) {
+      const b = getBuyer();
+      if (!b.name) setBuyer("name", [u.first_name, u.last_name].filter(Boolean).join(" "));
+      if (!b.tg)   setBuyer("tg", u.username ? "@" + u.username : String(u.id));
+    }
+  }
 
   renderChrome();
   applyI18n();
