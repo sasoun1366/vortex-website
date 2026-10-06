@@ -3,13 +3,6 @@
   "card": "",
   "cardName": ""
  },
- "stock": {
-  "tee": {
-   "M": 0
-  },
-  "crop": {
-   "*": 0
-  }
- },
+ "stock": {},
  "orders": {}
 }
