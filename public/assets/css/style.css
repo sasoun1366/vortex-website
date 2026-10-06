@@ -1140,3 +1140,95 @@ html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:vx-la
   .show3d canvas{cursor:default}
   .show3d-badge{animation:none}
 }
+
+/* ==========================================================================
+   حالت ساده و شیک (SIMPLE MODE)
+   سایت آرام، تمیز و کاربری‌محور: بدون انیمیشن تزئینی، بدون افکت موس،
+   با تمرکز روی خوانایی و راحتی خرید. همهٔ افکت‌ها اینجا خنثی می‌شوند.
+   ========================================================================== */
+
+/* ۱) خاموش‌کردن همهٔ انیمیشن‌های تزئینی */
+*, *::before, *::after { animation: none !important; }
+
+/* ۲) هیچ محتوایی پنهان نمی‌ماند (ریویل‌ها حذف شده‌اند) */
+.reveal, .reveal.in { opacity: 1 !important; transform: none !important; visibility: visible !important; }
+
+/* ۳) اجزای حذف‌شده — اگر جایی باقی مانده باشند */
+.vx-rail, #vx-progress, .hero-orb, #vortex-canvas, #vortex-3d, .hero-3d,
+.show3d, .drop-meter, .rot-badge, .hero-cue, .scroll-cue, .marquee,
+#vx-loader, .gal-zoom, .vx-lightbox, .vx-burst, .num-kicker, .hatch-live { display: none !important; }
+
+/* ۴) افکت‌های تزئینی کارت‌ها → حذف */
+.card::before, .cat-card::before, .btn::after,
+.card-media::before, .card-media::after { display: none !important; }
+.card:hover, .cat-card:hover, .btn:hover { transform: none !important; }
+.card:hover .card-media img, .card:hover .badge, .cat-card:hover img { transform: none !important; animation: none !important; }
+.card:hover { border-color: var(--olive-600, var(--line-strong)) !important; }
+.spot-media:hover img { transform: scale(1.02) !important; }
+
+/* ۵) کارت‌ها: ساده، خوانا، با دکمهٔ خرید واضح */
+.card { box-shadow: none !important; background: var(--bg-soft, #101208); }
+.card-body { padding: 1.1rem 1.1rem 1.2rem; display: grid; gap: .55rem; }
+.card-title { font-size: 1rem; line-height: 1.5; }
+.card-cat { font-size: .7rem; letter-spacing: .12em; color: var(--muted); }
+.card-foot { margin-top: .1rem; display: flex; align-items: baseline; justify-content: space-between; }
+.card .price b { font-size: 1.02rem; }
+.card .add-btn { display: flex; align-items: center; justify-content: center; gap: .45rem;
+  width: 100%; margin-top: .5rem; padding: .72rem 1rem; font-size: .86rem; }
+.card .add-btn svg { width: 16px; height: 16px; }
+.card-media { display: block; position: relative; overflow: hidden; }
+.card-media img { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; display: block; }
+
+/* ۶) فاصله‌گذاری سخاوتمندانه و تیپوگرافی آرام‌تر */
+.section { padding-block: clamp(3rem, 6.5vw, 5.5rem) !important; }
+.section-head { max-width: 46rem; }
+.section-head--left { text-align: start; margin-inline: 0; }
+.section-head h2 { font-size: clamp(1.5rem, 3.1vw, 2.15rem); letter-spacing: 0; }
+.section-head p { color: var(--muted); margin-top: .6rem; }
+.eyebrow { color: var(--olive-300); }
+
+/* ۷) هیرو: عکس + متن، بدون شلوغی */
+.hero { min-height: min(78vh, 620px); }
+.hero::after { background: linear-gradient(180deg, rgba(8,9,6,.72) 0%, rgba(8,9,6,.6) 45%, rgba(8,9,6,.95) 100%) !important; }
+.hero-inner { padding-block: clamp(2.6rem, 6vw, 4.6rem); }
+.hero h1 { font-size: clamp(1.9rem, 5vw, 3.3rem); line-height: 1.28; }
+.hero h1 em { font-style: normal; color: var(--olive-200); }
+.hero h1 em::after { display: none !important; }
+.hero-lead { max-width: 40rem; color: #cfd4c2; }
+.hero-cta { margin-top: 1.6rem; gap: .7rem; }
+.hero-stats { margin-top: 2.2rem; border-top: 1px solid var(--line-soft); padding-top: 1.2rem; }
+.hero-stats strong { font-size: 1.15rem; }
+.hero-stats span { font-size: .76rem; }
+
+/* ۸) بخش «سفارش در ۳ قدم» */
+.howto { background: #0c0e09; border-block: 1px solid var(--line-soft); }
+.steps { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1rem;
+  grid-template-columns: repeat(3, 1fr); }
+.steps li { border: 1px solid var(--line-strong); background: #0f1209; padding: 1.4rem 1.3rem; }
+.step-n { display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: .9rem;
+  border: 1px solid var(--olive); color: var(--olive-200); font-family: var(--font-display); font-size: .95rem; }
+.steps h3 { font-size: 1.02rem; margin-bottom: .45rem; }
+.steps p { font-size: .84rem; color: var(--muted); line-height: 1.85; }
+.howto-cta { margin-top: 1.8rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.howto-note { font-size: .78rem; color: var(--muted); }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+
+/* ۹) بخش‌های محتوایی: ساده و بدون حاشیهٔ اضافه */
+.spot { gap: 2rem; }
+.spot-facts { gap: 1.4rem; }
+.cat-card img, .gal img { transition: none !important; }
+.gal .cap { opacity: 1 !important; transform: none !important; }
+.quotes { gap: 1rem; }
+.quote { border: 1px solid var(--line-soft); background: #0f1209; }
+.why-grid .card--soon, .card--soon { min-height: 0; }
+
+/* ۱۰) کشو سبد و فرم‌ها: ترنزیشن‌های کوتاه و مفید می‌مانند */
+.drawer, .overlay, .modal, #to-top, #vx-sticky { transition-duration: .22s !important; }
+.btn, .card, .chip, a { transition-duration: .16s !important; }
+
+/* ۱۱) موبایل: خوانایی و لمس راحت‌تر */
+@media (max-width: 620px) {
+  .section { padding-block: 2.6rem !important; }
+  .card .add-btn { padding: .8rem 1rem; font-size: .9rem; }
+  .hero-stats { gap: 1rem 1.4rem; }
+}

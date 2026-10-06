@@ -7,6 +7,14 @@ const I18N = {
   fa: {
     /* header */
     nav_home: "خانه", nav_shop: "فروشگاه", nav_about: "درباره ما", nav_contact: "تماس",
+    ord_kick: "راهنمای خرید",
+    ord_title: "سفارش در ۳ قدم ساده",
+    ord_lead: "بدون ثبت‌نام، بدون درگاه پرداخت. همان‌طور که در اینستاگرام دایرکت می‌دهی، اینجا هم سفارش را مستقیم به ما می‌فرستی.",
+    ord_1t: "محصول را انتخاب کن", ord_1d: "از فروشگاه، محصول و سایزت را بزن و به سبد اضافه کن.",
+    ord_2t: "سبد را باز کن", ord_2d: "تعدادها را چک کن و اگر خواستی نام و شماره‌ات را بنویس.",
+    ord_3t: "ثبت سفارش", ord_3d: "سفارش مستقیم به تلگرام یا واتساپ ما می‌رسد؛ موجودی و ارسال را تأیید می‌کنیم.",
+    ord_cta: "رفتن به فروشگاه",
+    ord_note: "پشتیبانی ۲۴ ساعته · ارسال به سراسر ایران",
     rail_3d: "سه‌بعدی",
     s3_title: "تجهیزات را ۳بعدی بچرخان",
     s3_lead: "دمبل، کتل‌بل و صفحهٔ وزنهٔ ورتکس را با انگشت یا موس بچرخان — همان حسِ تجهیزات واقعی، بدون نصب هیچ برنامه‌ای.",
@@ -156,6 +164,14 @@ const I18N = {
   },
 
   en: {
+    ord_kick: "How to order",
+    ord_title: "Order in 3 simple steps",
+    ord_lead: "No sign-up, no payment gateway. Just like sending a DM on Instagram, your order goes straight to us.",
+    ord_1t: "Pick your product", ord_1d: "Choose the item and size in the shop and add it to your cart.",
+    ord_2t: "Open your cart", ord_2d: "Check quantities and add your name and phone if you like.",
+    ord_3t: "Send the order", ord_3d: "It lands in our Telegram or WhatsApp; we confirm stock and shipping.",
+    ord_cta: "Go to the shop",
+    ord_note: "24h support · nationwide shipping",
     rail_3d: "3D",
     s3_title: "Spin the gear in 3D",
     s3_lead: "Grab the dumbbell, kettlebell and weight plate and rotate them with your finger or mouse — the real feel of Vortex gear, no app needed.",
