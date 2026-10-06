@@ -1,5 +1,11 @@
 {
- "cfg": {},
+ "cfg": {
+  "passHash": {
+   "salt": "d7271ac1316b258bb0b00d16c9e08104",
+   "hash": "6dba0b2cb9e9c74345a76d83095bc64bb718a7e21f15feecdd3b1172445039bb",
+   "iters": 60000
+  }
+ },
  "texts": {
   "fa": {},
   "en": {}
@@ -23,5 +29,5 @@
   ],
   "hidden": []
  },
- "updated": 1791302814957
+ "updated": 1791302896302
 }
