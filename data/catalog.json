@@ -5,7 +5,10 @@
  "draft": null,
  "overrides": {
   "vx-chalk-001": {
-   "price": 550000
+   "price": 550000,
+   "name": {
+    "fa": "گچ مایع"
+   }
   }
  },
  "hidden": []
