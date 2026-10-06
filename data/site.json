@@ -14,8 +14,8 @@
   "addressFa": "ایران — ارسال به سراسر کشور",
   "addressEn": "Iran — shipping nationwide",
   "passHash": {
-   "salt": "acac565c259ee80d2686b6b0698fe792",
-   "hash": "00c3c8ee228a44646a532d5f54d3277bbbcb141a8ec2c3534628da9b9c536dc8"
+   "salt": "6389212bff192bc13df8c781c6a3f567",
+   "hash": "b9752b66e6ddd92cd3db16aa7241eea75a054ba637ff5def7ea905319e71bbd5"
   }
  },
  "texts": {
@@ -41,5 +41,5 @@
   ],
   "hidden": []
  },
- "updated": 1791303005335
+ "updated": 1791303014936
 }
