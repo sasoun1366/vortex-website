@@ -22,7 +22,9 @@
   "fa": {},
   "en": {}
  },
- "images": {},
+ "images": {
+  "gal5": "media/site/gal5.png?v=muwyt9hk"
+ },
  "theme": {
   "accent": "#7C8C4B",
   "bg": "#0A0B08"
@@ -41,5 +43,5 @@
   ],
   "hidden": []
  },
- "updated": 1791308440586
+ "updated": 1791308471957
 }
