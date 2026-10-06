@@ -52,7 +52,8 @@
    "status": "new",
    "tracking": "",
    "photoFileId": "",
-   "ownerMsgId": 18
+   "ownerMsgId": 18,
+   "chatId": 999000111
   }
  }
 }
