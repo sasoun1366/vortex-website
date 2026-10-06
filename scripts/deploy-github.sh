@@ -29,6 +29,10 @@ if [ "$CODE" = "201" ]; then
   echo "✅ ریپو ساخته شد: https://github.com/${OWNER}/${REPO_NAME}"
 elif [ "$CODE" = "422" ]; then
   echo "ℹ️  ریپو از قبل وجود دارد — ادامه می‌دهیم"
+elif [ "$CODE" = "403" ]; then
+  echo "⚠️  توکن اجازهٔ ساخت ریپو ندارد (Administration: Read and write لازم است)."
+  echo "   راه ساده: ریپوی خالی را دستی بساز — https://github.com/new  (نام: ${REPO_NAME}، بدون README)"
+  echo "   سپس همین اسکریپت را دوباره اجرا کن؛ فقط پوش انجام می‌شود."
 else
   echo "⚠️  پاسخ ساخت ریپو ($CODE):"; head -c 400 /tmp/vx-repo.json; echo
 fi
