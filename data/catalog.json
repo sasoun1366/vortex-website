@@ -2,5 +2,7 @@
  "products": [],
  "soon": [],
  "cfg": {},
- "draft": null
+ "draft": null,
+ "overrides": {},
+ "hidden": []
 }
