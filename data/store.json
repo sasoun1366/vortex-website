@@ -61,36 +61,6 @@
    "photoFileId": "",
    "ownerMsgId": 44,
    "chatId": 5034689859
-  },
-  "VX-261006-7426": {
-   "code": "VX-261006-7426",
-   "ts": 1791288161872,
-   "lang": "fa",
-   "items": [
-    {
-     "id": "vx-crop-001",
-     "name": "کراپ ورتکس Season 01",
-     "size": "M",
-     "qty": 1,
-     "price": 1250000
-    }
-   ],
-   "totals": {
-    "sub": 1250000,
-    "ship": 180000,
-    "total": 1430000
-   },
-   "buyer": {},
-   "note": "",
-   "tgUser": {
-    "username": "",
-    "first_name": ""
-   },
-   "status": "new",
-   "tracking": "",
-   "photoFileId": "",
-   "ownerMsgId": 48,
-   "chatId": 5034689859
   }
  }
 }
