@@ -12,6 +12,7 @@ import { paymentMessage, addressRequestMessage, parseAddressBlock, addressSummar
          ownerStockReport, statusFa, statusEn, resolveCfg, maskedCard } from "./flow.js";
 import { readCatalog, toSite, MEDIA_DIR, applyOverride } from "./catalog.js";
 import { admMessage, admCallback, admStart, productList, adminText, PRODUCT_HELP } from "./product.js";
+import { handleAdmin } from "./admin.js";
 
 const TG = (env) => `${env.TELEGRAM_API_BASE || "https://api.telegram.org"}/bot${env.BOT_TOKEN}`;
 const FA = new Intl.NumberFormat("fa-IR");
@@ -250,10 +251,20 @@ async function handleOrder(request, env) {
    می‌شود؛ این مسیر همان فایل را با کش طولانی تحویل می‌دهد. */
 async function handleMedia(env, url) {
   const file = url.pathname.replace(/^\/media\//, "");
-  if (!/^[A-Za-z0-9._-]{1,80}$/.test(file)) return new Response("bad request", { status: 400 });
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,60}(\/[A-Za-z0-9][A-Za-z0-9._-]{0,40})?$/.test(file)) {
+    return new Response("bad request", { status: 400 });
+  }
+  const parts = file.split("/");
+  /* site/<slot>.<ext> → media/site/…  |  <id>.<ext> یا products/<id>.<ext> → media/products/… */
+  let repoPath;
+  if (parts.length === 2 && parts[0] === "site") repoPath = `media/site/${parts[1]}`;
+  else if (parts.length === 2 && parts[0] === "products") repoPath = `media/products/${parts[1]}`;
+  else repoPath = `media/products/${parts[0]}`;
+
   const ext = (file.split(".").pop() || "").toLowerCase();
-  const type = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
-  const raw = `https://raw.githubusercontent.com/sasoun1366/vortex-website/main/${MEDIA_DIR}/${file}`;
+  const type = ext === "png" ? "image/png" : ext === "webp" ? "image/webp"
+    : ext === "svg" ? "image/svg+xml" : ext === "avif" ? "image/avif" : "image/jpeg";
+  const raw = `https://raw.githubusercontent.com/sasoun1366/vortex-website/main/${repoPath}`;
   const r = await fetch(raw, { cf: { cacheEverything: true, cacheTtl: 86400 } });
   if (!r.ok) return new Response("not found", { status: 404 });
   return new Response(r.body, {
@@ -588,6 +599,10 @@ export default {
 
     const wwwJump = redirectWww(url);
     if (wwwJump) return wwwJump;
+
+    /* پنل مدیریت + api/site (متن‌ها، تصاویر، ظاهر، سفارش‌ها، محصولات) */
+    const adminResp = await handleAdmin(request, env, url);
+    if (adminResp) return adminResp;
 
     if (url.pathname === "/api/order") {
       if (request.method === "OPTIONS") return json({ ok: true });

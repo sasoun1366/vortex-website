@@ -79,7 +79,7 @@ function renderChrome() {
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="index.html" aria-label="Vortex">
-          <img src="assets/img/logo.svg" alt="Vortex" width="34" height="34" style="width:34px;height:34px">
+          <img src="assets/img/logo.svg" data-slot="logo" alt="Vortex" width="34" height="34" style="width:34px;height:34px">
           <span>
             <span class="brand-word">Vortex</span>
             <span class="brand-sub">${pick(VORTEX.config.brandTag, state.lang)}</span>
@@ -111,7 +111,7 @@ function renderChrome() {
         <div class="footer-grid">
           <div class="footer-about">
             <a class="brand" href="index.html">
-              <img src="assets/img/logo.svg" alt="Vortex" width="34" height="34" style="width:34px;height:34px">
+              <img src="assets/img/logo.svg" data-slot="logo" alt="Vortex" width="34" height="34" style="width:34px;height:34px">
               <span><span class="brand-word">Vortex</span>
               <span class="brand-sub">${pick(VORTEX.config.brandTag, state.lang)}</span></span>
             </a>
@@ -258,6 +258,8 @@ function setLang(lang) {
 
 function applyI18n() {
   $$("[data-i18n]").forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  /* عناصری که متن‌شان HTML دارد (مثل عنوان بزرگ صفحهٔ اول) */
+  $$("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
   $$("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
 }
 
@@ -946,8 +948,12 @@ try { window.UI = UI; window.FX = UI; } catch (e) {}
 
 
 /* ---------- boot -------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   document.documentElement.lang = state.lang;
+
+  /* تنظیمات پنل مدیریت: متن‌ها، رنگ، تماس‌ها → قبل از رندر */
+  try { if (window.VXSite) { await VXSite.load(); VXSite.apply(); } } catch (e) {}
+
   document.documentElement.dir = RTL.includes(state.lang) ? "rtl" : "ltr";
   if (document.body.dataset.page) {
     const tt = document.body.dataset["title" + (state.lang === "fa" ? "Fa" : "En")];
@@ -981,6 +987,8 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
   observeReveal();
   UI.init();
+  /* تصاویر و چیدمان بخش‌ها (بعد از ساخته‌شدن هدر/فوتر) */
+  try { if (window.VXSite) VXSite.after(); } catch (e) {}
   loadCatalog().then(changed => {
     if (changed) refreshCatalogUI();
     loadStock();

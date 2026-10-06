@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>پنل مدیریت — VORTEX</title>
+<link rel="icon" href="/assets/img/logo.svg">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="brand"><span class="mark">V</span><span>VORTEX</span></div>
+  <span class="sub">پنل مدیریت سایت</span>
+  <span class="sp"></span>
+  <a class="btn btn--ghost btn--sm" href="/" target="_blank" rel="noopener">🌐 مشاهدهٔ سایت</a>
+  <button class="btn btn--ghost btn--sm hidden" id="logout">خروج</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ورود -->
+  <div class="login" id="login">
+    <div class="brand" style="display:flex;align-items:center;gap:10px;color:var(--accent)">
+      <span class="mark" style="width:34px;height:34px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center">V</span>
+      <b>VORTEX</b>
+    </div>
+    <h1>ورود به پنل مدیریت</h1>
+    <p>این پنل فقط برای صاحب فروشگاه است. رمز را وارد کن.</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="pw">رمز ورود</label>
+        <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <div class="err" id="login-err"></div>
+      <button class="btn btn--primary" type="submit" id="login-btn" style="width:100%;justify-content:center">ورود</button>
+    </form>
+  </div>
+
+  <!-- پنل -->
+  <div id="panel" class="hidden">
+    <div class="tabs" id="tabs"></div>
+    <div id="view"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/admin.js"></script>
+</body>
+</html>

@@ -32,12 +32,12 @@
 </div>
 <div id="site-header"></div>
 
-<main>
+<main data-sections>
 
   <!-- ==================== HERO ==================== -->
   <section class="hero" id="top">
     <div class="hero-media">
-      <img src="assets/img/hero.jpg" alt="تی‌شرت تمرین ورتکس روی دیوار بتنی" fetchpriority="high">
+      <img src="assets/img/hero.jpg" data-slot="hero" alt="تی‌شرت تمرین ورتکس روی دیوار بتنی" fetchpriority="high">
     </div>
     <div class="container hero-inner">
       <span class="eyebrow" data-i18n="hero_eyebrow">ساخته‌شده برای شدت</span>
@@ -56,7 +56,7 @@
 
 
   <!-- ==================== WHY ==================== -->
-  <section class="section section--amb" id="why">
+  <section class="section section--amb" id="why" data-section="why">
     <div class="container">
       <div class="section-head ">
         <span class="eyebrow" data-i18n="kick_why">مزیت‌های ورتکس</span>
@@ -89,7 +89,7 @@
   </section>
 
   <!-- ==================== CATEGORIES ==================== -->
-  <section class="section" id="cats" style="padding-top:0">
+  <section class="section" id="cats" data-section="cats" style="padding-top:0">
     <div class="container">
       <div class="section-head ">
         <span class="eyebrow" data-i18n="kick_cat">دسته‌بندی محصولات</span>
@@ -98,7 +98,7 @@
       </div>
       <div class="grid grid--3">
         <a class="cat-card " href="shop.html?cat=apparel">
-          <img src="assets/img/tee.jpg" alt="پوشاک ورتکس" loading="lazy">
+          <img src="assets/img/tee.jpg" data-slot="cat_apparel" alt="پوشاک ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_apparel_t">پوشاک</h3>
             <p data-i18n="cat_apparel_d">تی‌شرت، کراپ و لایه‌های تمرینی</p>
@@ -106,7 +106,7 @@
           </div>
         </a>
         <a class="cat-card " href="shop.html?cat=accessory">
-          <img src="assets/img/keychain.jpg" alt="اکسسوری ورتکس" loading="lazy">
+          <img src="assets/img/keychain.jpg" data-slot="cat_accessory" alt="اکسسوری ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_accessory_t">اکسسوری</h3>
             <p data-i18n="cat_accessory_d">جاکلیدی، بند و جزئیات برند</p>
@@ -114,7 +114,7 @@
           </div>
         </a>
         <a class="cat-card " href="shop.html?cat=gear">
-          <img src="assets/img/wrist-wraps.jpg" alt="تجهیزات تمرین ورتکس" loading="lazy">
+          <img src="assets/img/wrist-wraps.jpg" data-slot="cat_gear" alt="تجهیزات تمرین ورتکس" loading="lazy">
           <div class="cat-inner">
             <h3 class="display" data-i18n="cat_gear_t">تجهیزات تمرین</h3>
             <p data-i18n="cat_gear_d">مچ‌بند، گچ مایع و ابزار باکس</p>
@@ -126,7 +126,7 @@
   </section>
 
   <!-- ==================== FEATURED ==================== -->
-  <section class="section" id="shop" style="padding-top:0">
+  <section class="section" id="shop" data-section="shop" style="padding-top:0">
     <div class="container">
       <div class="section-head " style="display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;max-width:none;flex-wrap:wrap">
         <div style="max-width:56ch">
@@ -142,13 +142,13 @@
 
 
   <!-- ==================== DROP SPOTLIGHT ==================== -->
-  <section class="section" id="drop" style="padding-top:0">
+  <section class="section" id="drop" data-section="drop" style="padding-top:0">
     <div class="container">
       <div class="num-kicker"><span>01 / DROP</span></div>
       <div class="spot" style="margin-top:1.6rem">
         <div class="spot-media mask-img">
           <span class="stamp">SEASON 01 · ISSUE No.6</span>
-          <img src="assets/img/crop-tee.jpg" alt="تی‌شرت کراپ ورتکس — Season 01 Issue No.6" loading="lazy" >
+          <img src="assets/img/crop-tee.jpg" data-slot="drop" alt="تی‌شرت کراپ ورتکس — Season 01 Issue No.6" loading="lazy" >
         </div>
         <div class="spot-body">
           <span class="eyebrow" data-i18n="drop_kicker">دراپ فصل ۰۱</span>
@@ -167,11 +167,11 @@
 
 
   <!-- ==================== STORY ==================== -->
-  <section class="section" id="story" style="padding-top:0">
+  <section class="section" id="story" data-section="story" style="padding-top:0">
     <div class="container">
       <div class="split">
         <div class="split-media ">
-          <img src="assets/img/crop-tee.jpg" alt="تی‌شرت کراپ ورتکس — Season 01 / Issue No.6" loading="lazy">
+          <img src="assets/img/crop-tee.jpg" data-slot="story" alt="تی‌شرت کراپ ورتکس — Season 01 / Issue No.6" loading="lazy">
           <div class="tag">
             <span>SEASON 01 · ISSUE No.6</span>
             <small>Vortex drop</small>
@@ -194,7 +194,7 @@
   </section>
 
   <!-- ==================== HOW TO ORDER ==================== -->
-  <section class="section howto" id="howto">
+  <section class="section howto" id="howto" data-section="howto">
     <div class="container">
       <div class="section-head section-head--left">
         <span class="eyebrow" data-i18n="ord_kick">راهنمای خرید</span>
@@ -226,7 +226,7 @@
   </section>
 
   <!-- ==================== SOON ==================== -->
-  <section class="section" id="soon">
+  <section class="section" id="soon" data-section="soon">
     <div class="container">
       <div class="section-head section-head--left">
         <span class="eyebrow" data-i18n="kick_soon">در راه است</span>
@@ -237,7 +237,7 @@
   </section>
 
   <!-- ==================== GALLERY ==================== -->
-  <section class="section" id="gallery" style="padding-top:0">
+  <section class="section" id="gallery" data-section="gallery" style="padding-top:0">
     <div class="container">
       <div class="num-kicker"><span>03 / GALLERY</span></div>
       <div class="section-head" style="margin-top:1rem">
@@ -245,17 +245,17 @@
         <p data-i18n="gal_lead">تصاویر واقعی محصولات ورتکس — همان چیزی که می‌رسد دستت.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem">
-        <a class="gal" href="shop.html?cat=apparel"><img src="assets/img/tee.jpg" alt="تی‌شرت ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_1">تی‌شرت تمرین</b></span></a>
-        <a class="gal" href="shop.html?cat=apparel"><img src="assets/img/crop-tee.jpg" alt="کراپ ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_2">کراپ Season 01</b></span></a>
-        <a class="gal" href="shop.html?cat=gear"><img src="assets/img/wrist-wraps.jpg" alt="مچ‌بند ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_3">مچ‌بند تمرین</b></span></a>
-        <a class="gal" href="shop.html?cat=gear"><img src="assets/img/liquid-chalk.jpg" alt="گچ مایع ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_4">گچ مایع ۱۵۰ml</b></span></a>
-        <a class="gal" href="shop.html?cat=accessory"><img src="assets/img/keychain.jpg" alt="جاکلیدی ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_5">بند و جاکلیدی</b></span></a>
+        <a class="gal" href="shop.html?cat=apparel"><img src="assets/img/tee.jpg" data-slot="gal1" alt="تی‌شرت ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_1">تی‌شرت تمرین</b></span></a>
+        <a class="gal" href="shop.html?cat=apparel"><img src="assets/img/crop-tee.jpg" data-slot="gal2" alt="کراپ ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_2">کراپ Season 01</b></span></a>
+        <a class="gal" href="shop.html?cat=gear"><img src="assets/img/wrist-wraps.jpg" data-slot="gal3" alt="مچ‌بند ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_3">مچ‌بند تمرین</b></span></a>
+        <a class="gal" href="shop.html?cat=gear"><img src="assets/img/liquid-chalk.jpg" data-slot="gal4" alt="گچ مایع ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_4">گچ مایع ۱۵۰ml</b></span></a>
+        <a class="gal" href="shop.html?cat=accessory"><img src="assets/img/keychain.jpg" data-slot="gal5" alt="جاکلیدی ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_5">بند و جاکلیدی</b></span></a>
       </div>
     </div>
   </section>
 
   <!-- ==================== TESTIMONIALS ==================== -->
-  <section class="section" id="words" style="padding-top:0">
+  <section class="section" id="words" data-section="words" style="padding-top:0">
     <div class="container">
       <div class="num-kicker"><span>04 / WORDS</span></div>
       <div class="section-head" style="margin-top:1rem">
@@ -289,6 +289,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="assets/js/products.js"></script>
 <script src="assets/js/i18n.js"></script>
+<script src="assets/js/sitecfg.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>
