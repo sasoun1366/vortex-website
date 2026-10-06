@@ -7,6 +7,15 @@ const I18N = {
   fa: {
     /* header */
     nav_home: "خانه", nav_shop: "فروشگاه", nav_about: "درباره ما", nav_contact: "تماس",
+    rail_label: "پیمایش بخش‌ها",
+    rail_top: "شروع", rail_why: "چرا ورتکس", rail_cats: "دسته‌ها", rail_shop: "کالکشن",
+    rail_drop: "دراپ فصل ۰۱", rail_story: "داستان برند", rail_numbers: "در یک نگاه",
+    rail_gallery: "گالری", rail_words: "نظر بچه‌ها",
+    announce2: "ارسال ۲۴ ساعته از تهران · <b>پرداخت در محل</b> برای سفارش‌های داخل تهران",
+    announce3: "دراپ فصل ۰۱ با ۱۵۰ قطعه · <b>کراپ Season 01</b> موجود شد",
+    drop_meter_l: "فروش‌رفتِ این دراپ", drop_left_l: "باقی‌مانده در انبار",
+    lb_close: "بستن", lb_prev: "تصویر قبلی", lb_next: "تصویر بعدی",
+    sticky_view: "دیدن سبد", sticky_pieces: "قطعه در سبد",
     announce: "ارسال به سراسر ایران · سفارش بالای ۳٬۰۰۰٬۰۰۰ تومان <b>ارسال رایگان</b>",
     menu: "منو", close: "بستن", cart_open: "سبد خرید",
 
@@ -143,6 +152,15 @@ const I18N = {
 
   en: {
     nav_home: "Home", nav_shop: "Shop", nav_about: "About", nav_contact: "Contact",
+    rail_label: "Section navigation",
+    rail_top: "Top", rail_why: "Why Vortex", rail_cats: "Categories", rail_shop: "Collection",
+    rail_drop: "Season 01 drop", rail_story: "Brand story", rail_numbers: "At a glance",
+    rail_gallery: "Gallery", rail_words: "Reviews",
+    announce2: "24h dispatch from Tehran · <b>cash on delivery</b> inside Tehran",
+    announce3: "Season 01 drop — 150 pieces · <b>Crop Season 01</b> now live",
+    drop_meter_l: "Sold in this drop", drop_left_l: "Left in stock",
+    lb_close: "Close", lb_prev: "Previous image", lb_next: "Next image",
+    sticky_view: "View cart", sticky_pieces: "items in cart",
     announce: "Nationwide shipping across Iran · orders over 3,000,000 T <b>ship free</b>",
     menu: "Menu", close: "Close", cart_open: "Cart",
 

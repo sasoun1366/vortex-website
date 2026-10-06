@@ -978,3 +978,119 @@ html[dir="rtl"] #vx-loader .vx-load-bar i{animation-name:vx-load-slide-rtl}
 .gal:hover .gal-zoom{opacity:1;transform:none}
 .gal-zoom:hover{background:var(--olive);color:#0A0B08;border-color:var(--olive)}
 .gal-zoom svg{width:17px;height:17px}
+
+/* ==========================================================================
+   FX2 — بستهٔ جلوه‌های تازه: ریل بخش‌ها، ورود ماسک‌دار هیرو، نوار اعلان چرخان،
+         میتر دراپ، انفجار ذرات، لایت‌باکس ناوبری‌دار، نوار خرید موبایل
+   ========================================================================== */
+
+/* ---------- ریل پیمایش بخش‌ها ---------- */
+.vx-rail{position:fixed;top:50%;transform:translateY(-50%);inset-inline-start:1.1rem;z-index:70;
+  display:flex;flex-direction:column;gap:.66rem;opacity:0;transition:opacity .6s var(--ease)}
+.vx-rail.on{opacity:1}
+.vx-rail-line{position:absolute;top:.35rem;bottom:.35rem;inset-inline-start:3px;width:1px;background:var(--line-strong);z-index:-1}
+.vx-rail-line i{display:block;width:100%;height:0;background:linear-gradient(var(--olive-300),var(--olive-700))}
+.vx-rail-dot{position:relative;display:flex;align-items:center;gap:.55rem;padding-block:.1rem;text-decoration:none}
+.vx-rail-dot>i{width:7px;height:7px;border:1px solid var(--line-strong);border-radius:50%;background:var(--bg);
+  transition:background .3s var(--ease),box-shadow .3s var(--ease),transform .3s var(--ease)}
+.vx-rail-dot>span{font-size:.68rem;letter-spacing:.04em;color:var(--muted);white-space:nowrap;
+  opacity:0;transform:translateX(-7px);transition:.32s var(--ease);pointer-events:none}
+.vx-rail-dot.on>i{background:var(--olive-300);border-color:var(--olive-300);transform:scale(1.25);
+  box-shadow:0 0 0 4px rgba(124,140,75,.15)}
+.vx-rail-dot.on>span{opacity:1;transform:none;color:var(--olive-200)}
+.vx-rail:hover .vx-rail-dot>span{opacity:1;transform:none}
+html[dir="rtl"] .vx-rail-dot>span{transform:translateX(7px)}
+html[dir="rtl"] .vx-rail-dot.on>span,html[dir="rtl"] .vx-rail:hover .vx-rail-dot>span{transform:none}
+.nav a.is-current{color:var(--text)}
+.nav a.is-current::after{opacity:1}
+@media (max-width:1180px){.vx-rail{display:none}}
+
+/* ---------- ورود ماسک‌دار عنوان هیرو ---------- */
+.hero-inner.vx-hero-prep h1{clip-path:inset(0 0 102% 0)}
+.hero-inner.vx-in h1{animation:vx-hero-mask 1.05s var(--ease) .1s both}
+.hero h1 em{overflow:hidden}
+.hero-inner.vx-in .hero h1 em::before{content:"";position:absolute;top:0;bottom:0;width:38%;z-index:2;
+  background:linear-gradient(100deg,transparent,rgba(233,240,214,.5),transparent);
+  transform:translateX(-160%) skewX(-16deg);animation:vx-shine 1.25s var(--ease) 1s forwards;opacity:1}
+@keyframes vx-hero-mask{
+  from{opacity:0;transform:translateY(16px);clip-path:inset(0 0 102% 0)}
+  to{opacity:1;transform:none;clip-path:inset(0 0 -3% 0)}
+}
+
+/* ---------- نوار اعلان چرخان ---------- */
+.announce{transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.announce.vx-ann-out{opacity:0;transform:translateY(-9px)}
+.announce.vx-ann-in{animation:vx-ann-in .46s var(--ease) both}
+@keyframes vx-ann-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+
+/* ---------- میتر موجودی دراپ + شمارش معکوس ---------- */
+.drop-meter{margin-top:1.5rem;max-width:360px}
+.dm-head,.dm-foot{display:flex;align-items:center;justify-content:space-between;gap:.7rem;
+  font-size:.74rem;color:var(--muted)}
+.dm-head b{font-family:var(--font-display);font-size:1.02rem;letter-spacing:.04em;color:var(--olive-200)}
+.dm-bar{position:relative;margin:.6rem 0;height:6px;background:rgba(124,140,75,.13);
+  border:1px solid var(--line-strong);overflow:hidden}
+.dm-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--olive-700),var(--olive-300))}
+.dm-bar::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 4px,transparent 4px 9px);
+  animation:vx-hatch-slide 1.3s linear infinite}
+.dm-foot b{color:var(--text);font-weight:600}
+[data-drop-clock]{font-variant-numeric:tabular-nums}
+.drop-meter.done .dm-bar i{box-shadow:0 0 14px rgba(152,169,98,.45)}
+@media (prefers-reduced-motion:reduce){.dm-bar::after{animation:none}}
+
+/* ---------- انفجار ذرات ---------- */
+.vx-burst{position:fixed;z-index:210;width:0;height:0;pointer-events:none}
+.vx-burst span{position:absolute;width:var(--bs);height:var(--bs);border-radius:1px;background:var(--olive-300);
+  box-shadow:0 0 9px rgba(211,223,169,.45);transform:rotate(var(--br));
+  animation:vx-burst var(--bd) cubic-bezier(.18,.72,.34,1) forwards}
+.vx-burst span:nth-child(3n){background:var(--olive-700)}
+.vx-burst span:nth-child(4n){background:var(--olive-200)}
+@keyframes vx-burst{
+  0%{opacity:1;transform:translate(0,0) rotate(var(--br)) scale(.5)}
+  100%{opacity:0;transform:translate(var(--bx),var(--by)) rotate(calc(var(--br) + 240deg)) scale(1.05)}
+}
+@media (prefers-reduced-motion:reduce){.vx-burst{display:none}}
+
+/* ---------- ترسیم تیک موفقیت سفارش ---------- */
+.vx-draw path{stroke-dasharray:34;stroke-dashoffset:34;animation:vx-draw .75s var(--ease) .12s forwards}
+.vx-draw{animation:vx-celebrate .6s var(--ease) both}
+@keyframes vx-celebrate{0%{transform:scale(.6);opacity:0}55%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+
+/* ---------- لایت‌باکس: فلش‌ها و شمارنده ---------- */
+.vx-lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;z-index:2;cursor:pointer;
+  display:grid;place-items:center;border:1px solid var(--line-strong);background:rgba(10,11,8,.72);
+  color:var(--olive-200);transition:.28s var(--ease)}
+.vx-lb-nav:hover{background:var(--olive);color:#0A0B08;border-color:var(--olive)}
+.vx-lb-prev{inset-inline-start:1.1rem}
+.vx-lb-next{inset-inline-end:1.1rem}
+.vx-lb-nav svg{width:20px;height:20px}
+html[dir="rtl"] .vx-lb-nav svg{transform:scaleX(-1)}
+.vx-lb-count{position:absolute;bottom:1.15rem;inset-inline:0;text-align:center;font-family:var(--font-display);
+  font-size:.72rem;letter-spacing:.2em;color:var(--olive-200)}
+.vx-lb-img{animation:vx-lb-pop .42s var(--ease) both}
+@keyframes vx-lb-pop{from{opacity:0;transform:scale(.965)}to{opacity:1;transform:none}}
+@media (max-width:620px){.vx-lb-nav{width:40px;height:40px}.vx-lb-prev{inset-inline-start:.5rem}.vx-lb-next{inset-inline-end:.5rem}}
+
+/* ---------- نوار خرید چسبان (موبایل، صفحهٔ فروشگاه) ---------- */
+#vx-sticky{position:fixed;inset-inline:0;bottom:0;z-index:80;display:none;align-items:center;gap:.7rem;
+  padding:.6rem .9rem calc(.6rem + env(safe-area-inset-bottom, 0px));
+  background:rgba(11,13,8,.95);border-top:1px solid var(--line-strong);backdrop-filter:blur(10px);
+  transform:translateY(110%);transition:transform .42s var(--ease)}
+#vx-sticky.on{transform:none}
+#vx-sticky .vs-count{display:flex;flex-direction:column;line-height:1.15;font-size:.64rem;color:var(--muted)}
+#vx-sticky .vs-count b{font-family:var(--font-display);font-size:1.06rem;color:var(--olive-200)}
+#vx-sticky .vs-total{margin-inline-start:auto;font-size:.86rem;font-weight:600}
+#vx-sticky .btn{padding:.5rem .95rem}
+@media (max-width:860px){#vx-sticky{display:flex}}
+body.vx-sticky-on #wa-float{bottom:4.7rem}
+body.vx-sticky-on #to-top{bottom:4.7rem}
+@media (min-width:861px){body.vx-sticky-on #wa-float,body.vx-sticky-on #to-top{bottom:1.35rem}}
+
+/* ---------- روشن‌شدن نرم محتوا هنگام تغییر زبان ---------- */
+html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:vx-lang-in .44s var(--ease) both}
+@keyframes vx-lang-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:none}
+  .hero-inner.vx-hero-prep h1{clip-path:none}
+}

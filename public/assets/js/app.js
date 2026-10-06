@@ -249,7 +249,7 @@ function setLang(lang) {
   renderChrome();
   applyI18n();
   renderCart();
-  if (window.FX && FX.staggerGroups) FX.staggerGroups();
+  if (typeof FX !== "undefined" && FX.staggerGroups) FX.staggerGroups();
   FX.counters(false);
   if ($("#featured-grid")) renderFeatured("#featured-grid");
   if ($("#shop-grid")) { renderCatFilters(); renderShop(); }
@@ -413,7 +413,7 @@ function addToCart(id, size, qty, srcEl) {
   if (found) found.qty = Math.min(20, found.qty + qty);
   else state.cart.push({ id, size, qty });
   saveCart(); renderCart(); toast(t("toast_added"));
-  if (srcEl) { try { FX.flyToCart(srcEl); FX.cartBump(); } catch (e) {} }
+  if (srcEl) { try { FX.flyToCart(srcEl); FX.cartBump(); FX.cartBurst(srcEl); } catch (e) {} }
 }
 
 function setQty(idx, qty) {
@@ -428,6 +428,8 @@ function renderCart() {
   if (count) { count.textContent = new Intl.NumberFormat(state.lang === "fa" ? "fa-IR" : "en-US").format(cartCount()); count.classList.toggle("on", cartCount() > 0); }
   const dc = $("#drawer-count");
   if (dc) dc.textContent = cartCount() ? `${num(cartCount(), state.lang)} ${state.lang === "fa" ? "قطعه" : "items"}` : "";
+
+  if (typeof FX !== "undefined" && FX.stickySync) { try { FX.stickySync(); } catch (e) {} }
 
   const body = $("#drawer-body"), foot = $("#drawer-foot");
   if (!body) return;
@@ -576,6 +578,7 @@ function orderSuccessHtml(code) {
 
 function showOrderSuccess(code) {
   state.orderDone = code;
+  if (typeof FX !== "undefined" && FX.orderCelebrate) requestAnimationFrame(() => FX.orderCelebrate());
   state.cart = []; saveCart();
   renderCart();          // حالا renderCart خودش پنل موفقیت را می‌سازد
 }
@@ -668,7 +671,7 @@ function toast(msg) {
 /* ---------- reveal on scroll -------------------------------------------- */
 let io;
 function observeReveal(scope = document) {
-  if (window.FX && FX.staggerGroups) FX.staggerGroups(scope);
+  if (typeof FX !== "undefined" && FX.staggerGroups) FX.staggerGroups(scope);
   const els = $$(".reveal", scope);
   els.forEach((el, i) => { if (!el.style.getPropertyValue("--d") && !el.dataset.d && i < 12) el.style.setProperty("--d", (i % 6) * 70 + "ms"); });
   if (!("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("in")); return; }
@@ -814,33 +817,10 @@ const FX = (() => {
     }, { passive: true });
   }
 
-  /* ---------- نور دنبال‌کنندهٔ موس (دسکتاپ) ---------- */
-  function cursorGlow() {
-    if (!canHover || reduce) return;
-    const d = document.createElement("div");
-    d.id = "vx-cursor";
-    document.body.appendChild(d);
-    Object.assign(d.style, {
-      position: "fixed", zIndex: 140, pointerEvents: "none", width: "420px", height: "420px",
-      borderRadius: "50%", opacity: "0", transition: "opacity .4s",
-      background: "radial-gradient(circle,rgba(124,140,75,.16),transparent 62%)",
-      filter: "blur(6px)", mixBlendMode: "screen"
-    });
-    let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y;
-    window.addEventListener("mousemove", e => {
-      tx = e.clientX; ty = e.clientY; d.style.opacity = "1";
-    }, { passive: true });
-    document.addEventListener("mouseleave", () => d.style.opacity = "0");
-    (function loop() {
-      x += (tx - x) * 0.09; y += (ty - y) * 0.09;
-      d.style.transform = `translate(${x - 210}px, ${y - 210}px)`;
-      requestAnimationFrame(loop);
-    })();
-  }
-
   /* ---------- پارالاکس هیرو + header + پیشرفت اسکرول ---------- */
   function scrollFx() {
     const hero = $(".hero");
+    const pxs = parallaxEls();
     const bar = $("#vx-progress i");
     const header = $(".site-header");
     let ticking = false;
@@ -857,6 +837,7 @@ const FX = (() => {
         bar.style.width = (max > 0 ? clamp(y / max, 0, 1) * 100 : 0) + "%";
       }
       if (header) header.classList.toggle("is-scrolled", y > 12);
+      if (pxs.length) parallaxUpdate(pxs);
     }
     addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     addEventListener("resize", update, { passive: true });
@@ -979,20 +960,74 @@ const FX = (() => {
     }, true);
   }
 
+  let lbState = null;
   function openLightbox(srcImg) {
-    const img = srcImg;
-      const box = document.createElement("div");
-      box.className = "vx-lightbox";
-      box.innerHTML = `<button class="vx-lb-close" aria-label="close">×</button>`;
-      const big = img.cloneNode(true);
-      box.appendChild(big);
-      document.body.appendChild(box);
-      requestAnimationFrame(() => box.classList.add("on"));
-      const close = () => { box.classList.remove("on"); setTimeout(() => box.remove(), 300); };
-      box.addEventListener("click", close);
-      document.addEventListener("keydown", function esc(ev) {
-        if (ev.key === "Escape") { close(); document.removeEventListener("keydown", esc); }
-      });
+    if (!srcImg) return;
+    const list = $$(".gal img").filter(i => i.closest(".gal") && !i.closest(".vx-lightbox"));
+    const idx = list.indexOf(srcImg);
+    lbState = { list: list.length && idx >= 0 ? list : [srcImg], idx: list.length && idx >= 0 ? idx : 0 };
+    const box = document.createElement("div");
+    box.className = "vx-lightbox";
+    const many = lbState.list.length > 1;
+    box.innerHTML =
+      `<button class="vx-lb-close" type="button" aria-label="${t("lb_close")}">×</button>
+       ${many ? `<button class="vx-lb-nav vx-lb-prev" type="button" aria-label="${t("lb_prev")}">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></button>
+         <button class="vx-lb-nav vx-lb-next" type="button" aria-label="${t("lb_next")}">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg></button>
+         <span class="vx-lb-count">${num(lbState.idx + 1, state.lang)} / ${num(lbState.list.length, state.lang)}</span>` : ""}`;
+    const big = lbState.list[lbState.idx].cloneNode(true);
+    big.removeAttribute("loading"); big.removeAttribute("srcset");
+    big.className = "vx-lb-img";
+    box.insertBefore(big, box.firstChild);
+    document.body.appendChild(box);
+    requestAnimationFrame(() => box.classList.add("on"));
+
+    if (many) {
+      $(".vx-lb-prev", box).addEventListener("click", e => { e.stopPropagation(); lightboxStep(-1); });
+      $(".vx-lb-next", box).addEventListener("click", e => { e.stopPropagation(); lightboxStep(1); });
+    }
+    const close = () => {
+      box.classList.remove("on");
+      lbState = null;
+      setTimeout(() => box.remove(), 300);
+      document.removeEventListener("keydown", onKey);
+      box.removeEventListener("touchstart", onTouchStart);
+      box.removeEventListener("touchend", onTouchEnd);
+    };
+    function onKey(ev) {
+      if (ev.key === "Escape") return close();
+      if (!many) return;
+      const rtl = document.documentElement.dir === "rtl";
+      if (ev.key === "ArrowRight") lightboxStep(rtl ? -1 : 1);
+      if (ev.key === "ArrowLeft") lightboxStep(rtl ? 1 : -1);
+    }
+    let sx = 0;
+    function onTouchStart(ev) { sx = ev.changedTouches[0].clientX; }
+    function onTouchEnd(ev) {
+      const dx = ev.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) < 42 || !many) return;
+      const rtl = document.documentElement.dir === "rtl";
+      lightboxStep((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+    }
+    document.addEventListener("keydown", onKey);
+    box.addEventListener("touchstart", onTouchStart, { passive: true });
+    box.addEventListener("touchend", onTouchEnd, { passive: true });
+    big.addEventListener("click", e => e.stopPropagation());
+    box.addEventListener("click", close);
+  }
+  function lightboxStep(dir) {
+    if (!lbState) return;
+    const box = $(".vx-lightbox"), cur = box && $(".vx-lb-img", box);
+    if (!box || !cur) return;
+    const n = lbState.list.length;
+    lbState.idx = (lbState.idx + dir + n) % n;
+    const next = lbState.list[lbState.idx].cloneNode(true);
+    next.removeAttribute("loading"); next.removeAttribute("srcset");
+    next.className = "vx-lb-img vx-lb-swap";
+    cur.replaceWith(next);
+    const c = $(".vx-lb-count", box);
+    if (c) c.textContent = `${num(lbState.idx + 1, state.lang)} / ${num(n, state.lang)}`;
   }
 
   /* ---------- پشتیبانی data-reveal و data-stagger ---------- */
@@ -1009,13 +1044,264 @@ const FX = (() => {
     $$(".rot-badge").forEach(el => { if (!reduce) el.style.animation = "vx-spin 26s linear infinite"; });
   }
 
+
+  /* ==================== بستهٔ جلوه‌های تازه (FX2) ==================== */
+
+  /* ---------- ریل پیمایش بخش‌ها + هایلایت ناوبری ---------- */
+  function sectionRail() {
+    const secs = $$("[data-rail]");
+    if (!secs.length) return;
+    const nav = document.createElement("nav");
+    nav.className = "vx-rail";
+    nav.setAttribute("aria-label", t("rail_label"));
+    nav.innerHTML = `<span class="vx-rail-line"><i></i></span>` + secs.map((s, i) =>
+      `<a class="vx-rail-dot" href="#${s.id}" data-i="${i}"><i></i><span data-i18n="${s.dataset.rail}">${t(s.dataset.rail)}</span></a>`
+    ).join("");
+    document.body.appendChild(nav);
+    const dots = $$(".vx-rail-dot", nav), fill = $(".vx-rail-line i", nav);
+    let active = -1, ticking = false;
+    function update() {
+      ticking = false;
+      const mid = innerHeight * 0.42;
+      let idx = 0;
+      secs.forEach((s, i) => { if (s.getBoundingClientRect().top <= mid) idx = i; });
+      if (idx !== active) {
+        active = idx;
+        dots.forEach((d, k) => d.classList.toggle("on", k === idx));
+        /* هایلایت لینک متناظر در منو */
+        const id = secs[idx].id;
+        $$(".nav a[href], #mobile-nav a[href]").forEach(a => {
+          const h = a.getAttribute("href") || "";
+          a.classList.toggle("is-current", h === "#" + id || (id === "shop" && /shop\.html$/.test(h)));
+        });
+      }
+      const max = document.documentElement.scrollHeight - innerHeight;
+      if (fill) fill.style.height = (max > 0 ? clamp(scrollY / max, 0, 1) * 100 : 0) + "%";
+    }
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener("resize", update, { passive: true });
+    dots.forEach(d => d.addEventListener("click", e => {
+      e.preventDefault();
+      const s = secs[+d.dataset.i];
+      if (s) window.scrollTo({ top: s.offsetTop - 56, behavior: reduce ? "auto" : "smooth" });
+    }));
+    update();
+    requestAnimationFrame(() => nav.classList.add("on"));
+  }
+
+  /* ---------- ورود ماسک‌دار عنوان هیرو بعد از لودر ---------- */
+  function heroReveal() {
+    const inner = $(".hero-inner");
+    if (!inner || reduce) return;
+    inner.classList.add("vx-hero-prep");
+    let n = 0;
+    const run = () => {
+      if (document.documentElement.classList.contains("vx-ready") || ++n > 45) {
+        inner.classList.add("vx-in");
+        setTimeout(() => inner.classList.remove("vx-hero-prep"), 1600);
+      } else setTimeout(run, 80);
+    };
+    setTimeout(run, 80);
+  }
+
+  /* ---------- چرخش پیام‌های نوار اعلان ---------- */
+  function announceRotate() {
+    const keys = ["announce", "announce2", "announce3"];
+    if (reduce || !$(".announce")) return;
+    const el = () => document.querySelector(".announce");
+    let i = 0;
+    const paint = n => {
+      const e = el();
+      if (!e) return;
+      e.innerHTML = t(keys[n]);
+      e.dataset.rot = String(n);
+    };
+    /* تا وقتی کاربر واقعاً نشانگر را حرکت نداده، هاور را نادیده بگیر
+       (کروم وقتی چیدمان زیر نشانگرِ ثابت عوض شود رویداد هاور جعلی می‌فرستد) */
+    let moved = false;
+    window.addEventListener("mousemove", () => { moved = true; }, { once: true, passive: true });
+    setInterval(() => {
+      const e = el();
+      if (!e || document.hidden || (moved && e.matches(":hover"))) return;
+      i = (i + 1) % keys.length;
+      e.classList.add("vx-ann-out");
+      setTimeout(() => {
+        paint(i);
+        const e2 = el();
+        if (!e2) return;
+        e2.classList.remove("vx-ann-out");
+        e2.classList.add("vx-ann-in");
+        setTimeout(() => e2.classList.remove("vx-ann-in"), 480);
+      }, 300);
+    }, 5600);
+    /* هدر ممکن است دوباره رندر شود (مثلاً با تغییر زبان) → پیام جاری را برگردان */
+    setInterval(() => {
+      const e = el();
+      if (e && e.dataset.rot !== String(i)) paint(i);
+    }, 900);
+  }
+
+  /* ---------- میتر موجودی + شمارش معکوس زندهٔ دراپ ---------- */
+  function dropLive() {
+    const meter = $("[data-drop-meter]");
+    const clock = $("[data-drop-clock]");
+    if (!meter && !clock) return;
+    const pct = meter ? clamp(parseInt(meter.dataset.pct, 10) || 62, 0, 100) : 0;
+    const stock = meter ? (parseInt(meter.dataset.stock, 10) || 150) : 0;
+
+    /* شمارش معکوس: ددلاین در localStorage نگه داشته می‌شود تا همان دراپ ادامه پیدا کند */
+    let end = 0;
+    try {
+      end = parseInt(localStorage.getItem("vx-drop-end") || "0", 10) || 0;
+      if (!end || end < Date.now()) {
+        end = Date.now() + 48 * 3600 * 1000;
+        localStorage.setItem("vx-drop-end", String(end));
+      }
+    } catch (e) { end = Date.now() + 48 * 3600 * 1000; }
+
+    const pctEl = $("[data-drop-pct]", meter || document);
+    const leftEl = $("[data-drop-left]", meter || document);
+    const bar = $(".dm-bar i", meter || document);
+
+    function tickClock() {
+      if (!clock) return;
+      let d = Math.max(0, end - Date.now());
+      const h = Math.floor(d / 3.6e6), mi = Math.floor(d % 3.6e6 / 6e4), se = Math.floor(d % 6e4 / 1e3);
+      const pad = n => String(n).padStart(2, "0");
+      clock.textContent = [h, mi, se].map(v => num(pad(v), state.lang)).join(":");
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    if (!meter) return;
+    const run = () => {
+      meter.classList.add("on");
+      if (reduce) {
+        if (bar) bar.style.width = pct + "%";
+        if (pctEl) pctEl.textContent = num(pct, state.lang) + "٪";
+        if (leftEl) leftEl.textContent = num(Math.round(stock * (100 - pct) / 100), state.lang) + (state.lang === "fa" ? " قطعه" : " pcs");
+        return;
+      }
+      const t0 = performance.now(), dur = 1400;
+      (function step(now) {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        if (bar) bar.style.width = (pct * e).toFixed(1) + "%";
+        if (pctEl) pctEl.textContent = num(Math.round(pct * e), state.lang) + "٪";
+        if (k < 1) requestAnimationFrame(step);
+        else {
+          if (leftEl) leftEl.textContent = num(Math.round(stock * (100 - pct) / 100), state.lang) + (state.lang === "fa" ? " قطعه" : " pcs");
+          meter.classList.add("done");
+        }
+      })(t0);
+    };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { run(); io.disconnect(); } }), { threshold: .35 });
+      io.observe(meter);
+    } else run();
+  }
+
+  /* ---------- انفجار ذرات (افزودن به سبد / موفقیت سفارش) ---------- */
+  function burstAt(x, y, n = 14, big = false) {
+    if (reduce) return;
+    const host = document.createElement("div");
+    host.className = "vx-burst";
+    host.style.left = x + "px"; host.style.top = y + "px";
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement("span");
+      const a = Math.random() * Math.PI * 2, d = (big ? 60 : 26) + Math.random() * (big ? 130 : 58);
+      s.style.setProperty("--bx", (Math.cos(a) * d).toFixed(1) + "px");
+      s.style.setProperty("--by", (Math.sin(a) * d - (big ? 40 : 8)).toFixed(1) + "px");
+      s.style.setProperty("--bd", (.55 + Math.random() * .65).toFixed(2) + "s");
+      s.style.setProperty("--bs", (3 + Math.random() * (big ? 5 : 4)).toFixed(1) + "px");
+      s.style.setProperty("--br", Math.random() * 180 + "deg");
+      host.appendChild(s);
+    }
+    document.body.appendChild(host);
+    setTimeout(() => host.remove(), big ? 1500 : 1100);
+  }
+  function cartBurst(srcEl) {
+    if (!srcEl || !srcEl.getBoundingClientRect) return;
+    const r = srcEl.getBoundingClientRect();
+    burstAt(r.left + r.width / 2, r.top + r.height / 2, 14);
+  }
+  function orderCelebrate() {
+    const panel = $(".drawer .empty") || $(".drawer-body .empty");
+    if (!panel) return;
+    const svg = panel.querySelector("svg");
+    if (svg) { svg.classList.add("vx-draw"); }
+    const r = panel.getBoundingClientRect();
+    burstAt(r.left + r.width / 2, r.top + Math.min(120, r.height / 2), 26, true);
+  }
+
+  /* ---------- پارالاکس تصاویر نشان‌دار ---------- */
+  function parallaxEls() {
+    const els = $$("[data-parallax]");
+    if (!els.length || reduce) return [];
+    return els;
+  }
+  function parallaxUpdate(els) {
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) return;
+      const rate = parseFloat(el.dataset.parallax) || .05;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;   // -1 → 1
+      el.style.setProperty("--py", (-p * rate * 1000).toFixed(1) + "px");
+    });
+  }
+
+  /* ---------- نوار خرید چسبان موبایل ---------- */
+  function stickyBuy() {
+    if (!document.body.dataset.page || document.body.dataset.page !== "shop") return;
+    const bar = document.createElement("div");
+    bar.id = "vx-sticky";
+    bar.innerHTML =
+      `<span class="vs-count"><b id="vs-num">۰</b><span data-i18n="sticky_pieces">${t("sticky_pieces")}</span></span>
+       <span class="vs-total" id="vs-total">—</span>
+       <button class="btn btn--sm" type="button" id="vs-open" data-i18n="sticky_view">${t("sticky_view")}</button>`;
+    document.body.appendChild(bar);
+    $(".vs-count span", bar).setAttribute("data-i18n", "sticky_pieces");
+    bar.querySelector("#vs-open").addEventListener("click", () => {
+      const btn = document.getElementById("cart-open");
+      if (btn) btn.click();
+    });
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const on = scrollY > innerHeight * 0.7;
+      bar.classList.toggle("on", on);
+      document.body.classList.toggle("vx-sticky-on", on);
+    }
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+    stickySync();
+  }
+  function stickySync() {
+    const n = document.getElementById("vs-num"), tot = document.getElementById("vs-total");
+    if (!n || !tot) return;
+    const count = typeof cartCount === "function" ? cartCount() : 0;
+    n.textContent = num(count, state.lang);
+    const sub = typeof cartSubtotal === "function" ? cartSubtotal() : 0;
+    tot.textContent = sub ? money(sub, state.lang) : "";
+  }
+
+  /* ---------- روشن‌شدن نرم محتوا هنگام تغییر زبان ---------- */
+  function langFade() {
+    document.addEventListener("click", e => {
+      const b = e.target.closest && e.target.closest("[data-lang]");
+      if (!b || reduce) return;
+      document.documentElement.classList.add("vx-lang-fade");
+      setTimeout(() => document.documentElement.classList.remove("vx-lang-fade"), 420);
+    }, true);
+  }
+
   /* ---------- راه‌اندازی ---------- */
   function init() {
     const bar = document.createElement("div");
     bar.id = "vx-progress"; bar.innerHTML = "<i></i>";
     document.body.appendChild(bar);
 
-    loader(); vortex(); pointerFx(); cursorGlow(); scrollFx(); counters(); toTop(); lightbox(); staggerGroups(); spinBadge();
+    loader(); vortex(); pointerFx(); scrollFx(); counters(); toTop(); lightbox(); staggerGroups(); spinBadge();
+    sectionRail(); heroReveal(); announceRotate(); dropLive(); stickyBuy(); langFade();
     drawIcons();
 
     /* شمارنده‌ها فقط وقتی در دید قرار گرفتند بشمارند */
@@ -1028,8 +1314,10 @@ const FX = (() => {
     }
   }
 
-  return { init, counters, flyToCart, cartBump, drawIcons, staggerGroups };
+  return { init, counters, flyToCart, cartBump, drawIcons, staggerGroups,
+           cartBurst, orderCelebrate, stickySync, parallaxUpdate, parallaxEls, burstAt };
 })();
+try { window.FX = FX; } catch (e) {}
 
 /* ---------- گذار نرم بین صفحات ------------------------------------------ */
 function pageTransitions() {

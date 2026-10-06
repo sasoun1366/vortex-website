@@ -40,7 +40,7 @@
 <main>
 
   <!-- ==================== HERO ==================== -->
-  <section class="hero">
+  <section class="hero" id="top" data-rail="rail_top">
     <div class="hero-media">
       <img src="assets/img/hero.jpg" alt="تی‌شرت تمرین ورتکس روی دیوار بتنی" fetchpriority="high">
     </div>
@@ -117,7 +117,7 @@
   </div>
 
   <!-- ==================== WHY ==================== -->
-  <section class="section section--amb">
+  <section class="section section--amb" id="why" data-rail="rail_why">
     <div class="container">
       <div class="section-head reveal" data-reveal="up">
         <span class="eyebrow" data-i18n="kick_why">مزیت‌های ورتکس</span>
@@ -150,7 +150,7 @@
   </section>
 
   <!-- ==================== CATEGORIES ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="cats" data-rail="rail_cats" style="padding-top:0">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow" data-i18n="kick_cat">دسته‌بندی محصولات</span>
@@ -187,7 +187,7 @@
   </section>
 
   <!-- ==================== FEATURED ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="shop" data-rail="rail_shop" style="padding-top:0">
     <div class="container">
       <div class="section-head reveal" style="display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;max-width:none;flex-wrap:wrap">
         <div style="max-width:56ch">
@@ -203,7 +203,7 @@
 
 
   <!-- ==================== DROP SPOTLIGHT ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="drop" data-rail="rail_drop" style="padding-top:0">
     <div class="container">
       <div class="num-kicker" data-reveal="up"><span>01 / DROP</span></div>
       <div class="spot" style="margin-top:1.6rem">
@@ -219,9 +219,22 @@
           <div class="spot-facts">
             <div><b data-i18n="drop_f1v">۱۵۰</b><span data-i18n="drop_f1l">قطعه در هر سایز</span></div>
             <div><b data-i18n="drop_f2v">۲۲۰ گرم</b><span data-i18n="drop_f2l">گرماژ پارچه</span></div>
-            <div><b data-i18n="drop_f3v">۴۸ ساعت</b><span data-i18n="drop_f3l">تا پایان موجودی</span></div>
+            <div><b data-drop-clock>۴۸:۰۰:۰۰</b><span data-i18n="drop_f3l">تا پایان موجودی</span></div>
           </div>
-          <div class="hatch-live" style="width:150px;margin:1.6rem 0 1.4rem"></div>
+
+          <!-- میتر موجودی + شمارش معکوس زندهٔ دراپ -->
+          <div class="drop-meter" data-drop-meter data-pct="62" data-stock="150">
+            <div class="dm-head">
+              <span data-i18n="drop_meter_l">فروش‌رفتِ این دراپ</span>
+              <b data-drop-pct>۰٪</b>
+            </div>
+            <div class="dm-bar"><i></i></div>
+            <div class="dm-foot">
+              <span data-i18n="drop_left_l">باقی‌مانده در انبار</span>
+              <b data-drop-left>—</b>
+            </div>
+          </div>
+          <div class="hatch-live" style="width:150px;margin:1.2rem 0 1.4rem"></div>
           <a class="btn" href="shop.html?cat=apparel" data-i18n="drop_cta">دیدن دراپ</a>
         </div>
       </div>
@@ -229,7 +242,7 @@
   </section>
 
   <!-- ==================== STORY ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="story" data-rail="rail_story" style="padding-top:0">
     <div class="container">
       <div class="split">
         <div class="split-media reveal" data-reveal="start">
@@ -268,7 +281,7 @@
 
 
   <!-- ==================== NUMBERS ==================== -->
-  <section class="section section--tight" style="padding-top:0">
+  <section class="section section--tight" id="numbers" data-rail="rail_numbers" style="padding-top:0">
     <div class="container">
       <div class="num-kicker" data-reveal="up" style="margin-bottom:1.4rem"><span>02 / NUMBERS</span></div>
       <div class="strip" data-reveal="up">
@@ -297,7 +310,7 @@
 
 
   <!-- ==================== GALLERY ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="gallery" data-rail="rail_gallery" style="padding-top:0">
     <div class="container">
       <div class="num-kicker" data-reveal="up"><span>03 / GALLERY</span></div>
       <div class="section-head" data-reveal="up" style="margin-top:1rem">
@@ -315,7 +328,7 @@
   </section>
 
   <!-- ==================== TESTIMONIALS ==================== -->
-  <section class="section" style="padding-top:0">
+  <section class="section" id="words" data-rail="rail_words" style="padding-top:0">
     <div class="container">
       <div class="num-kicker" data-reveal="up"><span>04 / WORDS</span></div>
       <div class="section-head" data-reveal="up" style="margin-top:1rem">
