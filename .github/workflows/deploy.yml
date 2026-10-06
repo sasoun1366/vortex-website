@@ -1,0 +1,27 @@
+name: Deploy to Cloudflare Pages
+
+# ⚠️ این ورک‌فلو «مسیر جایگزین» است.
+# اگر پروژه را از داشبورد Cloudflare به گیت‌هاب وصل کرده‌ای (Connect to Git)،
+# نیازی به این فایل نیست و می‌توانی حذفش کنی تا دو بار دیپلوی نشود.
+
+on:
+  workflow_dispatch:        # اجرای دستی از تب Actions
+  # برای فعال‌کردن دیپلوی خودکار روی هر push، دو خط زیر را از حالت کامنت دربیاور:
+  # push:
+  #   branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Publish site
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy public/ to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy public --project-name=vortexgear

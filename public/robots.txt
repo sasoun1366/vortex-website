@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /assets/js/products.js
+
+Sitemap: https://vortexgear.ir/sitemap.xml

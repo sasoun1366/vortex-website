@@ -1,0 +1,9 @@
+# ==========================================================================
+# Cloudflare Pages — redirects / pretty URLs
+# ==========================================================================
+
+/shop        /shop.html      200
+/about       /about.html     200
+/contact     /contact.html   200
+/faq         /contact.html#faq 301
+/instagram   https://instagram.com/vortex.gear 302

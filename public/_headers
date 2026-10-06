@@ -1,0 +1,30 @@
+# ==========================================================================
+# Cloudflare Pages — headers
+# ==========================================================================
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# fonts never change — cache hard
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# images — long cache
+/assets/img/*
+  Cache-Control: public, max-age=604800
+
+# css/js — short cache so updates (new products, prices) show up fast
+/assets/css/*
+  Cache-Control: public, max-age=300, must-revalidate
+/assets/js/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+# html pages — always revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/
+  Cache-Control: public, max-age=0, must-revalidate

@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+.vscode/
+.DS_Store
+*.log
+.env
+.env.*
+vortex-upload.zip

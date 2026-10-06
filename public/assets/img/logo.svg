@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Vortex">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B3C37A"/>
+      <stop offset="1" stop-color="#6F8040"/>
+    </linearGradient>
+  </defs>
+  <path d="M10 14h22l18 46 18-46h22L60 94H40L10 14z" fill="url(#g)"/>
+</svg>
