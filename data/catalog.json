@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791289082690,
+  "ts": 1791289086690,
   "chat": "5034689859",
-  "step": "desc",
+  "step": "en",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkDAANAasTm1V8Un0m0zz8H2DvUHne8jrsAAi8Paxt9nC1SXlJrKxaIv_UBAAMCAAN5AAM9BA",
@@ -19,7 +19,8 @@
     "30cm": 5,
     "45cm": 3
    },
-   "cat": "gear"
+   "cat": "gear",
+   "desc": "کشی مقاوم با دوخت محکم و لیبل ورتکس — ثبات مچ در هالتر."
   }
  }
 }
