@@ -3,12 +3,6 @@
  "soon": [],
  "cfg": {},
  "draft": null,
- "overrides": {
-  "vx-chalk-001": {
-   "price": 550000
-  }
- },
- "hidden": [
-  "vx-key-001"
- ]
+ "overrides": {},
+ "hidden": []
 }
