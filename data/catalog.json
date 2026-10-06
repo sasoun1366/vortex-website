@@ -3,12 +3,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791289056357,
+  "ts": 1791289060768,
   "chat": "5034689859",
-  "step": "name",
+  "step": "price",
   "d": {
    "featured": true,
-   "photo": "AgACAgQAAxkDAANAasTm1V8Un0m0zz8H2DvUHne8jrsAAi8Paxt9nC1SXlJrKxaIv_UBAAMCAAN5AAM9BA"
+   "photo": "AgACAgQAAxkDAANAasTm1V8Un0m0zz8H2DvUHne8jrsAAi8Paxt9nC1SXlJrKxaIv_UBAAMCAAN5AAM9BA",
+   "name": "مچ‌بند تمرین ورتکس — تست"
   }
  }
 }
