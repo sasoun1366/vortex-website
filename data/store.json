@@ -1,65 +1,15 @@
 {
  "cfg": {
-  "card": "6037-9911-0000-1234",
-  "cardName": "ساسون",
-  "whatsapp": ""
+  "card": "",
+  "cardName": ""
  },
  "stock": {
   "tee": {
-   "M": 4,
-   "L": 2
-  },
-  "keychain": {
-   "*": 19
+   "M": 0
   },
   "crop": {
    "*": 0
   }
  },
- "orders": {
-  "VX-261006-9745": {
-   "code": "VX-261006-9745",
-   "ts": 1791287138740,
-   "lang": "fa",
-   "items": [
-    {
-     "id": "tee",
-     "name": "تی‌شرت تمرین ورتکس",
-     "size": "M",
-     "qty": 2,
-     "price": 1480000
-    },
-    {
-     "id": "keychain",
-     "name": "جاکلیدی ورتکس",
-     "size": "",
-     "qty": 1,
-     "price": 320000
-    }
-   ],
-   "totals": {
-    "sub": 3280000,
-    "ship": 0,
-    "total": 3280000
-   },
-   "buyer": {
-    "name": "امیر محمدی",
-    "phone": "09121234567",
-    "addr": "خیابان ولیعصر، کوچه بهار، پلاک ۱۲، واحد ۳",
-    "city": "تهران / تهران",
-    "address": "خیابان ولیعصر، کوچه بهار، پلاک ۱۲، واحد ۳",
-    "postal": "1234567890"
-   },
-   "note": "",
-   "tgUser": {
-    "username": "",
-    "first_name": ""
-   },
-   "status": "shipped",
-   "tracking": "14512987654321",
-   "photoFileId": "",
-   "ownerMsgId": 18,
-   "chatId": 999000111
-  }
- }
+ "orders": {}
 }
