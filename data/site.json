@@ -6,7 +6,9 @@
   },
   "en": {}
  },
- "images": {},
+ "images": {
+  "gal5": "media/site/gal5.png?v=muwv9d4a"
+ },
  "theme": {
   "accent": "#7C8C4B",
   "bg": "#0A0B08"
@@ -25,5 +27,5 @@
   ],
   "hidden": []
  },
- "updated": 1791302471709
+ "updated": 1791302505161
 }
