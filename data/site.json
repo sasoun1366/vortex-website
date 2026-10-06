@@ -12,7 +12,11 @@
   "hoursFa": "شنبه تا پنجشنبه • ۱۰:۰۰ تا ۲۰:۰۰",
   "hoursEn": "Sat–Thu • 10:00 – 20:00",
   "addressFa": "ایران — ارسال به سراسر کشور",
-  "addressEn": "Iran — shipping nationwide"
+  "addressEn": "Iran — shipping nationwide",
+  "passHash": {
+   "salt": "acac565c259ee80d2686b6b0698fe792",
+   "hash": "00c3c8ee228a44646a532d5f54d3277bbbcb141a8ec2c3534628da9b9c536dc8"
+  }
  },
  "texts": {
   "fa": {},
@@ -37,5 +41,5 @@
   ],
   "hidden": []
  },
- "updated": 1791302929669
+ "updated": 1791303005335
 }
