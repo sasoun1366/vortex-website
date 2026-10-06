@@ -62,6 +62,35 @@
    "photoFileId": "",
    "ownerMsgId": 44,
    "chatId": 5034689859
+  },
+  "VX-261006-5403": {
+   "code": "VX-261006-5403",
+   "ts": 1791288660449,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-chalk-001",
+     "name": "گچ مایع ورتکس — ۱۵۰ میلی‌لیتر",
+     "size": "",
+     "qty": 1,
+     "price": 480000
+    }
+   ],
+   "totals": {
+    "sub": 480000,
+    "ship": 180000,
+    "total": 660000
+   },
+   "buyer": {},
+   "note": "",
+   "payRef": "565458",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "paycheck",
+   "tracking": "",
+   "photoFileId": ""
   }
  }
 }
