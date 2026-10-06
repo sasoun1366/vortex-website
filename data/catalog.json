@@ -5,10 +5,23 @@
  "draft": null,
  "overrides": {
   "vx-chalk-001": {
-   "price": 550000,
+   "price": 1234567,
    "name": {
-    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر"
-   }
+    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر",
+    "en": "Vortex Liquid Chalk — 150 ml"
+   },
+   "oldPrice": 0,
+   "cat": "gear",
+   "featured": true,
+   "desc": {
+    "fa": "",
+    "en": ""
+   },
+   "badge": {
+    "fa": "",
+    "en": ""
+   },
+   "img": "assets/img/liquid-chalk.jpg"
   }
  },
  "hidden": []
