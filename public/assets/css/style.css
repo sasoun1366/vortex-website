@@ -1094,3 +1094,49 @@ html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:vx-la
   html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:none}
   .hero-inner.vx-hero-prep h1{clip-path:none}
 }
+
+/* ==========================================================================
+   لایهٔ سه‌بعدی (WebGL) — کانواس هیرو + شوکیس تعاملی تجهیزات
+   ========================================================================== */
+
+/* کانواس سه‌بعدی هیرو، روی همان قاب گرداب ۲بعدی */
+.hero-3d{position:absolute;inset:0;z-index:3;width:100%;height:100%;pointer-events:none;
+  opacity:0;transition:opacity 1.1s var(--ease)}
+.hero-3d.on{opacity:1}
+#vortex-canvas.vx-hide{opacity:0;transition:opacity .5s var(--ease)}
+
+/* بخش شوکیس ۳بعدی */
+.show3d{position:relative;margin-top:1.5rem;overflow:hidden;border:1px solid var(--line-strong);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(124,140,75,.17), rgba(10,11,8,0) 60%),
+    repeating-linear-gradient(115deg, rgba(124,140,75,.055) 0 2px, transparent 2px 13px),
+    #0b0d08}
+.show3d::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(90% 70% at 50% 50%, transparent 55%, rgba(6,7,4,.55) 100%)}
+.show3d canvas{display:block;position:relative;z-index:1;width:100%;height:min(64vh,540px);
+  touch-action:none;cursor:grab}
+.show3d canvas.dragging{cursor:grabbing}
+.show3d-badge{position:absolute;top:.75rem;inset-inline-start:.9rem;z-index:2;
+  font-family:var(--font-display);font-size:.7rem;letter-spacing:.22em;color:var(--olive-200);
+  padding:.24rem .55rem;border:1px solid var(--line-strong);background:rgba(10,11,8,.62);
+  animation:vx-pulse-glow 3.2s var(--ease) infinite}
+.show3d-hint{position:absolute;bottom:.75rem;inset-inline-start:.9rem;z-index:2;
+  font-size:.7rem;color:var(--muted);letter-spacing:.02em}
+.show3d-props{position:absolute;top:.65rem;inset-inline-end:.8rem;z-index:2;display:flex;gap:.4rem;flex-wrap:wrap}
+.show3d-props .chip{font:inherit;font-size:.74rem;padding:.4rem .78rem;cursor:pointer;
+  border:1px solid var(--line-strong);background:rgba(10,11,8,.68);color:var(--muted);
+  transition:.26s var(--ease);backdrop-filter:blur(6px)}
+.show3d-props .chip:hover{color:var(--text);border-color:var(--olive);transform:translateY(-2px)}
+.show3d-props .chip.on{background:var(--olive);border-color:var(--olive);color:#0A0B08;font-weight:600}
+.show3d.is-dragging .show3d-hint{opacity:.35}
+@media (max-width:760px){
+  .show3d canvas{height:min(58vh,430px)}
+  .show3d-hint{inset-inline-start:.7rem;font-size:.64rem;max-width:60%}
+  .show3d-badge{top:.6rem;inset-inline-start:.7rem}
+  .show3d-props{top:auto;bottom:.6rem;inset-inline-end:.7rem;gap:.3rem}
+  .show3d-props .chip{font-size:.68rem;padding:.32rem .6rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .show3d canvas{cursor:default}
+  .show3d-badge{animation:none}
+}

@@ -7,6 +7,11 @@ const I18N = {
   fa: {
     /* header */
     nav_home: "خانه", nav_shop: "فروشگاه", nav_about: "درباره ما", nav_contact: "تماس",
+    rail_3d: "سه‌بعدی",
+    s3_title: "تجهیزات را ۳بعدی بچرخان",
+    s3_lead: "دمبل، کتل‌بل و صفحهٔ وزنهٔ ورتکس را با انگشت یا موس بچرخان — همان حسِ تجهیزات واقعی، بدون نصب هیچ برنامه‌ای.",
+    s3_hint: "بکش و بچرخان · اسکرول = زوم · دوبار کلیک = ریست",
+    s3_p1: "دمبل", s3_p2: "کتل‌بل", s3_p3: "صفحهٔ وزنه",
     rail_label: "پیمایش بخش‌ها",
     rail_top: "شروع", rail_why: "چرا ورتکس", rail_cats: "دسته‌ها", rail_shop: "کالکشن",
     rail_drop: "دراپ فصل ۰۱", rail_story: "داستان برند", rail_numbers: "در یک نگاه",
@@ -151,6 +156,11 @@ const I18N = {
   },
 
   en: {
+    rail_3d: "3D",
+    s3_title: "Spin the gear in 3D",
+    s3_lead: "Grab the dumbbell, kettlebell and weight plate and rotate them with your finger or mouse — the real feel of Vortex gear, no app needed.",
+    s3_hint: "Drag to rotate · scroll to zoom · double-click to reset",
+    s3_p1: "Dumbbell", s3_p2: "Kettlebell", s3_p3: "Weight plate",
     nav_home: "Home", nav_shop: "Shop", nav_about: "About", nav_contact: "Contact",
     rail_label: "Section navigation",
     rail_top: "Top", rail_why: "Why Vortex", rail_cats: "Categories", rail_shop: "Collection",

@@ -69,6 +69,7 @@
       <path d="M62 46h20l18 46 18-46h20L110 158H90z" fill="url(#wmv)" opacity=".55"/>
     </svg>
     <canvas id="vortex-canvas" aria-hidden="true"></canvas>
+    <canvas id="vortex-3d" class="hero-3d" aria-hidden="true"></canvas>
     <div class="container hero-inner">
       <span class="eyebrow" data-i18n="hero_eyebrow">ساخته‌شده برای شدت</span>
       <h1 class="display" data-i18n-html="hero_title">تجهیزات کراس‌فیت،<br><em>ساخته‌شده برای شدت.</em></h1>
@@ -241,6 +242,27 @@
     </div>
   </section>
 
+  <!-- ==================== 3D SHOWROOM ==================== -->
+  <section class="section" id="show3d" data-rail="rail_3d" style="padding-top:0">
+    <div class="container">
+      <div class="num-kicker" data-reveal="up"><span>02 / 3D</span></div>
+      <div class="section-head" data-reveal="up" style="margin-top:1rem">
+        <h2 class="display" data-i18n="s3_title">تجهیزات را ۳بعدی بچرخان</h2>
+        <p data-i18n="s3_lead">دمبل، کتل‌بل و صفحهٔ وزنهٔ ورتکس را با انگشت یا موس بچرخان — همان حسِ تجهیزات واقعی، بدون نصب هیچ برنامه‌ای.</p>
+      </div>
+      <div class="show3d" data-reveal="scale">
+        <canvas id="vx-3d-canvas" aria-label="نمایش سه‌بعدی تجهیزات ورتکس"></canvas>
+        <span class="show3d-badge">3D</span>
+        <div class="show3d-props" role="group" aria-label="انتخاب تجهیز">
+          <button type="button" class="chip on" data-prop-3d="dumbbell" data-i18n="s3_p1">دمبل</button>
+          <button type="button" class="chip" data-prop-3d="kettlebell" data-i18n="s3_p2">کتل‌بل</button>
+          <button type="button" class="chip" data-prop-3d="plate" data-i18n="s3_p3">صفحهٔ وزنه</button>
+        </div>
+        <span class="show3d-hint" data-i18n="s3_hint">بکش و بچرخان · اسکرول = زوم · دوبار کلیک = ریست</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== STORY ==================== -->
   <section class="section" id="story" data-rail="rail_story" style="padding-top:0">
     <div class="container">
@@ -367,5 +389,6 @@
   // fill social CTA from config
   document.getElementById('band-ig').href = 'https://instagram.com/' + VORTEX.config.instagram;
 </script>
+  <script type="module" src="assets/js/three-scene.js"></script>
 </body>
 </html>

@@ -686,6 +686,8 @@ function observeReveal(scope = document) {
    FX — لایهٔ جلوه‌های بصری: گرداب ذرات، تیلت سه‌بعدی، نورافکن، شمارنده،
         پرواز تصویر به سبد خرید، پارالاکس و نوار پیشرفت اسکرول
    ========================================================================== */
+let vortexStop = null;   // توقف گرداب ۲بعدی وقتی لایهٔ ۳بعدی فعال می‌شود
+
 const FX = (() => {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -697,6 +699,7 @@ const FX = (() => {
   function vortex() {
     const c = $("#vortex-canvas");
     if (!c || reduce) return;
+    if (document.documentElement.dataset.hero3d === "1") return;   // لایهٔ ۳بعدی صحنه را گرفته
     const ctx = c.getContext("2d", { alpha: true });
     let w = 0, h = 0, dpr = 1, parts = [], raf = null, running = false, t = 0;
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -760,6 +763,7 @@ const FX = (() => {
     }
     function start() { if (running || reduce) return; running = true; frame(); }
     function stop()  { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+    vortexStop = stop;
 
     resize(); seed(count());
     window.addEventListener("resize", () => { resize(); seed(count()); }, { passive: true });
@@ -1314,7 +1318,9 @@ const FX = (() => {
     }
   }
 
-  return { init, counters, flyToCart, cartBump, drawIcons, staggerGroups,
+  function stopVortex() { if (vortexStop) vortexStop(); }
+
+  return { init, counters, flyToCart, cartBump, drawIcons, staggerGroups, stopVortex,
            cartBurst, orderCelebrate, stickySync, parallaxUpdate, parallaxEls, burstAt };
 })();
 try { window.FX = FX; } catch (e) {}
