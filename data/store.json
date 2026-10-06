@@ -62,69 +62,6 @@
    "photoFileId": "",
    "ownerMsgId": 44,
    "chatId": 5034689859
-  },
-  "VX-261006-8093": {
-   "code": "VX-261006-8093",
-   "ts": 1791288548541,
-   "lang": "fa",
-   "items": [
-    {
-     "id": "vx-tee-001",
-     "name": "تی‌شرت تمرین ورتکس",
-     "size": "S",
-     "qty": 1,
-     "price": 1480000
-    }
-   ],
-   "totals": {
-    "sub": 1480000,
-    "ship": 180000,
-    "total": 1660000
-   },
-   "buyer": {},
-   "note": "",
-   "payRef": "84631957",
-   "tgUser": {
-    "username": "",
-    "first_name": ""
-   },
-   "status": "paycheck",
-   "tracking": "",
-   "photoFileId": "",
-   "ownerMsgId": 59
-  },
-  "VX-261006-8595": {
-   "code": "VX-261006-8595",
-   "ts": 1791288569420,
-   "lang": "fa",
-   "items": [
-    {
-     "id": "vx-wrap-001",
-     "name": "مچ‌بند تمرین ورتکس",
-     "size": "",
-     "qty": 1,
-     "price": 690000
-    }
-   ],
-   "totals": {
-    "sub": 690000,
-    "ship": 180000,
-    "total": 870000
-   },
-   "buyer": {
-    "name": "تست پرداخت",
-    "phone": "09121112233"
-   },
-   "note": "",
-   "payRef": "55443322",
-   "tgUser": {
-    "username": "",
-    "first_name": ""
-   },
-   "status": "paycheck",
-   "tracking": "",
-   "photoFileId": "",
-   "ownerMsgId": 60
   }
  }
 }
