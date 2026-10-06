@@ -1239,3 +1239,39 @@ html.vx-lang-fade [data-i18n],html.vx-lang-fade [data-i18n-html]{animation:vx-la
 .card.is-out .card-media::after { content: "ناموجود"; position: absolute; inset-inline-start: .6rem; top: .6rem;
   padding: .22rem .5rem; background: rgba(10,11,8,.85); border: 1px solid var(--line-strong);
   color: var(--muted); font-size: .7rem; z-index: 3; }
+
+/* ===== مرحلهٔ پرداخت کارت‌به‌کارت در کشوی سبد ===== */
+.pay-step { display: grid; gap: .85rem; padding-bottom: .4rem; }
+.pay-back { justify-self: start; display: inline-flex; align-items: center; gap: .35rem; background: none;
+  border: 0; color: var(--muted); font: inherit; font-size: .78rem; cursor: pointer; padding: .2rem 0; }
+.pay-back:hover { color: var(--olive-200); }
+.pay-back svg { width: 15px; height: 15px; }
+html[dir="ltr"] .pay-back svg { transform: scaleX(-1); }
+.pay-title { font-size: 1.06rem; }
+.pay-lead { font-size: .84rem; color: var(--muted); line-height: 1.95; }
+.pay-card { position: relative; display: grid; gap: .3rem; padding: 1rem 1rem 1.05rem;
+  border: 1px solid var(--olive-700, var(--line-strong)); background: linear-gradient(160deg, #131609, #0d0f08); }
+.pay-card.is-error { border-color: #7a3a3a; }
+.pc-label { font-size: .72rem; color: var(--muted); letter-spacing: .04em; }
+.pc-num { font-family: var(--font-display); font-size: 1.24rem; letter-spacing: .09em; color: var(--olive-100, #e6efc4);
+  direction: ltr; unicode-bidi: embed; }
+.pc-holder { font-size: .8rem; color: var(--text); }
+.pay-card .btn { justify-self: start; margin-top: .5rem; }
+.pay-amount { display: flex; align-items: baseline; justify-content: space-between; padding: .7rem .9rem;
+  border: 1px dashed var(--line-strong); font-size: .85rem; }
+.pay-amount b { font-size: 1.02rem; }
+.pay-field { display: grid; gap: .4rem; }
+.pay-field span { font-size: .8rem; color: var(--muted); }
+.pay-field input { width: 100%; padding: .72rem .85rem; font: inherit; font-size: 1rem; letter-spacing: .06em;
+  background: #0c0e08; border: 1px solid var(--line-strong); color: var(--text); text-align: center; }
+.pay-field input:focus { outline: none; border-color: var(--olive); }
+.pay-hint { font-size: .74rem; color: var(--muted); line-height: 1.9; }
+.pay-alt { display: grid; gap: .5rem; padding-top: .4rem; border-top: 1px solid var(--line-soft); }
+.pay-alt > span { font-size: .78rem; color: var(--muted); }
+
+/* پنل موفقیت پرداخت */
+.pay-ok-mark { width: 62px; height: 62px; margin: 0 auto 1rem; display: grid; place-items: center;
+  border: 1px solid var(--olive); color: var(--olive-200); font-size: 1.4rem; }
+.pay-ok-mark svg { width: 30px; height: 30px; }
+.pay-ok-code { margin: 1.1rem auto 0; padding: .8rem 1rem; border: 1px dashed var(--line-strong);
+  width: fit-content; min-width: 210px; text-align: center; }

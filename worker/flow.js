@@ -28,6 +28,7 @@ const fx = (s = "") => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").re
 export function statusFa(st) {
   return {
     new: "در انتظار پرداخت",
+    paycheck: "پرداخت اعلام شد — منتظر تأیید",
     paid: "پرداخت تأیید شد — منتظر آدرس",
     ready: "آمادهٔ ارسال",
     shipped: "ارسال شد",
@@ -38,6 +39,7 @@ export function statusFa(st) {
 export function statusEn(st) {
   return {
     new: "Awaiting payment",
+    paycheck: "Payment declared — awaiting check",
     paid: "Payment confirmed — address needed",
     ready: "Ready to ship",
     shipped: "Shipped",
@@ -145,6 +147,10 @@ export function customerStatusMessage(order) {
   ];
   if (order.tracking) lines.push("", `🚚 ${L ? "کد رهگیری پست" : "Tracking"}: <code>${fx(order.tracking)}</code>`);
   if (order.status === "new") lines.push("", L ? "اگر پرداخت کرده‌ای، رسید یا «چهار رقم آخر · ساعت · مبلغ» را همین‌جا بفرست." : "Already paid? Send the receipt or “last 4 digits · time · amount”.");
+  if (order.status === "paycheck") {
+    lines.push("", L ? "کد پیگیری‌ات ثبت شده: <code>" + fx(order.payRef || "—") + "</code>" : "Your reference: <code>" + fx(order.payRef || "—") + "</code>");
+    lines.push(L ? "پرداختت در حال بررسی است و به‌زودی با تو تماس می‌گیریم. 🙏" : "We're verifying your payment and will call you shortly. 🙏");
+  }
   if (order.status === "paid") lines.push("", L ? "برای ارسال، آدرس را با قالب ۵ خطی بفرست (بات قبلاً فرستاده)." : "Send your address in the 5-line template.");
   if (order.status === "shipped") lines.push("", L ? "مرسوله تحویل پست شد. ممنون که ورتکس را انتخاب کردی 💪" : "Your parcel is on the way. Thanks for choosing Vortex 💪");
   return lines.join("\n");

@@ -20,6 +20,8 @@ const ICON = {
   tg: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 4.3 19 19.1c-.2 1-.8 1.2-1.6.8l-4.5-3.3-2.2 2.1c-.24.24-.44.44-.9.44l.32-4.6 8.4-7.6c.36-.32-.08-.5-.56-.18L7.6 13.2l-4.4-1.4c-.95-.3-.97-.95.2-1.4l17-6.6c.8-.3 1.5.18 1.2 1.5z"/></svg>`,
   ig: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>`,
   mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`,
+  card: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>`,
   check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg>`,
   bolt: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5z"/></svg>`,
   shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg>`,
@@ -391,6 +393,94 @@ function bindGrid(host) {
   }));
 }
 
+/* ---------- مرحلهٔ پرداخت کارت‌به‌کارت (داخل کشوی سبد) ---------------- */
+let payCard = null;          // { card, cardName }
+
+async function loadPayCard() {
+  if (payCard) return payCard;
+  try {
+    const r = await fetch("api/pay", { cache: "no-store" });
+    const d = await r.json();
+    if (d && d.ok) payCard = { card: d.card, cardName: d.cardName || "" };
+  } catch (e) { payCard = null; }
+  return payCard;
+}
+
+function renderPayStep() {
+  const body = $("#drawer-body"), foot = $("#drawer-foot");
+  if (!body) return;
+  const sub = cartSubtotal(), ship = shippingFor(sub), total = sub + ship;
+  body.innerHTML = `
+    <div class="pay-step">
+      <button class="pay-back" type="button" id="pay-back">${ICON.back} ${t("pay_back")}</button>
+      <h3 class="pay-title">${t("pay_title")}</h3>
+      <p class="pay-lead">${t("pay_lead")}</p>
+      <div class="pay-card" id="pay-card-box">
+        <span class="pc-label">${t("pay_card_no")}</span>
+        <b class="pc-num" id="pc-num">${t("pay_loading")}</b>
+        <span class="pc-holder" id="pc-holder"></span>
+        <button class="btn btn--ghost btn--sm" type="button" id="pc-copy">${ICON.eye} ${t("pay_copy")}</button>
+      </div>
+      <div class="pay-amount"><span>${t("pay_amount")}</span><b>${money(total, state.lang)}</b></div>
+      <label class="pay-field">
+        <span>${t("pay_ref_label")}</span>
+        <input type="text" id="pay-ref" inputmode="numeric" autocomplete="off"
+               placeholder="${t("pay_ref_ph")}" data-i18n-ph="pay_ref_ph">
+      </label>
+      <p class="pay-hint">${t("pay_ref_hint")}</p>
+      <button class="btn btn--block" type="button" id="pay-submit">${t("pay_submit")}</button>
+      <div class="pay-alt">
+        <span>${t("pay_alt")}</span>
+        <button class="btn btn--ghost btn--sm" type="button" id="pay-alt-tg">${ICON.tg} ${t("cart_tg")}</button>
+      </div>
+    </div>`;
+  foot.innerHTML = "";
+  $("#pay-back").addEventListener("click", () => { state.payStep = false; renderCart(); });
+
+  loadPayCard().then(c => {
+    const num = $("#pc-num"), holder = $("#pc-holder"), box = $("#pay-card-box");
+    if (!c || !num) { if (box) box.classList.add("is-error"); if (num) num.textContent = t("pay_card_missing"); return; }
+    num.textContent = c.card;
+    if (holder) holder.textContent = c.cardName ? `${t("pay_holder")}: ${c.cardName}` : "";
+  });
+
+  $("#pc-copy").addEventListener("click", async () => {
+    const c = await loadPayCard();
+    if (!c) return;
+    await copyText(c.card.replace(/[^0-9]/g, ""));
+    toast(t("pay_copied"));
+  });
+
+  const refInput = $("#pay-ref");
+  refInput.addEventListener("input", () => {
+    refInput.value = refInput.value.replace(/[^0-9A-Za-z\-]/g, "").slice(0, 24);
+  });
+  refInput.addEventListener("keydown", e => { if (e.key === "Enter") $("#pay-submit").click(); });
+
+  $("#pay-alt-tg").addEventListener("click", async () => {
+    try { const code = await submitOrder(); showOrderSuccess(code); toast(t("order_ok_toast")); }
+    catch (e) { showOrderFallback(); }
+  });
+
+  $("#pay-submit").addEventListener("click", async () => {
+    const ref = refInput.value.trim();
+    if (!ref) { toast(t("pay_ref_needed")); refInput.focus(); return; }
+    const btn = $("#pay-submit"), html = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = t("order_sending");
+    readBuyerFields();
+    try {
+      const code = await submitOrder(ref);
+      state.orderDone = code;
+      state.payRef = ref;
+      renderCart();
+      toast(t("pay_done_toast"));
+    } catch (e) {
+      btn.disabled = false; btn.innerHTML = html;
+      showOrderFallback();
+    }
+  });
+}
+
 /* ---------- product modal ---------------------------------------------- */
 let modalSel = { id: null, size: "", qty: 1 };
 
@@ -443,7 +533,7 @@ function openProduct(id) {
 
 /* ---------- cart --------------------------------------------------------- */
 function addToCart(id, size, qty, srcEl) {
-  state.orderDone = null;      // شروع سبد جدید → پنل موفقیت بسته می‌شود
+  state.orderDone = null; state.payRef = "";      // شروع سبد جدید → پنل موفقیت بسته می‌شود
   const found = state.cart.find(i => i.id === id && i.size === size);
   if (found) found.qty = Math.min(20, found.qty + qty);
   else state.cart.push({ id, size, qty });
@@ -456,6 +546,11 @@ function setQty(idx, qty) {
   if (qty <= 0) state.cart.splice(idx, 1);
   else state.cart[idx].qty = Math.min(20, qty);
   saveCart(); renderCart();
+}
+
+function readBuyerFields() {
+  const map = [["by-name", "name"], ["by-phone", "phone"], ["by-addr", "addr"]];
+  map.forEach(([id, k]) => { const el = $("#" + id); if (el && el.value.trim()) setBuyer(k, el.value.trim()); });
 }
 
 function renderCart() {
@@ -530,8 +625,9 @@ function renderCart() {
         <input type="text" id="by-addr"  data-i18n-ph="form_addr"  placeholder="${t("form_addr")}"  value="${(getBuyer().addr || "")}">
       </div>
     </details>
-    <button class="btn btn--block" type="button" id="checkout-wa">${ICON.wa} ${t("cart_wa")}</button>
+    <button class="btn btn--block" type="button" id="checkout-pay">${ICON.card} ${t("pay_btn")}</button>
     <button class="btn btn--block btn--dark" type="button" id="checkout-tg">${ICON.tg} ${t("cart_tg")}</button>
+    <button class="btn btn--block btn--ghost btn--sm" type="button" id="checkout-wa">${ICON.wa} ${t("cart_wa")}</button>
     <button class="btn btn--block btn--ghost btn--sm" type="button" id="copy-order">${ICON.eye} ${t("cart_copy")}</button>
     <p class="order-note">${t("cart_note")}</p>
     <button class="btn btn--ghost btn--sm" type="button" id="cart-clear" style="justify-self:start">${t("cart_clear")}</button>`;
@@ -543,6 +639,8 @@ function renderCart() {
   $$("[data-remove]", body).forEach(b => b.addEventListener("click", () => {
     setQty(Number(b.dataset.remove), 0); toast(t("toast_removed"));
   }));
+  $("#checkout-pay").addEventListener("click", () => renderPayStep());
+
   $("#checkout-wa").addEventListener("click", () => {
     window.open(`https://wa.me/${VORTEX.config.whatsapp}?text=${encodeURIComponent(orderText())}`, "_blank", "noopener");
   });
@@ -572,7 +670,7 @@ const tgInit  = () => { const a = TG_APP(); return a && a.initData ? a.initData 
 const tgUser  = () => { const a = TG_APP(); return a && a.initDataUnsafe ? a.initDataUnsafe.user : null; };
 
 /* ---------- ثبت سفارش در بات تلگرام (از طریق Cloudflare Worker) ---------- */
-async function submitOrder() {
+async function submitOrder(payRef) {
   const items = state.cart.map(i => {
     const p = productById(i.id);
     return { id: i.id, name: pick(p.name, state.lang), size: i.size || "", qty: i.qty, price: p.price };
@@ -585,6 +683,7 @@ async function submitOrder() {
       lang: state.lang, items,
       totals: { sub, ship, total: sub + ship },
       buyer: getBuyer(),
+      payRef: payRef || "",
       initData: tgInit()
     })
   });
@@ -595,6 +694,25 @@ async function submitOrder() {
 
 function orderSuccessHtml(code) {
   const botUrl = `https://t.me/${VORTEX.config.telegram}`;
+  if (state.payRef) {
+    return `
+    <div class="empty pay-ok" style="padding:2rem 1rem">
+      <div class="pay-ok-mark">${ICON.check}</div>
+      <h3 style="color:var(--text);font-size:1.12rem">${t("pay_ok_title")}</h3>
+      <p style="margin-top:.7rem;font-size:.88rem;line-height:1.95">${t("pay_ok_body")}</p>
+      <div class="pay-ok-code">
+        <span class="field-label">${t("order_ok_code")}</span>
+        <div style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:.06em;color:var(--olive-200)">${code}</div>
+        <span class="field-label" style="margin-top:.5rem">${t("pay_ref_label")}</span>
+        <div style="font-family:var(--font-display);font-size:1.05rem;color:var(--text)">${state.payRef}</div>
+      </div>
+      <div style="display:grid;gap:.6rem;margin-top:1.3rem">
+        <a class="btn btn--block" href="${botUrl}?start=${encodeURIComponent(code)}" target="_blank" rel="noopener">${ICON.tg} ${t("order_track")}</a>
+        <a class="btn btn--block btn--ghost btn--sm" href="shop.html">${t("order_ok_shop")}</a>
+      </div>
+      <p style="margin-top:.9rem;font-size:.76rem;color:var(--muted)">${t("pay_ok_note")}</p>
+    </div>`;
+  }
   return `
     <div class="empty" style="padding:2.2rem 1rem">
       <div style="width:64px;height:64px;margin:0 auto 1.1rem;display:grid;place-items:center;border:1px solid var(--olive);color:var(--olive)">${ICON.check}</div>

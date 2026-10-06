@@ -122,6 +122,12 @@ function buildOrderMessage(order, code, stockWarn = []) {
 
   rows.push(`🕐 ${new Intl.DateTimeFormat(L ? "fa-IR" : "en-GB", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Tehran" }).format(new Date())}`);
   rows.push("");
+  if (order.payRef) {
+    rows.push("🧾 <b>" + (L ? "کد پیگیری اعلامی مشتری" : "Customer payment ref") + ":</b> <code>" + esc(order.payRef) + "</code>");
+    rows.push(L ? "مشتری می‌گوید پرداخت کرده — با پیامک بانک تطبیق بده و تأیید کن." : "Customer says they paid — verify with your bank SMS.");
+    rows.push("");
+  }
+
   if (stockWarn.length) {
     rows.push("⚠️ <b>" + (L ? "هشدار موجودی" : "Stock warning") + ":</b>");
     stockWarn.forEach((w) => rows.push(L
@@ -164,6 +170,7 @@ async function handleOrder(request, env) {
     buyer: body.buyer || {},
     lang: body.lang === "en" ? "en" : "fa",
     note: typeof body.note === "string" ? body.note.slice(0, 400) : "",
+    payRef: typeof body.payRef === "string" ? body.payRef.replace(/[^0-9A-Za-z\-]/g, "").slice(0, 24) : "",
   };
   if (!order.items.length) return json({ ok: false, error: "empty_cart" }, 400);
 
@@ -182,9 +189,10 @@ async function handleOrder(request, env) {
     st.orders[code] = {
       code, ts: Date.now(), lang: order.lang, items: order.items, totals: order.totals,
       buyer: { ...(order.buyer || {}) }, note: order.note,
+      payRef: order.payRef || "",
       chatId: tgUser ? tgUser.id : null,
       tgUser: tgUser ? { id: tgUser.id, username: tgUser.username || "", first_name: tgUser.first_name || "" } : null,
-      status: "new", tracking: "", photoFileId: "",
+      status: order.payRef ? "paycheck" : "new", tracking: "", photoFileId: "",
     };
   });
 
@@ -204,6 +212,22 @@ async function handleOrder(request, env) {
   const msgId = sent && sent.result && sent.result.message_id;
   if (msgId) await writeStore(env, (st) => { if (st.orders[code]) st.orders[code].ownerMsgId = msgId; });
 
+  /* پیام کد پیگیری دریافت شد → تأیید فوری برای مشتری (اگر چت داریم) */
+  if (order.payRef && tgUser && tgUser.id) {
+    await tg(env, "sendMessage", {
+      chat_id: tgUser.id, parse_mode: "HTML",
+      text: [
+        order.lang === "en" ? "🧾 <b>Payment info received</b>" : "🧾 <b>اطلاعات پرداخت دریافت شد</b>",
+        `<b>${order.lang === "en" ? "Order" : "کد سفارش"}:</b> <code>${code}</code>`,
+        `<b>${order.lang === "en" ? "Your reference" : "کد پیگیری"}:</b> <code>${esc(order.payRef)}</code>`,
+        "",
+        order.lang === "en"
+          ? "We check the payment and call you shortly to arrange shipping."
+          : "پرداختت را بررسی می‌کنیم و به‌زودی برای هماهنگی ارسال با تو تماس می‌گیریم. 🙏",
+      ].join("\n"),
+    }).catch(() => {});
+  }
+
   /* پیام خودکار به مشتری (فقط اگر از تلگرام آمده باشد) */
   let notified = false;
   if (tgUser && tgUser.id) {
@@ -216,7 +240,7 @@ async function handleOrder(request, env) {
     notified = Boolean(r && r.ok);
   }
 
-  return json({ ok: true, code, notified, stockWarn: warn.length });
+  return json({ ok: true, code, notified, payRef: Boolean(order.payRef), status: order.payRef ? "paycheck" : "new", stockWarn: warn.length });
 }
 
 /* ---------- وب‌هوک بات تلگرام ------------------------------------------- */
@@ -540,6 +564,13 @@ export default {
     if (url.pathname === "/api/tg/webhook") {
       if (request.method !== "POST") return json({ ok: false }, 405);
       return handleWebhook(request, env);
+    }
+
+    if (url.pathname === "/api/pay") {
+      const store = await readStore(env);
+      const cfg = resolveCfg(env, store);
+      if (!cfg.card) return json({ ok: false, error: "card_not_set" }, 503);
+      return json({ ok: true, card: cfg.card, cardName: cfg.cardName || "" }, 200, { "cache-control": "no-store" });
     }
 
     if (url.pathname === "/api/stock") {
