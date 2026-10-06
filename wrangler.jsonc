@@ -1,7 +1,14 @@
 {
   // VORTEX — سایت + اندپوینت سفارش تلگرام روی Cloudflare Workers
   "name": "vortexgear",
-  "workers_dev": true,          // تا وقتی دامنه وصل نشده، آدرس workers.dev فعال بماند
+  "workers_dev": true,
+  // ⬇️ بعد از اینکه دامنه از داشبورد به Worker وصل شد، این دو مسیر را از کامنت خارج کن
+  //    (یا فقط SHOP_URL را عوض کن؛ اتصال دامنه از داشبورد هم کافی است)
+  // "routes": [
+  //   { "pattern": "vortexgear.ir/*", "zone_name": "vortexgear.ir" },
+  //   { "pattern": "www.vortexgear.ir/*", "zone_name": "vortexgear.ir" }
+  // ],
+  // "vars": { "SHOP_URL": "https://vortexgear.ir" }   ← بعد از فعال‌شدن دامنه          // تا وقتی دامنه وصل نشده، آدرس workers.dev فعال بماند
   "main": "worker/index.js",
   "compatibility_date": "2026-05-03",
   "assets": {
