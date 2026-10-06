@@ -7,6 +7,9 @@ const I18N = {
   fa: {
     /* header */
     nav_home: "خانه", nav_shop: "فروشگاه", nav_about: "درباره ما", nav_contact: "تماس",
+    order_track: "پیگیری سفارش در تلگرام",
+    order_track_hint: "این دکمه بات ورتکس را با کد سفارشت باز می‌کند؛ همان‌جا وضعیت را می‌بینی، کارت پرداخت را می‌گیری و آدرس را می‌فرستی.",
+    out_of_stock: "فعلاً ناموجود",
     ord_kick: "راهنمای خرید",
     ord_title: "سفارش در ۳ قدم ساده",
     ord_lead: "بدون ثبت‌نام، بدون درگاه پرداخت. همان‌طور که در اینستاگرام دایرکت می‌دهی، اینجا هم سفارش را مستقیم به ما می‌فرستی.",
@@ -164,6 +167,9 @@ const I18N = {
   },
 
   en: {
+    order_track: "Track the order in Telegram",
+    order_track_hint: "This opens the Vortex bot with your order code: see status, get the payment card and send your address there.",
+    out_of_stock: "Sold out for now",
     ord_kick: "How to order",
     ord_title: "Order in 3 simple steps",
     ord_lead: "No sign-up, no payment gateway. Just like sending a DM on Instagram, your order goes straight to us.",

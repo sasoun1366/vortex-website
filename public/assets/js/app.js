@@ -323,6 +323,46 @@ function renderCatFilters() {
   }));
 }
 
+/* موجودی انبار (از بات/انبارهٔ فروشگاه) — برای نشان‌دادن «ناموجود» */
+let STOCK = null;
+async function loadStock() {
+  try {
+    const r = await fetch("api/stock", { cache: "no-store" });
+    const d = await r.json();
+    STOCK = d && d.ok ? (d.stock || {}) : null;
+  } catch (e) { STOCK = null; }
+  if (STOCK) markSoldOut();
+}
+
+/* اگر همهٔ سایزهای یک محصول صفر بود → کارت ناموجود میشود */
+function stockOf(p, size) {
+  if (!STOCK) return null;
+  const keys = Object.keys(STOCK);
+  const key = keys.includes(p.id) ? p.id
+    : keys.find(k => p.id.toLowerCase().startsWith("vx-" + k.toLowerCase()) || p.id.toLowerCase().includes(k.toLowerCase()));
+  if (!key) return null;
+  const s = STOCK[key];
+  if (s["*"] !== undefined) return Number(s["*"]);
+  if (size && s[size] !== undefined) return Number(s[size]);
+  const vals = Object.values(s).map(Number).filter(n => !isNaN(n));
+  return vals.length ? vals.reduce((a, b) => a + b, 0) : null;
+}
+function markSoldOut() {
+  $$(".card[data-id]").forEach(card => {
+    const p = productById(card.dataset.id);
+    if (!p) return;
+    const total = stockOf(p);
+    const out = total !== null && total <= 0;
+    card.classList.toggle("is-out", out);
+    const btn = $(".add-btn", card);
+    if (btn) {
+      btn.disabled = out;
+      const label = $("span", btn);
+      if (label) label.textContent = out ? t("out_of_stock") : t("m_add");
+    }
+  });
+}
+
 function renderShop() {
   const host = $("#shop-grid"); if (!host) return;
   host.classList.remove("animating"); void host.offsetWidth; host.classList.add("animating");
@@ -337,8 +377,10 @@ function renderShop() {
 }
 
 function bindGrid(host) {
+  if (STOCK) setTimeout(markSoldOut, 0);
   $$("[data-add]", host).forEach(b => b.addEventListener("click", e => {
     e.preventDefault();
+    if (b.disabled) return;
     const p = productById(b.dataset.add);
     if (p.sizes && p.sizes.length) openProduct(p.id);   // needs a size first
     else addToCart(p.id, "", 1, b);
@@ -563,9 +605,10 @@ function orderSuccessHtml(code) {
         <div style="font-family:var(--font-display);font-size:1.25rem;letter-spacing:.08em;color:var(--olive-200)">${code}</div>
       </div>
       <div style="display:grid;gap:.6rem;margin-top:1.4rem">
-        <a class="btn btn--block" href="${botUrl}" target="_blank" rel="noopener">${ICON.tg} ${t("order_ok_bot")}</a>
+        <a class="btn btn--block" href="${botUrl}?start=${encodeURIComponent(code)}" target="_blank" rel="noopener">${ICON.tg} ${t("order_track")}</a>
         <a class="btn btn--block btn--ghost btn--sm" href="shop.html">${t("order_ok_shop")}</a>
       </div>
+      <p style="margin-top:.8rem;font-size:.78rem;line-height:1.9;color:var(--muted)">${t("order_track_hint")}</p>
     </div>`;
 }
 
@@ -759,6 +802,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCart();
   observeReveal();
   UI.init();
+  loadStock();
 
   /* contact page form → WhatsApp */
   const cf = $("#contact-form");
