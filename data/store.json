@@ -13,5 +13,45 @@
    "*": 20
   }
  },
- "orders": {}
+ "orders": {
+  "VX-261006-9745": {
+   "code": "VX-261006-9745",
+   "ts": 1791287138740,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "tee",
+     "name": "تی‌شرت تمرین ورتکس",
+     "size": "M",
+     "qty": 2,
+     "price": 1480000
+    },
+    {
+     "id": "keychain",
+     "name": "جاکلیدی ورتکس",
+     "size": "",
+     "qty": 1,
+     "price": 320000
+    }
+   ],
+   "totals": {
+    "sub": 3280000,
+    "ship": 0,
+    "total": 3280000
+   },
+   "buyer": {
+    "name": "",
+    "phone": "",
+    "addr": ""
+   },
+   "note": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
+  }
+ }
 }
