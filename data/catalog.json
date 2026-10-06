@@ -2,7 +2,15 @@
  "products": [],
  "soon": [],
  "cfg": {},
- "draft": null,
+ "draft": {
+  "ts": 1791290451295,
+  "chat": "5034689859",
+  "step": "editphoto",
+  "d": {
+   "editId": "vx-tee-001",
+   "photo": ""
+  }
+ },
  "overrides": {
   "vx-chalk-001": {
    "price": 550000,
