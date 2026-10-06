@@ -143,6 +143,20 @@ config: {
 ### مرحله ۱ — ریپوی گیت‌هاب
 کد در ریپوی گیت‌هاب (شاخهٔ `main`) قرار می‌گیرد. از این به بعد هر تغییری که push شود، خودکار منتشر می‌شود.
 
+دو اسکریپت آماده در پوشهٔ `scripts/` هست که همین کارها را انجام می‌دهند:
+
+```bash
+# ساخت ریپو + پوش کد  (نیاز به توکن گیت‌هاب با دسترسی Contents/Administration/Workflows: Write)
+GITHUB_TOKEN=xxx bash scripts/deploy-github.sh vortex-website
+
+# ساخت پروژه Pages + انتشار فوری سایت  (نیاز به توکن کلودفلر با دسترسی Pages: Edit)
+CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=yyy bash scripts/deploy-cloudflare.sh
+
+# ست کردن سکرت‌های GitHub Actions برای دیپلوی خودکار روی هر push
+GITHUB_TOKEN=xxx REPO=owner/vortex-website CF_API_TOKEN=xxx CF_ACCOUNT_ID=yyy \
+  python3 scripts/set-gh-secrets.py
+```
+
 ### مرحله ۲ — وصل کردن ریپو به Cloudflare Pages (۵ کلیک، یک‌بار برای همیشه)
 1. داشبورد Cloudflare → **Workers & Pages** → **Create** → تب **Pages** → **Connect to Git**
 2. اجازه دسترسی به گیت‌هاب بده و ریپو را انتخاب کن → **Begin setup**
