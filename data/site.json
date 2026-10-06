@@ -4,11 +4,13 @@
   "fa": {},
   "en": {}
  },
- "images": {},
+ "images": {
+  "gal5": "media/site/gal5.png?v=muwuywv7"
+ },
  "theme": {
   "accent": "#7C8C4B",
   "bg": "#0A0B08"
  },
  "layout": {},
- "updated": 0
+ "updated": 1791302016267
 }
