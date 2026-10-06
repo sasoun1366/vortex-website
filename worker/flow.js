@@ -75,7 +75,7 @@ export function paymentMessage(order, code, cfg) {
   const total = money2(order.totals?.total || 0, order.lang || "fa");
   const holder = cfg.cardName ? (L ? `به نام: <b>${fx(cfg.cardName)}</b>` : `Account name: <b>${fx(cfg.cardName)}</b>`) : "";
   const head = L
-    ? ["🧾 <b>سفارش تو ثبت شد</b>", `کد سفارش: <code>${code}</code>`, "", "برای نهایي‌شدن، فقط پرداخت مانده. 👇", ""].join("\n")
+    ? ["🧾 <b>سفارش تو ثبت شد</b>", `کد سفارش: <code>${code}</code>`, "", "فقط یک قدم مانده: پرداخت. 👇", ""].join("\n")
     : ["🧾 <b>Order received</b>", `Order code: <code>${code}</code>`, ""].join("\n");
   const body = cfg.card
     ? (L ? CARD_TIP_FA : CARD_TIP_EN).replace("{total}", total).replace("{card}", fx(cfg.card)).replace("{holder}", holder)
