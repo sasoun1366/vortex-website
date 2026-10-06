@@ -33,27 +33,5 @@
  ],
  "soon": [],
  "cfg": {},
- "draft": {
-  "ts": 1791289119269,
-  "chat": "5034689859",
-  "step": "confirm",
-  "d": {
-   "photo": "AgACAgQAAxkDAANNasTnHvqMq0TuU5P2h3ERmnI6cJEAAhEPaxv0fi1Sf86kEA_QyKEBAAMCAAN5AAM9BA",
-   "name": "جاکلیدی تست میان‌بر",
-   "nameEn": "",
-   "price": 320000,
-   "sizes": [],
-   "stock": {
-    "*": 4
-   },
-   "cat": "accessory",
-   "desc": "بند تسمه‌ای با قفل فلزی",
-   "descEn": "",
-   "badge": {
-    "fa": "",
-    "en": ""
-   },
-   "featured": true
-  }
- }
+ "draft": null
 }
