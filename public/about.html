@@ -21,10 +21,21 @@
 <meta name="twitter:description" content="داستان برند ورتکس؛ تولید داخلی تجهیزات تمرین قدرتی با متریال تست‌شده.">
 <meta name="twitter:image" content="https://vortexgear.ir/assets/img/hero.jpg">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/motion.css">
 </head>
 <body data-page="about"
       data-title-fa="درباره ورتکس | برند تجهیزات کراس‌فیت"
       data-title-en="About Vortex | CrossFit gear brand">
+
+<!-- لودر برند (با لوگوی ورتکس) -->
+<div id="vx-loader" aria-hidden="true">
+  <div class="vx-load-inner">
+    <svg class="vx-load-mark" viewBox="0 0 100 100"><path d="M12 16h20l18 44 18-44h20L58 90H42L12 16z"/></svg>
+    <div class="vx-load-word">Vortex</div>
+    <div class="vx-load-bar"><i></i></div>
+  </div>
+</div>
+<div id="vx-progress" aria-hidden="true"></div>
 
 <div id="site-header"></div>
 
@@ -45,15 +56,15 @@
   <!-- story -->
   <section class="section">
     <div class="container">
-      <div class="split">
-        <div class="split-body reveal">
+      <div class="split" data-stagger="140">
+        <div class="split-body reveal" data-reveal="right">
           <span class="eyebrow" data-i18n="story_eyebrow">داستان برند</span>
           <h2 class="display" data-i18n="story_title">از یک باکس، برای همه باکس‌ها</h2>
           <p data-i18n="a_p1">ورتکس با یک هدف ساده شروع شد: تجهیزات تمرین قدرتی باید مثل خود تمرین، جدی و بی‌تعارف باشند.</p>
           <p data-i18n="a_p2">هر محصول ورتکس چند مرحله نمونه‌سازی می‌شود: پارچه، درز، کشسانی، رفتار بعد از شست‌وشو و راحتی در حرکت.</p>
           <p data-i18n="a_p3">امروز محصولات ورتکس در باکس‌های سراسر کشور استفاده می‌شوند؛ از ورزشکار مبتدی تا تیم‌های کراس‌فیت.</p>
         </div>
-        <div class="split-media reveal">
+        <div class="split-media reveal mask-img" data-reveal="scale">
           <img src="assets/img/liquid-chalk.jpg" alt="گچ مایع ورتکس" loading="lazy">
           <div class="tag">
             <span>VORTEX</span>
@@ -67,7 +78,7 @@
   <!-- values -->
   <section class="section" style="padding-top:0">
     <div class="container">
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-stagger="130">
         <div class="feat reveal" style="border:1px solid var(--line-soft)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v6c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg>
           <h3 data-i18n="a_val1_t">کیفیت بی‌چون‌وچرا</h3>
@@ -90,7 +101,7 @@
   <!-- quote -->
   <section class="section" style="padding-top:0">
     <div class="container">
-      <div class="cta-band reveal" style="justify-content:center;text-align:center;flex-direction:column">
+      <div class="cta-band reveal" data-reveal="up" style="justify-content:center;text-align:center;flex-direction:column">
         <h2 class="display" style="font-size:var(--step-3);max-width:34ch" data-i18n="a_quote">«ما لباس تمرین نمی‌فروشیم؛ ابزار ساخت رکوردهای بعدی را می‌سازیم.»</h2>
         <div class="hatch-bar" style="width:120px"></div>
         <a class="btn" href="shop.html" data-i18n="a_cta">دیدن محصولات</a>
@@ -126,5 +137,6 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/motion.js"></script>
 </body>
 </html>

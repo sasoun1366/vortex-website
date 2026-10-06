@@ -250,6 +250,7 @@ function setLang(lang) {
   applyI18n();
   renderCart();
   if ($("#featured-grid")) renderFeatured("#featured-grid");
+  if (window.vxMotionRefresh) setTimeout(window.vxMotionRefresh, 40);
   if ($("#shop-grid")) { renderCatFilters(); renderShop(); }
   if (document.body.dataset.page === "home" && $("#soon-grid")) renderSoon();
 }
@@ -682,6 +683,7 @@ document.addEventListener("DOMContentLoaded", () => {
   applyI18n();
 
   if ($("#featured-grid")) renderFeatured("#featured-grid");
+  if (window.vxMotionRefresh) setTimeout(window.vxMotionRefresh, 40);
   if ($("#soon-grid")) renderSoon();
   if ($("#shop-grid")) {
     const urlCat = new URLSearchParams(location.search).get("cat");

@@ -21,10 +21,21 @@
 <meta name="twitter:description" content="خرید پوشاک و تجهیزات کراس‌فیت ورتکس با ارسال به سراسر ایران.">
 <meta name="twitter:image" content="https://vortexgear.ir/assets/img/hero.jpg">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/motion.css">
 </head>
 <body data-page="shop"
       data-title-fa="فروشگاه ورتکس | پوشاک و تجهیزات کراس‌فیت"
       data-title-en="Vortex shop | CrossFit apparel & gear">
+
+<!-- لودر برند (با لوگوی ورتکس) -->
+<div id="vx-loader" aria-hidden="true">
+  <div class="vx-load-inner">
+    <svg class="vx-load-mark" viewBox="0 0 100 100"><path d="M12 16h20l18 44 18-44h20L58 90H42L12 16z"/></svg>
+    <div class="vx-load-word">Vortex</div>
+    <div class="vx-load-bar"><i></i></div>
+  </div>
+</div>
+<div id="vx-progress" aria-hidden="true"></div>
 
 <div id="site-header"></div>
 
@@ -75,17 +86,18 @@
   <section class="section">
     <div class="container">
       <div class="shop-bar">
+        <div class="glow-blob" style="width:380px;height:380px;top:120px;inset-inline-start:-120px"></div>
         <div id="shop-filters" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
         <span class="shop-count" id="shop-count"></span>
       </div>
-      <div class="grid grid--4" id="shop-grid" style="margin-top:2rem"></div>
+      <div class="grid grid--4" id="shop-grid" style="margin-top:2rem" data-stagger="90"></div>
     </div>
   </section>
 
   <!-- ==================== SOON ==================== -->
   <section class="section" style="padding-top:0">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head reveal" data-reveal="up">
         <span class="eyebrow" data-i18n="kick_soon">در راه است</span>
         <h2 class="display" data-i18n="soon_title">در راه است</h2>
       </div>
@@ -117,6 +129,7 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/motion.js"></script>
 <script>
   /* CTA band buttons: open the cart (order happens from the drawer) */
   function paintCta(){
