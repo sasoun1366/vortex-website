@@ -3,16 +3,18 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791290542579,
+  "ts": 1791290550890,
   "chat": "5034689859",
-  "step": "qty",
+  "step": "cat",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAO1asTsb7bAqokCftQDjN-0BrUPg9QAAuAPaxuTrylSv4zMaBKsdHABAAMCAAN4AAM9BA",
    "name": "پودر پروتین دایماتیز ۲.۲ کیلویی",
    "price": 45000000,
    "sizes": [],
-   "stock": {}
+   "stock": {
+    "*": 3
+   }
   }
  },
  "overrides": {
