@@ -245,6 +245,23 @@ async function handleWebhook(request, env) {
     ],
   };
 
+  /* اگر مدیر هنوز تنظیم نشده، شناسهٔ چت را به کاربر می‌گوییم تا تنظیمات کامل شود */
+  if (!env.OWNER_CHAT_ID && !text.startsWith("/id")) {
+    await tg(env, "sendMessage", {
+      chat_id: chatId,
+      text: [
+        "⚙️ <b>این بات هنوز به فروشگاه وصل نشده است.</b>",
+        "",
+        "شناسهٔ چت شما:",
+        `<code>${chatId}</code>`,
+        "",
+        "این شناسه را برای مدیر فنی بفرست تا سفارش‌های فروشگاه به این چت برسد.",
+      ].join("\n"),
+      parse_mode: "HTML",
+    });
+    return json({ ok: true, unconfigured: true });
+  }
+
   if (text.startsWith("/id")) {
     await tg(env, "sendMessage", { chat_id: chatId, text: `🆔 <code>${chatId}</code>`, parse_mode: "HTML" });
     return json({ ok: true });
