@@ -1,6 +1,7 @@
 {
   // VORTEX — سایت + اندپوینت سفارش تلگرام روی Cloudflare Workers
   "name": "vortexgear",
+  "workers_dev": true,          // تا وقتی دامنه وصل نشده، آدرس workers.dev فعال بماند
   "main": "worker/index.js",
   "compatibility_date": "2026-05-03",
   "assets": {
