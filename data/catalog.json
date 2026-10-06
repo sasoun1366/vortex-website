@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791290560337,
+  "ts": 1791290581127,
   "chat": "5034689859",
-  "step": "desc",
+  "step": "en",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAO1asTsb7bAqokCftQDjN-0BrUPg9QAAuAPaxuTrylSv4zMaBKsdHABAAMCAAN4AAM9BA",
@@ -15,7 +15,8 @@
    "stock": {
     "*": 3
    },
-   "cat": "gear"
+   "cat": "gear",
+   "desc": "پودر پروتین دایماتیز محصول امریکا"
   }
  },
  "overrides": {
