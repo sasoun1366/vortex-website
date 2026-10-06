@@ -4,6 +4,10 @@
   "cardName": "ساسون",
   "whatsapp": ""
  },
- "stock": {},
+ "stock": {
+  "tee": {
+   "M": 6
+  }
+ },
  "orders": {}
 }
