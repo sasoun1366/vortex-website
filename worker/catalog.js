@@ -222,6 +222,25 @@ export function toSite(p) {
   return out;
 }
 
+/* ---------- بازنویسی محصول موجود (قیمت/اسم/عکس/…) ----------------------
+   صاحب فروشگاه می‌تواند محصولات ثابت سایت را هم با بات عوض کند؛ این
+   بازنویسی‌ها در catalog.overrides ذخیره و همین‌جا روی محصول اعمال می‌شوند.
+   ---------------------------------------------------------------------- */
+export function applyOverride(p, ov) {
+  if (!ov) return p;
+  const out = { ...p };
+  if (ov.price != null) out.price = Number(ov.price) || 0;
+  if (ov.oldPrice != null) out.oldPrice = Number(ov.oldPrice) || 0;
+  if (ov.img) out.img = ov.img;
+  if (ov.cat) out.cat = catId(ov.cat) || out.cat;
+  if (ov.featured != null) out.featured = Boolean(ov.featured);
+  if (ov.name) out.name = { ...(p.name || {}), ...ov.name };
+  if (ov.desc) out.desc = { ...(p.desc || {}), ...ov.desc };
+  if (ov.badge) out.badge = { ...(p.badge || {}), ...ov.badge };
+  if (Array.isArray(ov.sizes)) out.sizes = ov.sizes;
+  return out;
+}
+
 /* ---------- متن خلاصهٔ محصول (برای پیش‌نمایش و لیست) -------------------- */
 export function productSummary(p, money) {
   const sizes = Array.isArray(p.sizes) && p.sizes.length ? p.sizes.join(" · ") : "بدون سایز";

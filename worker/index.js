@@ -10,8 +10,8 @@
 import { readStore, writeStore, stockFor, stockReport, decStock } from "./store.js";
 import { paymentMessage, addressRequestMessage, parseAddressBlock, addressSummary, customerStatusMessage,
          ownerStockReport, statusFa, statusEn, resolveCfg, maskedCard } from "./flow.js";
-import { readCatalog, toSite, MEDIA_DIR } from "./catalog.js";
-import { admMessage, admCallback, admStart, productList, PRODUCT_HELP } from "./product.js";
+import { readCatalog, toSite, MEDIA_DIR, applyOverride } from "./catalog.js";
+import { admMessage, admCallback, admStart, productList, adminText, PRODUCT_HELP } from "./product.js";
 
 const TG = (env) => `${env.TELEGRAM_API_BASE || "https://api.telegram.org"}/bot${env.BOT_TOKEN}`;
 const FA = new Intl.NumberFormat("fa-IR");
@@ -368,6 +368,8 @@ async function handleWebhook(request, env) {
     /* جریان «افزودن محصول با عکس» (اگر وسط مرحله‌ای باشد، پیام را برمی‌دارد) */
     if (/^\/(products|list)\b/.test(text)) { await productList(env, tg, chatId, store); return json({ ok: true }); }
     if (await admMessage(env, tg, chatId, msg, text, store)) return json({ ok: true });
+    /* دستور آزاد فارسی: «قیمت گچ رو بکن ۵۵۰ هزار» ، «تی‌شرت ناموجود شد» ، «جاکلیدی رو حذف کن» */
+    if (await adminText(env, tg, chatId, text, store)) return json({ ok: true });
 
     /* /setcard 6037-xxxx-xxxx-1234 [نام صاحب کارت] */
     if (text.startsWith("/setcard")) {
@@ -607,12 +609,15 @@ export default {
 
     if (url.pathname === "/api/products") {
       const cat = await readCatalog(env);
+      const ov = cat.overrides || {};
+      const hidden = Array.isArray(cat.hidden) ? cat.hidden : [];
       const list = (cat.products || [])
-        .filter((p) => p && p.active !== false && p.id)
+        .filter((p) => p && p.active !== false && p.id && !hidden.includes(p.id))
         .sort((a, b) => (b.ts || 0) - (a.ts || 0))
-        .map(toSite);
+        .map((p) => applyOverride(toSite(p), ov[p.id]));
       const soon = Array.isArray(cat.soon) ? cat.soon.filter((x) => x && (x.fa || x.en)) : [];
-      return json({ ok: true, count: list.length, products: list, soon });
+      /* hidden/overrides برای محصولات ثابتِ فایل products.js هم لازم است */
+      return json({ ok: true, count: list.length, products: list, soon, hidden, overrides: ov });
     }
 
     if (url.pathname.startsWith("/media/")) {

@@ -329,18 +329,46 @@ function renderCatFilters() {
    محصولاتی که با بات تلگرام اضافه/عوض می‌شوند از /api/products می‌آیند و
    روی فهرست ثابت products.js سوار می‌شوند (محصولات بات اول، جدیدترین اول).
    اگر این درخواست جواب ندهد، سایت با همان فهرست ثابت کار می‌کند. */
+function applyOverride(p, o) {
+  if (!o) return p;
+  const out = { ...p };
+  if (o.price != null) out.price = Number(o.price) || 0;
+  if (o.oldPrice != null) out.oldPrice = Number(o.oldPrice) || 0;
+  if (o.img) out.img = o.img;
+  if (o.cat) out.cat = o.cat;
+  if (o.featured != null) out.featured = !!o.featured;
+  if (o.name) out.name = { ...(p.name || {}), ...o.name };
+  if (o.desc) out.desc = { ...(p.desc || {}), ...o.desc };
+  if (o.badge) out.badge = { ...(p.badge || {}), ...o.badge };
+  if (Array.isArray(o.sizes)) out.sizes = o.sizes;
+  return out;
+}
+
 async function loadCatalog() {
+  let d;
   try {
     const r = await fetch("api/products", { cache: "no-store" });
-    const d = await r.json();
-    if (!d || !d.ok || !Array.isArray(d.products) || !d.products.length) return false;
-    const live = d.products.filter(p => p && p.id && p.name && Number(p.price) >= 0);
-    if (!live.length) return false;
-    const ids = new Set(live.map(p => p.id));
-    VORTEX.products = live.concat(VORTEX.products.filter(p => !ids.has(p.id)));
-    if (Array.isArray(d.soon) && d.soon.length) VORTEX.soon = d.soon;
-    return true;
+    d = await r.json();
   } catch (e) { return false; }
+  if (!d || !d.ok) return false;
+
+  if (!VORTEX.baseProducts) VORTEX.baseProducts = VORTEX.products.slice();   // فهرست ثابت اصلی
+  const hidden = new Set(Array.isArray(d.hidden) ? d.hidden : []);
+  const ov = d.overrides || {};
+  const base = VORTEX.baseProducts
+    .filter(p => !hidden.has(p.id))
+    .map(p => applyOverride(p, ov[p.id]));
+  const bot = (d.products || []).filter(p => p && p.id && !hidden.has(p.id));
+  VORTEX.products = bot.concat(base.filter(p => !bot.some(b => b.id === p.id)));
+  if (Array.isArray(d.soon) && d.soon.length) VORTEX.soon = d.soon;
+  return true;
+}
+
+/* این تابع بعد از هر تغییر (بات محصول اضافه/عوض کرده) صفحه را تازه می‌کند */
+function refreshCatalogUI() {
+  if ($("#featured-grid")) renderFeatured("#featured-grid");
+  if ($("#shop-grid")) renderShop();
+  markSoldOut();
 }
 
 /* موجودی انبار (از بات/انبارهٔ فروشگاه) — برای نشان‌دادن «ناموجود» */
@@ -519,7 +547,10 @@ function openProduct(id) {
       ${p.sizes && p.sizes.length ? `
         <span class="field-label">${t("m_size")}</span>
         <div class="sizes" id="size-list">
-          ${p.sizes.map(s => `<button class="size" type="button" data-size="${s}">${s}</button>`).join("")}
+          ${p.sizes.map(s => {
+            const st = stockOf(p, s), out = st !== null && st <= 0;
+            return `<button class="size${out ? " is-out" : ""}" type="button" data-size="${s}"${out ? " disabled" : ""}>${s}${out ? `<i>${t("size_out")}</i>` : ""}</button>`;
+          }).join("")}
         </div>` : ""}
       <span class="field-label" style="margin-top:.6rem">${t("m_qty")}</span>
       <div class="qty">
@@ -535,7 +566,9 @@ function openProduct(id) {
     $$("#size-list .size", host).forEach(x => x.classList.toggle("is-active", x === b));
   }));
   $$("[data-step]", host).forEach(b => b.addEventListener("click", () => {
-    modalSel.qty = Math.max(1, Math.min(20, modalSel.qty + Number(b.dataset.step)));
+    const avail = stockOf(p, modalSel.size);
+    const cap = avail === null ? 20 : Math.max(1, Math.min(20, avail));
+    modalSel.qty = Math.max(1, Math.min(cap, modalSel.qty + Number(b.dataset.step)));
     $("#modal-qty").innerHTML = num(modalSel.qty, state.lang);
   }));
   $("#modal-add").addEventListener("click", () => {
@@ -600,13 +633,16 @@ function renderCart() {
     return;
   }
 
+  const outLines = state.cart.filter(i => { const p = productById(i.id); const st = p ? stockOf(p, i.size) : null; return st !== null && st <= 0; });
   body.innerHTML = state.cart.map((i, idx) => {
     const p = productById(i.id); if (!p) return "";
-    return `<div class="cart-row">
+    const st = stockOf(p, i.size), out = st !== null && st <= 0;
+    return `<div class="cart-row${out ? " is-out" : ""}">
       <img src="${p.img}" alt="${pick(p.name, state.lang)}">
       <div>
         <h4>${pick(p.name, state.lang)}</h4>
         ${i.size ? `<div class="meta">${t("m_size")}: ${i.size}</div>` : ""}
+        ${out ? `<div class="out-chip">${t("cart_item_out")}</div>` : ""}
         <div class="qty--sm">
           <button type="button" data-cart-step="${idx}|-1" aria-label="-">${ICON.minus}</button>
           <span>${num(i.qty, state.lang)}</span>
@@ -650,6 +686,10 @@ function renderCart() {
     <p class="order-note">${t("cart_note")}</p>
     <button class="btn btn--ghost btn--sm" type="button" id="cart-clear" style="justify-self:start">${t("cart_clear")}</button>`;
 
+  if (outLines.length) {
+    foot.insertAdjacentHTML("afterbegin", `<div class="order-note out-note">${t("cart_out_note")}</div>`);
+  }
+
   $$("[data-cart-step]", body).forEach(b => b.addEventListener("click", () => {
     const [i, d] = b.dataset.cartStep.split("|").map(Number);
     setQty(i, state.cart[i].qty + d);
@@ -657,12 +697,15 @@ function renderCart() {
   $$("[data-remove]", body).forEach(b => b.addEventListener("click", () => {
     setQty(Number(b.dataset.remove), 0); toast(t("toast_removed"));
   }));
-  $("#checkout-pay").addEventListener("click", () => renderPayStep());
+  const guardOut = () => { if (outLines.length) { toast(t("cart_out_toast")); return true; } return false; };
+  $("#checkout-pay").addEventListener("click", () => { if (guardOut()) return; renderPayStep(); });
 
   $("#checkout-wa").addEventListener("click", () => {
+    if (guardOut()) return;
     window.open(`https://wa.me/${VORTEX.config.whatsapp}?text=${encodeURIComponent(orderText())}`, "_blank", "noopener");
   });
   $("#checkout-tg").addEventListener("click", async () => {
+    if (guardOut()) return;
     const btn = $("#checkout-tg");
     const html = btn.innerHTML;
     btn.disabled = true; btn.innerHTML = `${ICON.tg} ${t("order_sending")}`;
@@ -939,13 +982,15 @@ document.addEventListener("DOMContentLoaded", () => {
   observeReveal();
   UI.init();
   loadCatalog().then(changed => {
-    if (changed) {
-      if ($("#featured-grid")) renderFeatured("#featured-grid");
-      if ($("#shop-grid")) renderShop();
-      markSoldOut();
-    }
+    if (changed) refreshCatalogUI();
     loadStock();
   });
+
+  /* هر ۶۰ ثانیه موجودی و هر ۵ دقیقه کاتالوگ را تازه کن:
+     اگر موجودی محصولی در بات صفر شود، سایت خودش «ناموجود» می‌شود */
+  setInterval(() => loadStock(), 60000);
+  setInterval(() => loadCatalog().then(ch => { if (ch) refreshCatalogUI(); }), 300000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { loadStock(); } });
 
   /* contact page form → WhatsApp */
   const cf = $("#contact-form");

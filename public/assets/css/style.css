@@ -1275,3 +1275,37 @@ html[dir="ltr"] .pay-back svg { transform: scaleX(-1); }
 .pay-ok-mark svg { width: 30px; height: 30px; }
 .pay-ok-code { margin: 1.1rem auto 0; padding: .8rem 1rem; border: 1px dashed var(--line-strong);
   width: fit-content; min-width: 210px; text-align: center; }
+
+
+/* ---------- وضعیت ناموجودی (مدیریت از بات) ----------------------------- */
+.size.is-out{
+  opacity:.5;
+  cursor:not-allowed;
+  text-decoration:line-through;
+  position:relative;
+}
+.size.is-out i{
+  display:block;
+  font-style:normal;
+  font-size:.62rem;
+  opacity:.85;
+  text-decoration:none;
+  margin-top:.15rem;
+}
+.size.is-out:disabled{ pointer-events:none; }
+.cart-row.is-out img{ opacity:.45; filter:grayscale(.8); }
+.cart-row .out-chip{
+  display:inline-block;
+  margin-top:.35rem;
+  padding:.15rem .5rem;
+  border:1px solid rgba(214,92,74,.55);
+  color:#e08a7c;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:600;
+}
+.order-note.out-note{
+  color:#e08a7c;
+  border-inline-start:2px solid rgba(214,92,74,.6);
+  padding-inline-start:.6rem;
+}

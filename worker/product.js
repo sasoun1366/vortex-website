@@ -18,7 +18,7 @@
 
 import {
   readCatalog, writeCatalog, putRepoFile, invalidate, MEDIA_DIR,
-  CATS, catFa, catId, makeId, parseSizes, toSite, productSummary, toNum, faDigits,
+  CATS, catFa, catId, makeId, parseSizes, toSite, productSummary, toNum, faDigits, applyOverride,
 } from "./catalog.js";
 import { writeStore } from "./store.js";
 
@@ -66,6 +66,10 @@ function ask(step, d = {}) {
       return `💰 <b>قیمت جدید</b> را بنویس (فقط عدد).\nمحصول: <code>${d.editId}</code>`;
     case "editphoto":
       return `🖼 <b>عکس جدید</b> را بفرست.\nمحصول: <code>${d.editId}</code>`;
+    case "editname":
+      return `✏️ <b>اسم جدید</b> را بنویس.\nمحصول فعلی: <b>${esc(d.editLabel || d.editId)}</b>`;
+    case "editdesc":
+      return `📝 <b>توضیح جدید</b> را بنویس (یا /skip برای خالی‌کردن).\nمحصول: <b>${esc(d.editLabel || d.editId)}</b>`;
     default:
       return "ادامه بده 👇";
   }
@@ -266,6 +270,12 @@ function bytesToB64(buf) {
 /* ---------- پیام‌های ورودی مالک ----------------------------------------- */
 export async function admMessage(env, tg, chatId, msg, text, store) {
   const t = String(text || "").trim();
+  /* اگر مالک وسط مرحلهٔ ساخت محصول، یک دستور مدیریتی بنویسد
+     (مثل «قیمت گچ رو بکن ۵۵۰ هزار»)، جریان متوقف نمی‌شود ولی دستور هم اجرا می‌شود */
+  if (t && !t.startsWith("/") && !msg.photo) {
+    const cat0 = await readCatalog(env);
+    if (isAdminIntent(t, adminPool(cat0))) return false;
+  }
   const draft = await getDraft(env);
   const mine = draft && String(draft.chat) === String(chatId);
   const photoId = msg.photo && msg.photo.length ? msg.photo[msg.photo.length - 1].file_id
@@ -326,6 +336,24 @@ export async function admMessage(env, tg, chatId, msg, text, store) {
     });
     await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
       text: `✅ قیمت محصول <code>${esc(id)}</code> شد <b>${money(n)}</b> — همین حالا روی سایت عوض شد.` });
+    return true;
+  }
+
+  /* --- ویرایش اسم / توضیح با متن ---------------------------------------- */
+  if (mine && (draft.step === "editname" || draft.step === "editdesc")) {
+    const id = draft.d.editId;
+    const v = /^\/skip\b/.test(t) ? "" : t.slice(0, 220);
+    await writeCatalog(env, (c) => {
+      c.overrides = c.overrides || {};
+      const cur = c.overrides[id] || {};
+      const key = draft.step === "editname" ? "name" : "desc";
+      c.overrides[id] = { ...cur, [key]: { ...((cur[key]) || {}), fa: v } };
+      c.draft = null;
+    });
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: draft.step === "editname"
+        ? `✅ اسم محصول شد <b>${esc(v)}</b>`
+        : `✅ توضیح عوض شد.` });
     return true;
   }
 
@@ -439,8 +467,8 @@ async function applyPhotoEdit(env, tg, chatId, store) {
     const ext = /\.png$/i.test(fp) ? "png" : "jpg";
     await putRepoFile(env, `${MEDIA_DIR}/${id}.${ext}`, bytesToB64(buf), `media: ${id} (replace)`);
     await writeCatalog(env, (c) => {
-      const p = (c.products || []).find((x) => x.id === id);
-      if (p) p.img = `media/${id}.${ext}?v=${Date.now().toString(36)}`;
+      c.overrides = c.overrides || {};
+      c.overrides[id] = { ...(c.overrides[id] || {}), img: `media/${id}.${ext}?v=${Date.now().toString(36)}` };
       c.draft = null;
     });
     await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
@@ -457,26 +485,41 @@ async function applyPhotoEdit(env, tg, chatId, store) {
 /* ---------- لیست محصولات ------------------------------------------------- */
 export async function productList(env, tg, chatId, store) {
   const cat = await readCatalog(env);
-  const list = (cat.products || []).slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
-  if (!list.length) {
-    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-      text: "هنوز محصولی با بات اضافه نشده.\n\nبرای شروع یک <b>عکس محصول</b> بفرست یا /new را بزن." });
-    return true;
-  }
+  const botList = (cat.products || []).slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  const hiddenIds = new Set(cat.hidden || []);
+  const ov = cat.overrides || {};
+
   const rows = [];
-  const lines = ["🗂 <b>محصولات ساختهٔ بات</b>", ""];
-  list.forEach((p, i) => {
-    const active = p.active !== false;
-    const onboard = Boolean((store.stock || {})[p.id] && Object.keys(store.stock[p.id]).length);
-    lines.push(`${FA.format(i + 1)}. ${active ? "🟢" : "⚫️"} <b>${esc(p.name && p.name.fa ? p.name.fa : p.id)}</b> — ${money(p.price)}${onboard ? "" : " — <i>موجودی ثبت نشده</i>"}`);
+  const lines = ["🗂 <b>محصولات سایت</b>", ""];
+
+  const push = (p, { id, name, price, sizes, kind }) => {
+    const total = stockTotal(store, id, sizes, kind);
+    const stockTxt = total === null ? "موجودی: بی‌نهایت" : total <= 0 ? "🔴 ناموجود" : `🟢 موجودی ${FA.format(total)}`;
+    const isHidden = hiddenIds.has(id);
+    lines.push(`${isHidden ? "⚫️" : "🟢"} <b>${esc(name)}</b> — ${money(price)} — ${stockTxt}`);
     rows.push([
-      { text: active ? "🚫 مخفی" : "✅ نمایش", callback_data: `pr:${active ? "hide" : "show"}:${p.id}` },
-      { text: "💰 قیمت", callback_data: `pr:price:${p.id}` },
-      { text: "🖼 عکس", callback_data: `pr:photo:${p.id}` },
-      { text: "🗑 حذف", callback_data: `pr:del:${p.id}` },
+      { text: isHidden ? "✅ نمایش" : "🚫 مخفی", callback_data: `pr:${isHidden ? "show" : "hide"}:${id}` },
+      { text: "💰 قیمت", callback_data: `pr:price:${id}` },
+      { text: "🖼 عکس", callback_data: `pr:photo:${id}` },
+      kind === "static"
+        ? { text: "🗑 از سایت", callback_data: `pr:del:${id}` }
+        : { text: "🗑 حذف کامل", callback_data: `pr:del:${id}` },
     ]);
-  });
-  lines.push("", "➕ محصول جدید: /new");
+  };
+
+  STATIC.forEach((sp) => push(null, {
+    id: sp.id, kind: "static", sizes: sp.sizes,
+    name: (ov[sp.id] && ov[sp.id].name && ov[sp.id].name.fa) || sp.fa,
+    price: (ov[sp.id] && ov[sp.id].price != null) ? ov[sp.id].price : sp.price,
+  }));
+  botList.forEach((p) => push(p, {
+    id: p.id, kind: "bot", sizes: p.sizes || [],
+    name: (p.name && p.name.fa) || p.id,
+    price: (ov[p.id] && ov[p.id].price != null) ? ov[p.id].price : p.price,
+  }));
+
+  lines.push("", "💰 با دکمه‌ها عوض کن، یا همین‌جا بنویس: «قیمت گچ رو ۵۵۰ هزار کن»");
+  lines.push("➕ محصول جدید: /new");
   await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML", text: lines.join("\n"), reply_markup: { inline_keyboard: rows } });
   return true;
 }
@@ -505,6 +548,22 @@ export async function admCallback(env, tg, cb, store) {
     await ack("لغو شد");
     await dropButtons();
     await tg(env, "sendMessage", { chat_id: chatId, text: "لغو شد ✅" });
+    return true;
+  }
+
+  /* --- انتخاب بین چند محصول هم‌نام --- */
+  if (action === "pick") {
+    const draft = await getDraft(env);
+    const d = (draft && draft.d) || {};
+    const id = (d.pickIds || [])[Number(arg)];
+    if (!id) { await ack("پیدا نشد"); return true; }
+    const cat = await readCatalog(env);
+    const prod = adminPool(cat).find((p) => p.id === id);
+    await ack(prod ? prod.fa : "…");
+    await dropButtons();
+    if (!prod) return true;
+    await setDraft(env, null);
+    await applyAction(env, tg, chatId, prod, { act: d.act, val: d.val, size: d.size, cat, store, raw: "", draftOpen: false });
     return true;
   }
 
@@ -542,56 +601,427 @@ export async function admCallback(env, tg, cb, store) {
   }
 
   /* --- دکمه‌های لیست محصولات --- */
-  if (["hide", "show", "price", "photo", "del", "delok"].includes(action)) {
+  if (["hide", "show", "price", "photo", "del", "hideokdo", "delok"].includes(action)) {
     const id = arg;
     const cat = await readCatalog(env);
-    const prod = (cat.products || []).find((p) => p.id === id);
+    const prod = adminPool(cat).find((p) => p.id === id);
     if (!prod) { await ack("محصول پیدا نشد"); return true; }
 
     if (action === "hide" || action === "show") {
-      const active = action === "show";
-      await writeCatalog(env, (c) => { const p = (c.products || []).find((x) => x.id === id); if (p) p.active = active; });
-      await ack(active ? "روی سایت رفت" : "از سایت برداشته شد");
+      await setHidden(env, id, action === "hide");
+      await ack(action === "hide" ? "از سایت برداشته شد" : "روی سایت رفت");
+      await dropButtons();
+      const nm = esc(pname(prod));
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-        text: active ? `✅ <b>${esc(prod.name.fa)}</b> دوباره روی سایت رفت.` : `🚫 <b>${esc(prod.name.fa)}</b> از سایت برداشته شد (حذف نشد، هر وقت خواستی برگردانش).` });
+        text: action === "hide"
+          ? `🚫 <b>${nm}</b> از سایت برداشته شد.\n<i>پاک نشده — با «${nm} رو برگردون» یا دکمهٔ ✅ نمایش برمی‌گردد.</i>`
+          : `✅ <b>${nm}</b> دوباره روی سایت آمد.` });
       return true;
     }
     if (action === "price") {
       await setDraft(env, { chat: String(chatId), step: "editprice", d: { editId: id } });
       await ack("قیمت جدید را بنویس");
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-        text: `💰 قیمت فعلی <b>${esc(prod.name.fa)}</b>: ${money(prod.price)}\n\nقیمت جدید را فقط با عدد بنویس.` });
+        text: `💰 قیمت فعلی <b>${esc(pname(prod))}</b>: ${money(effPrice(prod, cat))}\n\nقیمت جدید را فقط با عدد بنویس.` });
       return true;
     }
     if (action === "photo") {
       await setDraft(env, { chat: String(chatId), step: "editphoto", d: { editId: id, photo: "" } });
       await ack("عکس جدید را بفرست");
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-        text: `🖼 عکس جدید <b>${esc(prod.name.fa)}</b> را بفرست.` });
+        text: `🖼 عکس جدید <b>${esc(pname(prod))}</b> را بفرست.` });
       return true;
     }
     if (action === "del") {
+      const isBot = (cat.products || []).some((p) => p.id === id);
       await ack("تأیید می‌خواهد");
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-        text: `🗑 <b>${esc(prod.name.fa)}</b> حذف شود؟ (از سایت و از لیست)`,
+        text: `🗑 <b>${esc(pname(prod))}</b> از سایت برداشته شود؟`,
         reply_markup: { inline_keyboard: [[
-          { text: "🗑 بله، حذف کن", callback_data: `pr:delok:${id}` },
-          { text: "❌ نه", callback_data: "pr:cancel" },
+          { text: "🗑 بله، از سایت بردار", callback_data: `pr:hideokdo:${id}` },
+          isBot ? { text: "🧨 کامل پاک کن", callback_data: `pr:delok:${id}` } : { text: "❌ نه", callback_data: "pr:cancel" },
         ]] } });
       return true;
     }
-    if (action === "delok") {
-      await writeCatalog(env, (c) => { c.products = (c.products || []).filter((p) => p.id !== id); c.draft = null; });
-      await ack("حذف شد");
+    if (action === "hideokdo") {
+      await setHidden(env, id, true);
+      await ack("از سایت برداشته شد");
       await dropButtons();
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
-        text: `🗑 <b>${esc(prod.name.fa)}</b> از سایت حذف شد.` });
+        text: `🚫 <b>${esc(pname(prod))}</b> از سایت برداشته شد.\nهر وقت خواستی برگردانی: «${esc(pname(prod))} رو برگردون»` });
+      return true;
+    }
+    if (action === "delok") {
+      await writeCatalog(env, (c) => {
+        c.products = (c.products || []).filter((p) => p.id !== id);
+        c.hidden = (c.hidden || []).filter((x) => x !== id);
+        if (c.overrides) delete c.overrides[id];
+        c.draft = null;
+      });
+      await ack("کامل پاک شد");
+      await dropButtons();
+      await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+        text: `🧨 <b>${esc(pname(prod))}</b> کامل پاک شد (دیگر قابل برگشت نیست).` });
       return true;
     }
   }
 
   await ack("انجام شد");
   return true;
+}
+
+/* ==========================================================================
+   مدیر سایت با زبان آدمیزاد
+   --------------------------------------------------------------------------
+   مثال‌هایی که کار می‌کنند:
+     «قیمت گچ رو بکن ۵۵۰ هزار»        «قیمت تی‌شرت ۱٬۶۰۰٬۰۰۰ تومان»
+     «موجودی مچ‌بند ۳۰ سانت رو ۵ کن»   «تی‌شرت ناموجود شد»  «گچ تموم شد»
+     «جاکلیدی رو از سایت حذف کن»       «کراپ رو برگردون»
+     «عکس گچ رو عوض کن»                «اسم کراپ رو عوض کن به کراپ زمستانی»
+     «توضیح کروپ رو عوض کن به ...»     «محصولات»  «محصول جدید»
+   ========================================================================== */
+
+/* همین پنج محصول ثابت سایت (public/assets/js/products.js) — برای اینکه بات
+   بتواند با اسم فارسی‌شان پیدایشان کند. اگر محصول ثابتی اضافه/کم شد، اینجا هم عوض کن. */
+const STATIC = [
+  { id: "vx-tee-001",   key: "tee",   fa: "تی‌شرت تمرین ورتکس",            en: "Vortex Performance Tee",      cat: "apparel",   sizes: ["S", "M", "L", "XL", "XXL"], price: 1480000 },
+  { id: "vx-crop-001",  key: "crop",  fa: "تی‌شرت کراپ فصل ۰۱ شماره ۶",     en: "Crop Tee Season 01 Issue 6",  cat: "apparel",   sizes: ["S", "M", "L"],             price: 1250000 },
+  { id: "vx-wrap-001",  key: "wrap",  fa: "مچ‌بند تمرین ورتکس",            en: "Vortex Wrist Wraps",          cat: "gear",      sizes: ["30cm", "45cm"],            price: 690000 },
+  { id: "vx-chalk-001", key: "chalk", fa: "گچ مایع ورتکس ۱۵۰ میلی‌لیتر",     en: "Vortex Liquid Chalk 150 ml",  cat: "gear",      sizes: [],                          price: 480000 },
+  { id: "vx-key-001",   key: "key",   fa: "جاکلیدی و بند ورتکس",           en: "Vortex Key Strap",            cat: "accessory", sizes: [],                          price: 320000 },
+];
+
+const INTENT = [
+  { act: "new",   re: /(محصول\s*جدید|محصول\s*بساز|محصول\s*اضافه|اضافه\s*کنم\s*محصول|محصول\s*تازه)/ },
+  { act: "list",  re: /(لیست\s*محصول|همه\s*ی?\s*محصول|محصولات\s*(سایت|چی|چیا)?|چیا\s*داریم)/ },
+  { act: "price", re: /(قیمت|نرخ|گرون|ارزون)/ },
+  { act: "photo", re: /(عکس|تصویر|فوتو|pic)/ },
+  { act: "desc",  re: /(توضیح|معرفی|دسکریپشن)/ },
+  { act: "name",  re: /(^|\s)(اسم|نام)(\s|$)/ },
+  { act: "show",  re: /(برگردان|برگردون|بازگردان|نمایش\s*بده|فعال\s*کن|روی\s*سایت\s*بذار|دوباره\s*بذار|موجودش\s*کن)/ },
+  { act: "hide",  re: /(حذف|پاک\s*کن|بردار|مخفی|غیرفعال|از\s*سایت\s*درش?\s*بیار|بیرون|نمی‌?خوام\s*باشه)/ },
+  { act: "stock", re: /(موجود|موجودی|تعداد|تموم|تمام|ناموجود|صفر|شارژ|چند\s*تا|بشه)/ },
+];
+const ZERO_RE = /(تموم|تمام|ناموجود|صفر|خالی|نباشه|نیست)/;
+
+export function normT(s) {
+  return String(s == null ? "" : s)
+    .replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+    .replace(/[يى]/g, "ی").replace(/ك/g, "ک")
+    .replace(/\u200c/g, " ")
+    .replace(/(\d+)\s*(?:سانتی\s*متر|سانتیمتر|سانتی|سانت)(?=\s|$)/g, "$1cm")
+    .replace(/[«»"'؛،,:!?()\-–—]+/g, " ")
+    .replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function extractNums(t) {
+  const out = [];
+  const re = /(\d+(?:[.,]\d+)?)\s*(هزار|میلیون|ملیون|میلیارد|تومن|تومان|عدد|تا|قطعه)?/g;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    let v = Number(String(m[1]).replace(/,/g, ""));
+    const u = m[2] || "";
+    if (u === "هزار") v *= 1000;
+    else if (u === "میلیون" || u === "ملیون") v *= 1000000;
+    else if (u === "میلیارد") v *= 1000000000;
+    if (!Number.isNaN(v)) out.push({ v: Math.round(v), unit: u, at: m.index });
+  }
+  return out;
+}
+
+function findSize(prod, t) {
+  const sizes = (prod && prod.sizes) || [];
+  for (const s of sizes) {
+    const st = normT(s);
+    if (st && t.includes(st)) return s;
+    const m = st.match(/^(\d+)cm$/);
+    if (m && new RegExp(`(^|[^0-9])${m[1]}\s*(cm|سانت|سانتی|سانتیمتر|سانتی\s*متر)(?![0-9])`).test(t)) return s;
+  }
+  for (const s of sizes) {
+    const st = normT(s);
+    if (/^[a-z]{1,3}$/.test(st) && new RegExp(`(^|\\s)${st}(\\s|$)`).test(t)) return s;
+  }
+  return null;
+}
+
+function adminPool(cat) {
+  const ov = (cat && cat.overrides) || {};
+  const hidden = (cat && cat.hidden) || [];
+  const statics = STATIC.map((sp) => ({
+    id: sp.id, key: sp.key, fa: (ov[sp.id] && ov[sp.id].name && ov[sp.id].name.fa) || sp.fa,
+    en: sp.en, sizes: sp.sizes, basePrice: sp.price, kind: "static", hidden: hidden.includes(sp.id),
+  }));
+  const bots = ((cat && cat.products) || []).map((p) => ({
+    id: p.id, key: p.id, fa: (p.name && p.name.fa) || p.id, en: (p.name && p.name.en) || "",
+    sizes: p.sizes || [], basePrice: (ov[p.id] && ov[p.id].price != null) ? ov[p.id].price : (p.price || 0),
+    kind: "bot", hidden: hidden.includes(p.id),
+  }));
+  return statics.concat(bots);
+}
+
+/* کدام محصول‌ها در متن صاحب فروشگاه آمده‌اند؟ */
+function findProducts(t, pool) {
+  const scored = [];
+  for (const p of pool) {
+    let score = 0;
+    const words = new Set(
+      normT([p.fa, p.en].join(" ")).split(/[^\p{L}\p{N}]+/u).filter((w) => w.length >= 2)
+    );
+    for (const w of words) {
+      if (w.length >= 3) {
+        if (t.includes(w)) score += w.length >= 5 ? 2 : 1;
+      } else if (new RegExp(`(^|\\s)${w}(\\s|$)`).test(t)) {
+        score += 2;                    // کلمهٔ کوتاهی مثل «گچ» فقط وقتی جدا نوشته شود
+      }
+    }
+    if (p.key && new RegExp(`(^|\\s)${p.key}(\\s|$)`).test(t)) score += 3;
+    if (t.includes(normT(p.id))) score += 5;
+    if (score > 0) scored.push({ p, score });
+  }
+  if (!scored.length) return [];
+  scored.sort((a, b) => b.score - a.score);
+  return scored.filter((x) => x.score === scored[0].score).map((x) => x.p);
+}
+
+export function isAdminIntent(text, pool) {
+  const t = normT(text);
+  if (!t) return false;
+  const hit = INTENT.find((i) => i.re.test(t));
+  if (!hit) return false;
+  if (hit.act === "new" || hit.act === "list") return true;
+  if (!findProducts(t, pool).length) return false;
+  return true;
+}
+
+function pname(p) {
+  if (!p) return "";
+  if (typeof p.name === "string") return p.name;
+  if (p.name && p.name.fa) return p.name.fa;
+  if (p.fa) return p.fa;
+  const st = STATIC.find((x) => x.id === p.id);
+  return st ? st.fa : p.id;
+}
+function effPrice(p, cat) {
+  const o = ((cat && cat.overrides) || {})[p.id];
+  if (o && o.price != null) return o.price;
+  if (p.basePrice != null) return p.basePrice;
+  if (p.price != null && p.price !== 0) return p.price;
+  const st = STATIC.find((x) => x.id === p.id);
+  return st ? st.price : (p.price || 0);
+}
+function stockKeyFor(store, id) {
+  const st = (store && store.stock) || {};
+  if (st[id] !== undefined) return id;
+  const norm = String(id).toLowerCase();
+  return Object.keys(st).find((k) => norm.startsWith("vx-" + k.toLowerCase()) || norm.includes(k.toLowerCase())) || null;
+}
+function stockTotal(store, id, sizes, kind) {
+  const key = stockKeyFor(store, id);
+  if (!key) return null;
+  const s = store.stock[key] || {};
+  if (s["*"] !== undefined) return Number(s["*"]);
+  const vals = Object.values(s).map(Number).filter((n) => !Number.isNaN(n));
+  return vals.length ? vals.reduce((a, b) => a + b, 0) : null;
+}
+async function setHidden(env, id, hide) {
+  await writeCatalog(env, (c) => {
+    c.hidden = (c.hidden || []).filter((x) => x !== id);
+    if (hide) c.hidden.push(id);
+    c.overrides = c.overrides || {};
+  });
+}
+
+/* نوشتن موجودی: با سایز، برای همهٔ سایزها، یا «*» برای محصول بدون سایز */
+function stockSet(store, prod, size, qty) {
+  store.stock = store.stock || {};
+  const key = stockKeyFor(store, prod.id) || prod.key || prod.id;
+  const s = (store.stock[key] = store.stock[key] || {});
+  const sizes = prod.sizes || [];
+  if (s["*"] !== undefined && (size || sizes.length)) {
+    const val = s["*"];
+    delete s["*"];
+    for (const sz of sizes) s[sz] = val;
+  }
+  if (size) s[size] = qty;
+  else if (sizes.length) for (const sz of sizes) s[sz] = qty;
+  else s["*"] = qty;
+  return { key, size: size || null, qty };
+}
+
+function valueAfter(raw) {
+  const m = String(raw).match(/(?:به|بشه|کن|:)\s+(.{2,})$/) || String(raw).match(/[:：]\s*(.{2,})$/);
+  if (!m) return "";
+  return m[1].trim()
+    .replace(/^(?:به|بشه)\s+/, "")
+    .replace(/^["'«»]+|["'«»]+$/g, "")
+    .trim();
+}
+
+/* اجرای دستور روی یک محصول */
+async function applyAction(env, tg, chatId, prod, ctx) {
+  const { act, val, size, cat, store, raw, draftOpen } = ctx;
+  const nm = esc(prod.fa);
+  const tail = draftOpen ? "\n\n<i>ℹ️ مرحلهٔ محصول جدیدت هم باز است — جواب سؤال قبلی را بده یا /cancel</i>" : "";
+  const link = `<a href="${SHOP(env)}">فروشگاه</a>`;
+
+  if (act === "price") {
+    if (val == null) {
+      await setDraft(env, { chat: String(chatId), step: "editprice", d: { editId: prod.id, editLabel: prod.fa } });
+      await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+        text: `💰 قیمت جدید <b>${nm}</b> چند باشد؟ فقط عدد بنویس.` + tail });
+      return true;
+    }
+    const old = prod.basePrice;
+    await writeCatalog(env, (c) => {
+      c.overrides = c.overrides || {};
+      c.overrides[prod.id] = { ...(c.overrides[prod.id] || {}), price: val };
+    });
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: `✅ قیمت <b>${nm}</b> شد <b>${money(val)}</b> (قبلاً ${money(old)}) — همین حالا روی سایت عوض شد.\n${link}`, disable_web_page_preview: true });
+    return true;
+  }
+
+  if (act === "stock") {
+    if (val == null) {
+      await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+        text: `🔢 موجودی <b>${nm}</b> را چند کنم؟ فقط عدد بنویس (برای ناموجود‌کردن: «${nm} تموم شد»).` });
+      return true;
+    }
+    let res = null;
+    await writeStore(env, (st) => { res = stockSet(st, prod, size, val); });
+    const where = size ? `سایز ${esc(size)}` : (prod.sizes && prod.sizes.length) ? "همهٔ سایزها" : "";
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: val <= 0
+        ? `🔴 <b>${nm}</b>${where ? " · " + where : ""} ناموجود شد — سایت خودش کارت را «ناموجود» کرد و خریدش بسته شد.\nبرای شارژ دوباره: «${nm} رو ۱۰ کن»`
+        : `✅ موجودی <b>${nm}</b>${where ? " · " + where : ""} شد <b>${FA.format(val)}</b> عدد.` });
+    return true;
+  }
+
+  if (act === "hide") {
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: `🗑 <b>${nm}</b> از سایت برداشته شود؟`,
+      reply_markup: { inline_keyboard: [[
+        { text: "🗑 بله، از سایت بردار", callback_data: `pr:hideokdo:${prod.id}` },
+        { text: "❌ نه", callback_data: "pr:cancel" },
+      ]] } });
+    return true;
+  }
+
+  if (act === "show") {
+    await setHidden(env, prod.id, false);
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: `✅ <b>${nm}</b> دوباره روی سایت آمد.\n${link}`, disable_web_page_preview: true });
+    return true;
+  }
+
+  if (act === "photo") {
+    await setDraft(env, { chat: String(chatId), step: "editphoto", d: { editId: prod.id, editLabel: prod.fa, photo: "" } });
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: `🖼 عکس جدید <b>${nm}</b> را بفرست.` + tail });
+    return true;
+  }
+
+  if (act === "name") {
+    const v = valueAfter(raw);
+    if (!v) {
+      await setDraft(env, { chat: String(chatId), step: "editname", d: { editId: prod.id, editLabel: prod.fa } });
+      await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+        text: `✏️ اسم جدید <b>${nm}</b> را بنویس.` + tail });
+      return true;
+    }
+    await writeCatalog(env, (c) => {
+      c.overrides = c.overrides || {};
+      const cur = c.overrides[prod.id] || {};
+      c.overrides[prod.id] = { ...cur, name: { ...((cur.name) || {}), fa: v } };
+    });
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: `✅ اسم محصول شد <b>${esc(v)}</b>.` });
+    return true;
+  }
+
+  if (act === "desc") {
+    const v = valueAfter(raw);
+    if (!v) {
+      await setDraft(env, { chat: String(chatId), step: "editdesc", d: { editId: prod.id, editLabel: prod.fa } });
+      await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+        text: `📝 توضیح جدید <b>${nm}</b> را بنویس.` + tail });
+      return true;
+    }
+    await writeCatalog(env, (c) => {
+      c.overrides = c.overrides || {};
+      const cur = c.overrides[prod.id] || {};
+      c.overrides[prod.id] = { ...cur, desc: { ...((cur.desc) || {}), fa: v } };
+    });
+    await setDraft(env, null);
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML", text: `✅ توضیح <b>${nm}</b> عوض شد.` });
+    return true;
+  }
+
+  return false;
+}
+
+/* ---------- ورودی آزاد مالک → دستور مدیریتی ---------------------------- */
+export async function adminText(env, tg, chatId, text, store) {
+  const raw = String(text || "").trim();
+  const t = normT(raw);
+  if (!t) return false;
+  const cat = await readCatalog(env);
+  const pool = adminPool(cat);
+  const hit = INTENT.find((i) => i.re.test(t));
+  if (!hit) return false;
+
+  if (hit.act === "new") { await admStart(env, tg, chatId, store); return true; }
+  if (hit.act === "list") { await productList(env, tg, chatId, store); return true; }
+
+  let tMatch = t;
+  if (hit.act === "name" || hit.act === "desc") {
+    const cut = t.indexOf(" به ");
+    if (cut > 0) tMatch = t.slice(0, cut);
+  }
+  const cands = findProducts(tMatch, pool);
+  if (!cands.length) {
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: "محصولی با این اسم پیدا نکردم 🤔\nاسمش را دقیق‌تر بنویس یا /products را بزن." });
+    return true;
+  }
+
+  const draft = await getDraft(env);
+  const draftOpen = Boolean(draft && draft.d && draft.step && !["pick"].includes(draft.step));
+
+  /* عددها را از متن بیرون بکش (عدد سایز را نادیده بگیر) */
+  const sizeHit = cands.length === 1 ? findSize(cands[0], t) : null;
+  let nums = extractNums(t);
+  if (sizeHit) {
+    const sn = (normT(sizeHit).match(/(\d+)/) || [])[1];
+    if (sn && nums.length > 1) nums = nums.filter((n) => String(n.v) !== sn);
+  }
+  let val = null;
+  if (hit.act === "price") {
+    val = nums.length ? Math.max(...nums.map((n) => n.v)) : null;
+  } else if (hit.act === "stock") {
+    val = ZERO_RE.test(t) && !nums.length ? 0 : (nums.length ? nums[nums.length - 1].v : (ZERO_RE.test(t) ? 0 : null));
+  }
+
+  const ctx = { act: hit.act, val, size: sizeHit, cat, store, raw, draftOpen };
+
+  if (cands.length > 1) {
+    const ids = cands.slice(0, 6).map((p) => p.id);
+    await setDraft(env, { chat: String(chatId), step: "pick", d: { pickIds: ids, act: hit.act, val, size: sizeHit } });
+    await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML",
+      text: "کدام یکی را می‌گویی؟ 👇",
+      reply_markup: { inline_keyboard: ids.map((id, i) => [
+        { text: cands[i].fa, callback_data: `pr:pick:${i}` },
+      ]).concat([[{ text: "❌ هیچ‌کدام", callback_data: "pr:cancel" }]]) } });
+    return true;
+  }
+
+  return applyAction(env, tg, chatId, cands[0], ctx);
 }
 
 /* ---------- راهنمای بخش محصولات ----------------------------------------- */
@@ -607,4 +1037,9 @@ export const PRODUCT_HELP = [
   "<code>/new</code> — محصول جدید",
   "<code>/products</code> — لیست محصولات + دکمهٔ قیمت/عکس/مخفی/حذف",
   "<code>/cancel</code> — لغو مرحلهٔ جاری",
+  "",
+  "🗣 <b>یا با زبان خودت بنویس</b> (بدون دستور):",
+  "«قیمت گچ رو بکن ۵۵۰ هزار» · «موجودی مچ‌بند ۳۰ سانت رو ۵ کن»",
+  "«تی‌شرت ناموجود شد» · «جاکلیدی رو از سایت حذف کن» · «کراپ رو برگردون»",
+  "«عکس گچ رو عوض کن» · «اسم کراپ رو عوض کن به …» · «توضیحش رو عوض کن به …»",
 ].join("\n");
