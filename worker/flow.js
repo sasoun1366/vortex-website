@@ -2,6 +2,22 @@
    VORTEX — متن‌ها و گردش‌کار اتوماسیون فروش (فارسی/انگلیسی)
    ========================================================================== */
 
+/* شمارهٔ کارت: اگر در انباره تنظیم شده باشد اولویت دارد، وگرنه از Secret کلودفلر می‌آید
+   (تا شماره در ریپوی عمومی ذخیره نشود) */
+export function resolveCfg(env, store) {
+  const cfg = (store && store.cfg) || {};
+  const raw = String(cfg.card || env.CARD_NUMBER || "");
+  const num = raw.replace(/[^0-9]/g, "");
+  const pretty = num.length === 16 ? num.slice(0, 4) + "-" + num.slice(4, 8) + "-" + num.slice(8, 12) + "-" + num.slice(12) : raw;
+  return { card: pretty, cardName: cfg.cardName || env.CARD_HOLDER || "" };
+}
+
+export function maskedCard(cfg) {
+  const n = String((cfg && cfg.card) || "").replace(/[^0-9]/g, "");
+  if (!n) return "—";
+  return n.slice(0, 4) + "-****-****-" + n.slice(-4);
+}
+
 const FAn = new Intl.NumberFormat("fa-IR");
 const ENn = new Intl.NumberFormat("en-US");
 const money2 = (n, lang) => `${(lang === "en" ? ENn : FAn).format(Math.round(n || 0))} ${lang === "en" ? "Toman" : "تومان"}`;

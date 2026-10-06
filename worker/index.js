@@ -9,7 +9,7 @@
 
 import { readStore, writeStore, stockFor, stockReport, decStock } from "./store.js";
 import { paymentMessage, addressRequestMessage, parseAddressBlock, addressSummary, customerStatusMessage,
-         ownerStockReport, statusFa, statusEn } from "./flow.js";
+         ownerStockReport, statusFa, statusEn, resolveCfg, maskedCard } from "./flow.js";
 
 const TG = (env) => `${env.TELEGRAM_API_BASE || "https://api.telegram.org"}/bot${env.BOT_TOKEN}`;
 const FA = new Intl.NumberFormat("fa-IR");
@@ -207,7 +207,7 @@ async function handleOrder(request, env) {
   /* پیام خودکار به مشتری (فقط اگر از تلگرام آمده باشد) */
   let notified = false;
   if (tgUser && tgUser.id) {
-    const cfg = store.cfg || {};
+    const cfg = resolveCfg(env, store);
     const m = paymentMessage(order, code, cfg);
     const r = await tg(env, "sendMessage", {
       chat_id: tgUser.id, text: m, parse_mode: "HTML",
@@ -230,7 +230,7 @@ async function handleWebhook(request, env) {
   const cb = update.callback_query;
   const owner = String(env.OWNER_CHAT_ID || "");
   const store = await readStore(env);
-  const cfg = store.cfg || {};
+  const cfg = resolveCfg(env, store);   // Secret کلودفلر (خصوصی) با اولویت انباره
 
   /* ---------- دکمه‌های مالک روی سفارشها ---------- */
   if (cb) {
@@ -370,6 +370,22 @@ async function handleWebhook(request, env) {
       return json({ ok: true });
     }
 
+    /* /card — دیدن کارت فعال (ماسک‌شده) */
+    if (text.startsWith("/card")) {
+      const c = resolveCfg(env, store);
+      const src = (store.cfg && store.cfg.card) ? "انبارهٔ فروشگاه (فایل عمومی ریپو)" : "Secret کلودفلر (خصوصی)";
+      console.log("card-check", JSON.stringify({ card: maskedCard(c), name: c.cardName, src }));   // شماره در لاگ نمی‌افتد
+      await tg(env, "sendMessage", {
+        chat_id: chatId, parse_mode: "HTML",
+        text: c.card
+          ? "💳 <b>کارت فعال برای پیام پرداخت</b>\n<code>" + c.card + "</code>"
+            + (c.cardName ? "\nبه نام: <b>" + c.cardName + "</b>" : "\n⚠️ نام صاحب کارت ثبت نشده")
+            + "\n\nمنبع: " + src
+          : "⚠️ هنوز شمارهٔ کارتی تنظیم نشده.",
+      });
+      return json({ ok: true });
+    }
+
     if (text.startsWith("/orders")) {
       const list = Object.values(store.orders || {}).sort((a, b) => b.ts - a.ts).slice(0, 10);
       const rows = list.length ? list.map((o) => `• <code>${o.code}</code> — ${statusFa(o.status)} — ${FA.format(o.totals?.total || 0)} تومان`) : ["سفارشی ثبت نشده."];
@@ -380,7 +396,8 @@ async function handleWebhook(request, env) {
     if (text.startsWith("/help")) {
       await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML", text: [
         "<b>دستورهای مدیریتی ورتکس</b>", "",
-        "<code>/setcard 6037-... نام</code> — ثبت شمارهٔ کارت برای پیام پرداخت خودکار",
+        "<code>/card</code> — دیدن کارت فعال",
+        "<code>/setcard 6037-... نام</code> — ثبت شمارهٔ کارت (در فایل عمومی ریپو ذخیره می‌شود)",
         "<code>/stock</code> — دیدن موجودی",
         "<code>/stock tee M 12</code> — ثبت موجودی · <code>/stock tee M -1</code> — کم‌کردن یک عدد",
         "<code>/track VX-... 1234...</code> — ثبت کد رهگیری و اطلاع خودکار به مشتری",
