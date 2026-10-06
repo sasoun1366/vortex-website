@@ -28,13 +28,13 @@
   "gal5": "media/site/gal5.png?v=muwyrwho"
  },
  "theme": {
-  "accent": "#7C8C4B",
+  "accent": "#C4573A",
   "bg": "#0A0A0A"
  },
  "layout": {
   "order": [
-   "why",
    "cats",
+   "why",
    "shop",
    "drop",
    "story",
@@ -43,7 +43,9 @@
    "gallery",
    "words"
   ],
-  "hidden": []
+  "hidden": [
+   "soon"
+  ]
  },
- "updated": 1791308415387
+ "updated": 1791308425166
 }
