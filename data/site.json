@@ -8,9 +8,24 @@
   "gal5": "media/site/gal5.png?v=muwv1697"
  },
  "theme": {
-  "accent": "#7C8C4B",
+  "accent": "#C4573A",
   "bg": "#0A0B08"
  },
- "layout": {},
- "updated": 1791302120892
+ "layout": {
+  "order": [
+   "cats",
+   "why",
+   "shop",
+   "drop",
+   "story",
+   "howto",
+   "soon",
+   "gallery",
+   "words"
+  ],
+  "hidden": [
+   "soon"
+  ]
+ },
+ "updated": 1791302137918
 }
