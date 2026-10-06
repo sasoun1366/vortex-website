@@ -3,12 +3,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791290479867,
+  "ts": 1791290500431,
   "chat": "5034689859",
-  "step": "name",
+  "step": "price",
   "d": {
    "featured": true,
-   "photo": "AgACAgQAAxkBAAO1asTsb7bAqokCftQDjN-0BrUPg9QAAuAPaxuTrylSv4zMaBKsdHABAAMCAAN4AAM9BA"
+   "photo": "AgACAgQAAxkBAAO1asTsb7bAqokCftQDjN-0BrUPg9QAAuAPaxuTrylSv4zMaBKsdHABAAMCAAN4AAM9BA",
+   "name": "پودر پروتین دایماتیز ۲.۲ کیلویی"
   }
  },
  "overrides": {
