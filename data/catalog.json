@@ -2,20 +2,7 @@
  "products": [],
  "soon": [],
  "cfg": {},
- "draft": {
-  "ts": 1791289614752,
-  "chat": "5034689859",
-  "step": "pick",
-  "d": {
-   "pickIds": [
-    "vx-wrap-001",
-    "vx-key-001"
-   ],
-   "act": "stock",
-   "val": 5,
-   "size": null
-  }
- },
+ "draft": null,
  "overrides": {},
  "hidden": []
 }
