@@ -297,9 +297,23 @@ async function handleWebhook(request, env) {
 }
 
 /* ---------- روتر -------------------------------------------------------- */
+const APEX = "vortexgear.ir";
+
+/* www.vortexgear.ir -> vortexgear.ir  (301, مسیر و پارامترها حفظ می‌شوند) */
+function redirectWww(url) {
+  if (url.hostname === `www.${APEX}`) {
+    url.hostname = APEX;
+    return Response.redirect(url.toString(), 301);
+  }
+  return null;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const wwwJump = redirectWww(url);
+    if (wwwJump) return wwwJump;
 
     if (url.pathname === "/api/order") {
       if (request.method === "OPTIONS") return json({ ok: true });
