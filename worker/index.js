@@ -237,7 +237,7 @@ async function handleOrder(request, env) {
     const m = paymentMessage(order, code, cfg);
     const r = await tg(env, "sendMessage", {
       chat_id: tgUser.id, text: m, parse_mode: "HTML",
-      reply_markup: cfg.card ? undefined : { inline_keyboard: [[{ text: "💬 پیام به پشتیبانی", url: "https://t.me/vortexgear" }]] },
+      reply_markup: cfg.card ? undefined : { inline_keyboard: [[{ text: "💬 پیام به پشتیبانی", url: "https://wa.me/989031200140" }]] },
     }).catch(() => null);
     notified = Boolean(r && r.ok);
   }
@@ -348,7 +348,7 @@ async function handleWebhook(request, env) {
     inline_keyboard: [
       [{ text: "🛒 ورود به فروشگاه", web_app: { url: shopUrl } }],
       [
-        { text: "📞 تماس با ما", url: "https://t.me/vortexgear" },
+        { text: "📞 واتساپ فروشگاه", url: "https://wa.me/989031200140" },
         { text: "📷 اینستاگرام", url: "https://instagram.com/vortex.gear" },
       ],
     ],
