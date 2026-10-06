@@ -3,14 +3,22 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791289075519,
+  "ts": 1791289079550,
   "chat": "5034689859",
-  "step": "sizes",
+  "step": "cat",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkDAANAasTm1V8Un0m0zz8H2DvUHne8jrsAAi8Paxt9nC1SXlJrKxaIv_UBAAMCAAN5AAM9BA",
    "name": "مچ‌بند تمرین ورتکس — تست",
-   "price": 690000
+   "price": 690000,
+   "sizes": [
+    "30cm",
+    "45cm"
+   ],
+   "stock": {
+    "30cm": 5,
+    "45cm": 3
+   }
   }
  }
 }
