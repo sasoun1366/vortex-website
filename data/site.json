@@ -1,10 +1,18 @@
 {
  "cfg": {
-  "passHash": {
-   "salt": "d7271ac1316b258bb0b00d16c9e08104",
-   "hash": "6dba0b2cb9e9c74345a76d83095bc64bb718a7e21f15feecdd3b1172445039bb",
-   "iters": 60000
-  }
+  "whatsapp": "989031200140",
+  "phone": "+98 903 120 0140",
+  "telegram": "VortexGearBot",
+  "instagram": "vortex.gear",
+  "email": "order@vortex.gear",
+  "shippingCost": 180000,
+  "freeShipOver": 3000000,
+  "brandTagFa": "ساخته‌شده برای شدت",
+  "brandTagEn": "Built for intensity",
+  "hoursFa": "شنبه تا پنجشنبه • ۱۰:۰۰ تا ۲۰:۰۰",
+  "hoursEn": "Sat–Thu • 10:00 – 20:00",
+  "addressFa": "ایران — ارسال به سراسر کشور",
+  "addressEn": "Iran — shipping nationwide"
  },
  "texts": {
   "fa": {},
