@@ -1,0 +1,360 @@
+/* ==========================================================================
+   VORTEX — استایل بخش‌های محتوایی (دراپ اسپات‌لایت، گالری، نظرات، لودر، back-to-top)
+   --------------------------------------------------------------------------
+   نکته: این فایل ابتدا با نام motion.css اضافه شده بود و یک موتور انیمیشن کامل
+   درون خودش داشت. حالا فقط استایل‌های همین بخش‌ها در آن مانده است و
+   موتور حرکت/افکت‌های سایت داخل این دو فایل است:
+       assets/css/style.css  → بخش «Motion & FX layer»
+       assets/js/app.js      → ماژول FX
+   ========================================================================== */
+/* ==========================================================================
+   VORTEX — MOTION & GRAPHICS LAYER
+   لایهٔ انیمیشن و جلوه‌های بصری — جدا از استایل اصلی تا سایت سبک بماند
+   همهٔ افکت‌ها با prefers-reduced-motion سازگارند.
+   ========================================================================== */
+
+/* ---------- ۱) لودر با لوگوی ورتکس -------------------------------------- */
+#vx-loader{
+  position:fixed;inset:0;z-index:200;background:var(--bg);
+  display:grid;place-items:center;gap:0;
+  transition:opacity .55s var(--ease),visibility .55s;
+}
+
+#vx-loader.done{opacity:0;visibility:hidden}
+
+.vx-load-inner{display:grid;justify-items:center;gap:1.1rem}
+
+.vx-load-mark{width:74px;height:74px;overflow:visible}
+
+.vx-load-mark path{
+  fill:none;stroke:var(--olive);stroke-width:7;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:260;stroke-dashoffset:260;
+  animation:vxDraw 1.05s var(--ease) forwards;
+}
+
+@keyframes vxDraw{to{stroke-dashoffset:0}}
+
+.vx-load-word{
+  font-family:var(--font-display);font-size:1.05rem;letter-spacing:.42em;text-indent:.42em;
+  color:var(--text);text-transform:uppercase;opacity:0;animation:vxFade .6s .35s var(--ease) forwards;
+}
+
+.vx-load-bar{width:174px;height:2px;background:rgba(124,140,75,.18);overflow:hidden;margin-top:.2rem}
+
+.vx-load-bar i{display:block;height:100%;width:40%;background:var(--olive);
+  animation:vxLoad 1.15s var(--ease) infinite}
+
+@keyframes vxLoad{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+
+@keyframes vxFade{to{opacity:1}}
+
+
+/* ---------- ۲) نوار پیشرفت اسکرول --------------------------------------- */
+#vx-progress{
+  position:fixed;top:0;inset-inline:0;height:2px;z-index:150;pointer-events:none;
+  background:linear-gradient(90deg,var(--olive-700),var(--olive-300),var(--olive));
+  transform-origin:0 50%;transform:scaleX(0);
+}
+
+html[dir="rtl"] #vx-progress{transform-origin:100% 50%}
+
+
+/* ---------- ۳) کرسر سفارشی (فقط دسکتاپ با ماوس) ------------------------- */
+@media (hover:hover) and (pointer:fine){
+  html.vx-cursor-on,html.vx-cursor-on a,html.vx-cursor-on button{cursor:none}
+  #vx-cursor{
+    position:fixed;top:0;left:0;z-index:180;pointer-events:none;
+    width:26px;height:26px;margin:-13px 0 0 -13px;
+    border:1px solid rgba(124,140,75,.85);
+    transform:rotate(45deg);transition:width .25s var(--ease),height .25s var(--ease),
+      background .25s var(--ease),opacity .3s;opacity:0;
+  }
+  #vx-cursor.on{opacity:1}
+  #vx-cursor.grow{width:54px;height:54px;margin:-27px 0 0 -27px;background:rgba(124,140,75,.14)}
+  #vx-cursor-dot{
+    position:fixed;top:0;left:0;z-index:181;pointer-events:none;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+    background:var(--olive-300);border-radius:50%;opacity:0;transition:opacity .3s
+  }
+  #vx-cursor-dot.on{opacity:1}
+}
+
+
+/* ---------- ۴) سیستم ریویل (ورود المان‌ها با اسکرول) -------------------- */
+[data-reveal]{opacity:0;will-change:transform,opacity;
+  transition:opacity .85s var(--ease),transform .85s var(--ease),clip-path .9s var(--ease);
+  transition-delay:var(--d,0ms)}
+
+[data-reveal="up"]{transform:translateY(38px)}
+
+[data-reveal="down"]{transform:translateY(-26px)}
+
+[data-reveal="left"]{transform:translateX(42px)}
+
+[data-reveal="right"]{transform:translateX(-42px)}
+
+[data-reveal="scale"]{transform:scale(.93)}
+
+[data-reveal="clip"]{opacity:1;clip-path:inset(0 0 100% 0)}
+
+[data-reveal="clip-x"]{opacity:1;clip-path:inset(0 100% 0 0)}
+
+html[dir="rtl"] [data-reveal="clip-x"]{clip-path:inset(0 0 0 100%)}
+
+[data-reveal].in{opacity:1;transform:none;clip-path:inset(0 0 0 0)}
+
+
+/* خط‌های تقسیم‌کننده که با اسکرول «کشیده» می‌شوند */
+.vx-line{height:1px;background:var(--line-strong);transform:scaleX(0);transform-origin:0 50%;
+  transition:transform 1.1s var(--ease)}
+
+html[dir="rtl"] .vx-line{transform-origin:100% 50%}
+
+.vx-line.in{transform:scaleX(1)}
+
+
+/* ---------- ۵) ریز‌انیمیشن‌ها -------------------------------------------- */
+/* دکمه: درخشش عبوری */
+.btn{overflow:hidden;isolation:isolate}
+
+html[dir="rtl"] .btn::after{transform:translateX(130%)}
+
+html[dir="rtl"] .btn:hover::after{transform:translateX(-130%)}
+
+
+/* آیکون دکمه: حرکت ریز */
+.btn svg{transition:transform .3s var(--ease)}
+
+
+/* اعداد شمارنده */
+.count{font-variant-numeric:tabular-nums;display:inline-block}
+
+
+/* کارت محصول: تیلت سه‌بعدی + درخشش */
+.card,.cat-card{transform-style:preserve-3d}
+
+
+/* ستارهٔ چرخان «ورتکس» — گرافیک پس‌زمینه */
+.vx-swirl{position:absolute;pointer-events:none;opacity:.5;z-index:-1}
+
+.vx-swirl .ring{transform-origin:50% 50%;animation:vxSpin 26s linear infinite}
+
+.vx-swirl .ring:nth-child(2){animation-duration:34s;animation-direction:reverse}
+
+.vx-swirl .ring:nth-child(3){animation-duration:46s}
+
+@keyframes vxSpin{to{transform:rotate(360deg)}}
+
+
+/* لکه‌های نور سبز با حرکت آرام */
+.glow-blob{
+  position:absolute;border-radius:50%;pointer-events:none;z-index:-1;filter:blur(70px);
+  background:radial-gradient(circle,rgba(124,140,75,.30),transparent 68%);
+  animation:blobFloat 16s ease-in-out infinite alternate;
+}
+
+@keyframes blobFloat{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(28px,-34px,0) scale(1.12)}
+}
+
+
+/* نشانگر اسکرول در هیرو */
+.scroll-cue{
+  position:absolute;bottom:1.6rem;inset-inline-start:50%;transform:translateX(-50%);
+  display:grid;justify-items:center;gap:.5rem;color:var(--muted);z-index:3
+}
+
+html[dir="rtl"] .scroll-cue{transform:translateX(50%)}
+
+@keyframes cueMove{0%{transform:translateY(-16px)}100%{transform:translateY(46px)}}
+
+
+/* هیرو: تایپوگرافی با پوشش متحرک */
+.hero h1 .line-mask{display:block;overflow:hidden}
+
+@keyframes lineUp{to{transform:translateY(0)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+
+/* خط هاشور متحرک */
+.hatch-live{
+  height:7px;background-image:repeating-linear-gradient(115deg,var(--olive) 0 2px,transparent 2px 7px);
+  background-size:200% 100%;animation:hatchSlide 3.4s linear infinite;opacity:.75
+}
+
+@keyframes hatchSlide{to{background-position:40px 0}}
+
+
+/* مارکی: توقف روی هاور + ردیف معکوس */
+.marquee:hover .marquee-track{animation-play-state:paused}
+
+
+/* گالری: هاور با زوم و برچسب */
+.gal{position:relative;overflow:hidden;border:1px solid var(--line-soft);aspect-ratio:4/5;display:block}
+
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease),filter .5s;
+  filter:saturate(.9)}
+
+.gal:hover img{transform:scale(1.08) rotate(.6deg);filter:saturate(1.05)}
+
+.gal .cap{
+  position:absolute;inset-inline:0;bottom:0;padding:1rem;z-index:2;
+  background:linear-gradient(to top,rgba(10,11,8,.92),transparent);
+  transform:translateY(8px);opacity:0;transition:.45s var(--ease)
+}
+
+.gal:hover .cap{transform:none;opacity:1}
+
+.gal .cap b{font-family:var(--font-display);letter-spacing:.12em;font-size:.8rem;color:var(--olive-200)}
+
+
+/* اسپات‌لایت دراپ */
+.spot{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(1.5rem,5vw,4rem);align-items:center}
+
+.spot-media{position:relative;overflow:hidden;border:1px solid var(--line-strong)}
+
+.spot-media img{width:100%;aspect-ratio:1/1;object-fit:cover;transform:scale(1.06);
+  transition:transform 1.4s var(--ease)}
+
+.spot-media:hover img{transform:scale(1.12)}
+
+.spot-media .frame{
+  position:absolute;inset:14px;border:1px solid rgba(124,140,75,.35);pointer-events:none
+}
+
+.spot-media .stamp{
+  position:absolute;top:-1px;inset-inline-start:-1px;background:var(--olive);color:#0A0B08;
+  font-family:var(--font-display);font-size:.68rem;letter-spacing:.2em;padding:.4rem .8rem
+}
+
+.spot-body .kicker{color:var(--olive-300)}
+
+.spot-body h2{font-size:var(--step-3);text-transform:uppercase;margin-top:.7rem}
+
+html[lang="fa"] .spot-body h2{text-transform:none}
+
+.spot-body .desc{color:var(--muted);margin-top:1rem;max-width:52ch}
+
+.spot-facts{display:flex;flex-wrap:wrap;gap:1.6rem;margin-top:1.6rem;padding-top:1.2rem;
+  border-top:1px solid var(--line-soft)}
+
+.spot-facts b{display:block;font-family:var(--font-display);font-size:1.5rem;color:var(--olive-200);line-height:1}
+
+.spot-facts span{font-size:.72rem;color:var(--muted-2)}
+
+
+/* اسلایدر نظرات */
+.quotes{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:.6rem;scrollbar-width:thin}
+
+.quotes::-webkit-scrollbar{height:4px}
+
+.quotes::-webkit-scrollbar-thumb{background:var(--olive-800)}
+
+.quote{
+  flex:0 0 min(420px,86%);scroll-snap-align:start;background:var(--surface);
+  border:1px solid var(--line-soft);padding:1.6rem;position:relative;overflow:hidden
+}
+
+.quote::before{
+  content:"”";position:absolute;top:-1.5rem;inset-inline-end:.8rem;font-family:var(--font-display);
+  font-size:7rem;color:rgba(124,140,75,.14);line-height:1
+}
+
+.quote p{font-size:.95rem;line-height:1.9;position:relative}
+
+.quote .who{display:flex;align-items:center;gap:.7rem;margin-top:1.2rem}
+
+.quote .av{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--olive-700);
+  color:var(--olive-200);font-family:var(--font-display);font-size:.8rem}
+
+.quote .who b{display:block;font-size:.86rem}
+
+.quote .who span{font-size:.72rem;color:var(--muted-2)}
+
+.quote .stars{color:var(--olive);font-size:.8rem;letter-spacing:.18em;margin-bottom:.7rem;display:block}
+
+
+/* بخش شماره‌دار */
+.num-kicker{display:flex;align-items:center;gap:.9rem;color:var(--olive-700);
+  font-family:var(--font-display);letter-spacing:.3em;font-size:.7rem}
+
+.num-kicker::after{content:"";height:1px;flex:1;background:var(--line-soft)}
+
+
+/* دکمهٔ بازگشت به بالا */
+#to-top{
+  position:fixed;bottom:1.3rem;inset-inline-start:1.3rem;z-index:75;
+  width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line-strong);
+  background:rgba(10,11,8,.86);color:var(--olive-200);backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transform:translateY(12px);transition:.35s var(--ease)
+}
+
+#to-top.on{opacity:1;visibility:visible;transform:none}
+
+#to-top:hover{background:var(--olive);color:#0A0B08;border-color:var(--olive)}
+
+#to-top svg{width:18px;height:18px}
+
+
+/* گلیچ کوتاه روی تیتر اصلی هنگام هاور */
+.glitch{position:relative;display:inline-block}
+
+
+/* تصویر با ماسک ریویل */
+.mask-img{overflow:hidden}
+
+
+/* بج چرخان «built for intensity» */
+.rot-badge{position:relative;width:118px;height:118px;flex:0 0 auto}
+
+.rot-badge svg{width:100%;height:100%;animation:vxSpin 18s linear infinite}
+
+.rot-badge .core{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-display);font-size:.62rem;letter-spacing:.2em;color:var(--olive-200);text-align:center
+}
+
+
+/* کارت‌های «خدمات» با آیکون متحرک */
+.feat svg{transition:transform .45s var(--ease),color .3s}
+
+
+/* ---------- ۶) موبایل و کم‌کردن افکت‌ها ---------------------------------- */
+@media (max-width:900px){
+  .spot{grid-template-columns:1fr}
+  .scroll-cue{display:none}
+}
+
+@media (max-width:620px){
+  #vx-progress{height:3px}
+}
+
+
+/* ---------- ۷) احترام به تنظیمات کاربر ----------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+  [data-reveal]{opacity:1!important;transform:none!important;clip-path:none!important}
+  #vx-loader{display:none}
+  .hero h1 .line-mask>span{transform:none!important}
+  .hero .eyebrow,.hero-lead,.hero-cta,.hero-stats{opacity:1!important}
+}
+
+
+/* بج چرخان شناور در گوشهٔ هیرو (دسکتاپ) */
+.hero-cta{align-items:center;row-gap:1.2rem}
+
+@media (max-width:620px){.hero-cta .rot-badge{display:none}}
+
+
+/* شکست متعادل خط در تیترها + نشکستن عبارت‌های لاتین */
+.spot-body h2,.section-head h2,.cta-band h2,.split-body h2{text-wrap:balance}
+
+.ltr-part{white-space:nowrap;direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+
+.spot-body h2{font-size:clamp(1.5rem,1.1rem + 1.5vw,2.45rem);max-width:24ch}
+
+@media (max-width:620px){.spot-body h2{font-size:1.45rem}}

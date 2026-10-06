@@ -21,11 +21,20 @@
 <meta name="twitter:description" content="تجهیزات و پوشاک کراس‌فیت ورتکس: تی‌شرت تمرین، مچ‌بند، گچ مایع و اکسسوری. سفارش سریع از واتساپ و تلگرام.">
 <meta name="twitter:image" content="https://vortexgear.ir/assets/img/hero.jpg">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/motion.css">
 </head>
 <body data-page="home"
       data-title-fa="ورتکس | تجهیزات کراس‌فیت — ساخته‌شده برای شدت"
       data-title-en="VORTEX | CrossFit gear — built for intensity">
 
+<!-- لودر برند (با لوگوی ورتکس) -->
+<div id="vx-loader" aria-hidden="true">
+  <div class="vx-load-inner">
+    <svg class="vx-load-mark" viewBox="0 0 100 100"><path d="M12 16h20l18 44 18-44h20L58 90H42L12 16z"/></svg>
+    <div class="vx-load-word">Vortex</div>
+    <div class="vx-load-bar"><i></i></div>
+  </div>
+</div>
 <div id="site-header"></div>
 
 <main>
@@ -67,6 +76,16 @@
       <div class="hero-cta">
         <a class="btn" href="shop.html" data-i18n="hero_cta1">خرید کالکشن</a>
         <a class="btn btn--ghost" href="about.html" data-i18n="hero_cta2">درباره ورتکس</a>
+        <div class="rot-badge" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="vxcir" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+            <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(124,140,75,.32)"/>
+            <text font-size="9.6" letter-spacing="3.1" fill="#B3C37A" font-family="Oswald, sans-serif">
+              <textPath href="#vxcir" startOffset="0">BUILT FOR INTENSITY · VORTEX · </textPath>
+            </text>
+          </svg>
+          <span class="core">SEASON<br>01</span>
+        </div>
       </div>
       <div class="hero-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
       <div class="hero-stats">
@@ -75,6 +94,7 @@
         <div data-reveal="scale" class="reveal"><strong data-i18n="stat3v">۲۴ ساعته</strong><span data-i18n="stat3l">پاسخ‌گویی پشتیبانی</span></div>
       </div>
     </div>
+    <div class="scroll-cue"><span data-i18n="scroll_hint">اسکرول کن</span><i></i></div>
   </section>
 
   <!-- ==================== MARQUEE ==================== -->
@@ -99,7 +119,7 @@
   <!-- ==================== WHY ==================== -->
   <section class="section section--amb">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head reveal" data-reveal="up">
         <span class="eyebrow" data-i18n="kick_why">مزیت‌های ورتکس</span>
         <h2 class="display" data-i18n="why_title">چرا ورتکس؟</h2>
         <p data-i18n="why_lead">چهار دلیل ساده که بچه‌های باکس دوباره از ما خرید می‌کنند.</p>
@@ -177,7 +197,34 @@
         </div>
         <a class="btn btn--ghost btn--sm" href="shop.html" data-i18n="view_all">مشاهده همه محصولات</a>
       </div>
-      <div class="grid grid--4" id="featured-grid"></div>
+      <div class="grid grid--4" id="featured-grid" data-stagger="110"></div>
+    </div>
+  </section>
+
+
+  <!-- ==================== DROP SPOTLIGHT ==================== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="num-kicker" data-reveal="up"><span>01 / DROP</span></div>
+      <div class="spot" style="margin-top:1.6rem">
+        <div class="spot-media mask-img" data-reveal="scale">
+          <span class="stamp">SEASON 01 · ISSUE No.6</span>
+          <img src="assets/img/crop-tee.jpg" alt="تی‌شرت کراپ ورتکس — Season 01 Issue No.6" loading="lazy" data-parallax="0.05">
+          <span class="frame"></span>
+        </div>
+        <div class="spot-body" data-reveal="left">
+          <span class="eyebrow" data-i18n="drop_kicker">دراپ فصل ۰۱</span>
+          <h2 class="display" data-i18n="drop_title">کراپ فصل ۰۱</h2>
+          <p class="desc" data-i18n="drop_text">کراپ فصل اول با چاپ دست‌نویس «Season 01 — Issue No.6»، برش آزاد برای حرکت‌های ترکیبی و پارچه‌ای که زیر عرق وا نمی‌دهد.</p>
+          <div class="spot-facts">
+            <div><b data-i18n="drop_f1v">۱۵۰</b><span data-i18n="drop_f1l">قطعه در هر سایز</span></div>
+            <div><b data-i18n="drop_f2v">۲۲۰ گرم</b><span data-i18n="drop_f2l">گرماژ پارچه</span></div>
+            <div><b data-i18n="drop_f3v">۴۸ ساعت</b><span data-i18n="drop_f3l">تا پایان موجودی</span></div>
+          </div>
+          <div class="hatch-live" style="width:150px;margin:1.6rem 0 1.4rem"></div>
+          <a class="btn" href="shop.html?cat=apparel" data-i18n="drop_cta">دیدن دراپ</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -215,7 +262,21 @@
         <span class="eyebrow" data-i18n="kick_soon">در راه است</span>
         <h2 class="display" data-i18n="soon_title">در راه است</h2>
       </div>
-      <div class="grid grid--3" id="soon-grid"></div>
+      <div class="grid grid--3" id="soon-grid" data-stagger="110"></div>
+    </div>
+  </section>
+
+
+  <!-- ==================== NUMBERS ==================== -->
+  <section class="section section--tight" style="padding-top:0">
+    <div class="container">
+      <div class="num-kicker" data-reveal="up" style="margin-bottom:1.4rem"><span>02 / NUMBERS</span></div>
+      <div class="strip" data-reveal="up">
+        <div><strong class="count" data-count="12500" data-suffix-fa="+" data-suffix-en="+">۰</strong><span data-i18n="stat1l">سفارش ارسال‌شده</span></div>
+        <div><strong class="count" data-count="98" data-suffix-fa="٪" data-suffix-en="%">۰</strong><span data-i18n="stat2l">رضایت مشتری</span></div>
+        <div><strong class="count" data-count="5" data-suffix-fa=" سال" data-suffix-en=" yrs">۰</strong><span data-i18n="num_years">سابقهٔ فعالیت</span></div>
+        <div><strong class="count" data-count="34" data-suffix-fa=" شهر" data-suffix-en=" cities">۰</strong><span data-i18n="num_cities">پوشش ارسال</span></div>
+      </div>
     </div>
   </section>
 
@@ -230,6 +291,53 @@
         <div style="display:flex;gap:.7rem;flex-wrap:wrap">
           <a class="btn" id="band-ig" href="#" target="_blank" rel="noopener" data-i18n="band_cta">ما را دنبال کن</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== GALLERY ==================== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="num-kicker" data-reveal="up"><span>03 / GALLERY</span></div>
+      <div class="section-head" data-reveal="up" style="margin-top:1rem">
+        <h2 class="display" data-i18n="gal_title">از تمرین، از باکس</h2>
+        <p data-i18n="gal_lead">تصاویر واقعی محصولات ورتکس — همان چیزی که می‌رسد دستت.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem" data-stagger="100">
+        <a class="gal" href="shop.html?cat=apparel" data-reveal="up"><img src="assets/img/tee.jpg" alt="تی‌شرت ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_1">تی‌شرت تمرین</b></span></a>
+        <a class="gal" href="shop.html?cat=apparel" data-reveal="up"><img src="assets/img/crop-tee.jpg" alt="کراپ ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_2">کراپ Season 01</b></span></a>
+        <a class="gal" href="shop.html?cat=gear" data-reveal="up"><img src="assets/img/wrist-wraps.jpg" alt="مچ‌بند ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_3">مچ‌بند تمرین</b></span></a>
+        <a class="gal" href="shop.html?cat=gear" data-reveal="up"><img src="assets/img/liquid-chalk.jpg" alt="گچ مایع ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_4">گچ مایع ۱۵۰ml</b></span></a>
+        <a class="gal" href="shop.html?cat=accessory" data-reveal="up"><img src="assets/img/keychain.jpg" alt="جاکلیدی ورتکس" loading="lazy"><span class="cap"><b data-i18n="gal_5">بند و جاکلیدی</b></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIALS ==================== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="num-kicker" data-reveal="up"><span>04 / WORDS</span></div>
+      <div class="section-head" data-reveal="up" style="margin-top:1rem">
+        <h2 class="display" data-i18n="testi_title">بچه‌های باکس چه می‌گویند</h2>
+        <p data-i18n="testi_lead">بازخورد ورزشکارانی که با محصولات ورتکس تمرین می‌کنند.</p>
+      </div>
+      <div class="quotes" data-reveal="up" data-stagger="120">
+        <blockquote class="quote">
+          <span class="stars">★★★★★</span>
+          <p data-i18n="t1">«مچ‌بندها دقیقاً همون چیزی بود که لازم داشتم؛ زیر ۱۵۰ کیلو ذره‌ای جابه‌جا نشد.»</p>
+          <div class="who"><span class="av">ا</span><div><b data-i18n="t1n">امیر ک.</b><span data-i18n="t1r">باکس کراس‌فیت، تهران</span></div></div>
+        </blockquote>
+        <blockquote class="quote">
+          <span class="stars">★★★★★</span>
+          <p data-i18n="t2">«گچ مایعش عالیه — نه پودر می‌کنه نه دست رو خشک می‌کنه، فقط گیر می‌ده.»</p>
+          <div class="who"><span class="av">س</span><div><b data-i18n="t2n">سارا م.</b><span data-i18n="t2r">وزنه‌بردار، اصفهان</span></div></div>
+        </blockquote>
+        <blockquote class="quote">
+          <span class="stars">★★★★★</span>
+          <p data-i18n="t3">«تی‌شرت بعد از ده‌ها شست‌وشو هم فرمش رو حفظ کرده؛ برای تمرین روزانه بهترین انتخاب بوده.»</p>
+          <div class="who"><span class="av">ر</span><div><b data-i18n="t3n">رضا ب.</b><span data-i18n="t3r">مربی کراس‌فیت، شیراز</span></div></div>
+        </blockquote>
       </div>
     </div>
   </section>

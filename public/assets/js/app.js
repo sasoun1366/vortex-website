@@ -249,6 +249,7 @@ function setLang(lang) {
   renderChrome();
   applyI18n();
   renderCart();
+  if (window.FX && FX.staggerGroups) FX.staggerGroups();
   FX.counters(false);
   if ($("#featured-grid")) renderFeatured("#featured-grid");
   if ($("#shop-grid")) { renderCatFilters(); renderShop(); }
@@ -667,6 +668,7 @@ function toast(msg) {
 /* ---------- reveal on scroll -------------------------------------------- */
 let io;
 function observeReveal(scope = document) {
+  if (window.FX && FX.staggerGroups) FX.staggerGroups(scope);
   const els = $$(".reveal", scope);
   els.forEach((el, i) => { if (!el.style.getPropertyValue("--d") && !el.dataset.d && i < 12) el.style.setProperty("--d", (i % 6) * 70 + "ms"); });
   if (!("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("in")); return; }
@@ -920,13 +922,100 @@ const FX = (() => {
     });
   }
 
+
+  /* ---------- لودر اولیه ---------- */
+  function loader() {
+    const el = $("#vx-loader");
+    if (!el) return;
+    const finish = () => {
+      el.classList.add("done");
+      document.documentElement.classList.add("vx-ready");
+      setTimeout(() => el.remove(), 800);
+    };
+    if (reduce) return finish();
+    const t0 = performance.now(), min = 620;   // کمتر از این، مثل فلاش دیده می‌شود
+    const go = () => setTimeout(finish, Math.max(0, min - (performance.now() - t0)));
+    if (document.readyState === "complete") go(); else window.addEventListener("load", go);
+    setTimeout(finish, 3200);                  // سقف ایمنی
+  }
+
+  /* ---------- بازگشت به بالا ---------- */
+  function toTop() {
+    if ($("#to-top")) return;
+    const b = document.createElement("button");
+    b.id = "to-top"; b.type = "button"; b.setAttribute("aria-label", t("to_top"));
+    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
+    document.body.appendChild(b);
+    const sync = () => b.classList.toggle("on", (window.scrollY || 0) > 700);
+    addEventListener("scroll", sync, { passive: true }); sync();
+    b.addEventListener("click", () => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }));
+  }
+
+  /* ---------- لایت‌باکس گالری ---------- */
+  function lightbox() {
+    /* دکمهٔ بزرگ‌نمایی روی تایل‌های گالری (لینک فروشگاه دست‌نخورده می‌ماند) */
+    $$(".gal").forEach(tile => {
+      const img = tile.querySelector("img");
+      if (!img || tile.querySelector(".gal-zoom")) return;
+      const b = document.createElement("button");
+      b.className = "gal-zoom"; b.type = "button";
+      b.setAttribute("aria-label", t("gal_zoom"));
+      b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-3.6-3.6"/></svg>`;
+      tile.appendChild(b);
+    });
+
+    /* فاز capture: باید قبل از pageTransitions اجرا شود تا کلیک روی دکمهٔ
+       بزرگ‌نمایی باعث پرش به صفحهٔ فروشگاه نشود */
+    document.addEventListener("click", e => {
+      const zoomBtn = e.target.closest && e.target.closest(".gal-zoom");
+      if (zoomBtn) {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        const img = zoomBtn.closest(".gal").querySelector("img");
+        if (img) openLightbox(img);
+        return;
+      }
+      const z = e.target.closest && e.target.closest("[data-zoom]");
+      if (z) { e.stopImmediatePropagation(); openLightbox(z); }
+    }, true);
+  }
+
+  function openLightbox(srcImg) {
+    const img = srcImg;
+      const box = document.createElement("div");
+      box.className = "vx-lightbox";
+      box.innerHTML = `<button class="vx-lb-close" aria-label="close">×</button>`;
+      const big = img.cloneNode(true);
+      box.appendChild(big);
+      document.body.appendChild(box);
+      requestAnimationFrame(() => box.classList.add("on"));
+      const close = () => { box.classList.remove("on"); setTimeout(() => box.remove(), 300); };
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", function esc(ev) {
+        if (ev.key === "Escape") { close(); document.removeEventListener("keydown", esc); }
+      });
+  }
+
+  /* ---------- پشتیبانی data-reveal و data-stagger ---------- */
+  function staggerGroups(scope = document) {
+    $$("[data-stagger]", scope).forEach(group => {
+      const step = Number(group.dataset.stagger) || 90;
+      $$("[data-reveal], .reveal", group).forEach((el, i) => el.style.setProperty("--d", `${i * step}ms`));
+    });
+    $$("[data-reveal]", scope).forEach(el => el.classList.add("reveal"));
+  }
+
+  /* ---------- نشان چرخان «Season 01» ---------- */
+  function spinBadge() {
+    $$(".rot-badge").forEach(el => { if (!reduce) el.style.animation = "vx-spin 26s linear infinite"; });
+  }
+
   /* ---------- راه‌اندازی ---------- */
   function init() {
     const bar = document.createElement("div");
     bar.id = "vx-progress"; bar.innerHTML = "<i></i>";
     document.body.appendChild(bar);
 
-    vortex(); pointerFx(); cursorGlow(); scrollFx(); counters();
+    loader(); vortex(); pointerFx(); cursorGlow(); scrollFx(); counters(); toTop(); lightbox(); staggerGroups(); spinBadge();
     drawIcons();
 
     /* شمارنده‌ها فقط وقتی در دید قرار گرفتند بشمارند */
@@ -939,7 +1028,7 @@ const FX = (() => {
     }
   }
 
-  return { init, counters, flyToCart, cartBump, drawIcons };
+  return { init, counters, flyToCart, cartBump, drawIcons, staggerGroups };
 })();
 
 /* ---------- گذار نرم بین صفحات ------------------------------------------ */
