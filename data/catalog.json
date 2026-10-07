@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791381747923,
+  "ts": 1791381757961,
   "chat": "5034689859",
-  "step": "desc",
+  "step": "en",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAPoasZQyHpfBVgh0q0Fz9p6GwOLFnYAAxBrG5OvMVJiTp_Da1ma2wEAAwIAA3kAAz0E",
@@ -15,7 +15,8 @@
    "stock": {
     "*": 2
    },
-   "cat": "apparel"
+   "cat": "apparel",
+   "desc": ""
   }
  },
  "overrides": {
