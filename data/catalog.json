@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791381765963,
+  "ts": 1791381770414,
   "chat": "5034689859",
-  "step": "badge",
+  "step": "confirm",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAPoasZQyHpfBVgh0q0Fz9p6GwOLFnYAAxBrG5OvMVJiTp_Da1ma2wEAAwIAA3kAAz0E",
@@ -16,7 +16,11 @@
     "*": 2
    },
    "cat": "apparel",
-   "desc": ""
+   "desc": "",
+   "badge": {
+    "fa": "",
+    "en": ""
+   }
   }
  },
  "overrides": {
