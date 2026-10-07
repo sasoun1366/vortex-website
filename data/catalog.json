@@ -3,12 +3,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791381705182,
+  "ts": 1791381721254,
   "chat": "5034689859",
-  "step": "name",
+  "step": "price",
   "d": {
    "featured": true,
-   "photo": "AgACAgQAAxkBAAPoasZQyHpfBVgh0q0Fz9p6GwOLFnYAAxBrG5OvMVJiTp_Da1ma2wEAAwIAA3kAAz0E"
+   "photo": "AgACAgQAAxkBAAPoasZQyHpfBVgh0q0Fz9p6GwOLFnYAAxBrG5OvMVJiTp_Da1ma2wEAAwIAA3kAAz0E",
+   "name": "ته چین"
   }
  },
  "overrides": {
