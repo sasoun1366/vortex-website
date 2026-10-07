@@ -3,16 +3,18 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791381737003,
+  "ts": 1791381741464,
   "chat": "5034689859",
-  "step": "qty",
+  "step": "cat",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAPoasZQyHpfBVgh0q0Fz9p6GwOLFnYAAxBrG5OvMVJiTp_Da1ma2wEAAwIAA3kAAz0E",
    "name": "ته چین",
    "price": 1222222,
    "sizes": [],
-   "stock": {}
+   "stock": {
+    "*": 2
+   }
   }
  },
  "overrides": {
