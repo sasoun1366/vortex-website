@@ -35,17 +35,19 @@
  },
  "layout": {
   "order": [
-   "why",
    "cats",
-   "shop",
    "drop",
+   "shop",
    "story",
    "howto",
    "soon",
    "gallery",
+   "why",
    "words"
   ],
-  "hidden": []
+  "hidden": [
+   "howto"
+  ]
  },
- "updated": 1791650978516
+ "updated": 1791651171327
 }
