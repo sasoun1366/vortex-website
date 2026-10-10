@@ -28,8 +28,8 @@
  },
  "images": {},
  "theme": {
-  "accent": "#5F7A3A",
-  "bg": "#0A0A0A"
+  "accent": "#B3C37A",
+  "bg": "#000000"
  },
  "layout": {
   "order": [
@@ -45,5 +45,5 @@
   ],
   "hidden": []
  },
- "updated": 1791650502247
+ "updated": 1791650740044
 }
