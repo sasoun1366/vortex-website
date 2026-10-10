@@ -20,7 +20,9 @@
  },
  "texts": {
   "fa": {
-   "hero_title": "BUILT FOR INTENSITY"
+   "hero_title": "BUILT FOR INTENSITY",
+   "f_about": "ورتکس پوشاک و تجهیزات تمرین",
+   "hero_lead": "ساخته شده از شدت"
   },
   "en": {}
  },
@@ -43,5 +45,5 @@
   ],
   "hidden": []
  },
- "updated": 1791650215479
+ "updated": 1791650294486
 }
