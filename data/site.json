@@ -1,8 +1,8 @@
 {
  "cfg": {
   "whatsapp": "989370050571",
-  "phone": "989370050571",
-  "telegram": "VortexGearBot",
+  "phone": "+989370050571",
+  "telegram": "",
   "instagram": "vtx.gear",
   "email": "order@vortex.gear",
   "shippingCost": 250000,
@@ -52,5 +52,5 @@
    "gallery"
   ]
  },
- "updated": 1791651564833
+ "updated": 1791651739635
 }
