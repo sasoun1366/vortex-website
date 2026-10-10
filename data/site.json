@@ -24,7 +24,7 @@
  },
  "images": {},
  "theme": {
-  "accent": "#7C8C4B",
+  "accent": "#5F7A3A",
   "bg": "#0A0A0A"
  },
  "layout": {
@@ -41,5 +41,5 @@
   ],
   "hidden": []
  },
- "updated": 1791308504431
+ "updated": 1791615450818
 }
