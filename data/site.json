@@ -5,8 +5,8 @@
   "telegram": "VortexGearBot",
   "instagram": "vtx.gear",
   "email": "order@vortex.gear",
-  "shippingCost": 180000,
-  "freeShipOver": 3000000,
+  "shippingCost": 250000,
+  "freeShipOver": 10000000,
   "brandTagFa": "ساخته‌شده برای شدت",
   "brandTagEn": "Built for intensity",
   "hoursFa": "شنبه تا پنجشنبه • ۱۰:۰۰ تا ۲۰:۰۰",
@@ -45,5 +45,5 @@
   ],
   "hidden": []
  },
- "updated": 1791650757523
+ "updated": 1791650772399
 }
