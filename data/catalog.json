@@ -3,12 +3,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1791695360083,
+  "ts": 1793254207244,
   "chat": "5034689859",
-  "step": "name",
+  "step": "price",
   "d": {
    "featured": true,
-   "photo": "AgACAgQAAxkBAAP9assZ_zv7NrvulPLxEG6b0fguKZ8AAiUPaxtF_1hSyU9UXouiYqUBAAMCAAN5AAM9BA"
+   "photo": "AgACAgQAAxkBAAP9assZ_zv7NrvulPLxEG6b0fguKZ8AAiUPaxtF_1hSyU9UXouiYqUBAAMCAAN5AAM9BA",
+   "name": "Kir"
   }
  },
  "overrides": {
