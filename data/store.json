@@ -175,6 +175,38 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 250
+  },
+  "VX-261031-9591": {
+   "code": "VX-261031-9591",
+   "ts": 1793436767587,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-tee-001",
+     "name": "تی‌شرت تمرین ورتکس",
+     "size": "L",
+     "qty": 1,
+     "price": 1480000
+    }
+   ],
+   "totals": {
+    "sub": 1480000,
+    "ship": 250000,
+    "total": 1730000
+   },
+   "buyer": {
+    "name": "Sasoun Shaghoulian",
+    "tg": "@zirocool1987"
+   },
+   "note": "",
+   "payRef": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  }
 }
