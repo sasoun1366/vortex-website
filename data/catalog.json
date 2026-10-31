@@ -3,13 +3,23 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793443391474,
+  "ts": 1793443421380,
   "chat": "665175562",
-  "step": "sizes",
+  "step": "cat",
   "d": {
    "photo": "AgACAgQAAxkBAAIBOGrlxgYnr_1tUKrfhnW4_pD1EzTkAAJ5EGsbghcwU_hYgOwcJAiUAQADAgADeAADPQQ",
    "name": "تیشرت زنانه",
-   "price": 2980000
+   "price": 2980000,
+   "sizes": [
+    "S",
+    "M",
+    "L"
+   ],
+   "stock": {
+    "S": 0,
+    "M": 2,
+    "L": 6
+   }
   }
  },
  "overrides": {
