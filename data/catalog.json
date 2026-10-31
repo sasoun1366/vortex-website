@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793443426020,
+  "ts": 1793443449671,
   "chat": "665175562",
-  "step": "desc",
+  "step": "en",
   "d": {
    "photo": "AgACAgQAAxkBAAIBOGrlxgYnr_1tUKrfhnW4_pD1EzTkAAJ5EGsbghcwU_hYgOwcJAiUAQADAgADeAADPQQ",
    "name": "تیشرت زنانه",
@@ -20,7 +20,8 @@
     "M": 2,
     "L": 6
    },
-   "cat": "apparel"
+   "cat": "apparel",
+   "desc": "تیشرت زنانه ورتکس سری دوم در دو رنگ سفید و مشکی"
   }
  },
  "overrides": {
