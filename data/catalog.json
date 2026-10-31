@@ -2,7 +2,14 @@
  "products": [],
  "soon": [],
  "cfg": {},
- "draft": null,
+ "draft": {
+  "ts": 1793443290218,
+  "chat": "665175562",
+  "step": "photo",
+  "d": {
+   "featured": true
+  }
+ },
  "overrides": {
   "vx-chalk-001": {
    "price": 550000,
