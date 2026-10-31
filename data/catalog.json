@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793443421380,
+  "ts": 1793443426020,
   "chat": "665175562",
-  "step": "cat",
+  "step": "desc",
   "d": {
    "photo": "AgACAgQAAxkBAAIBOGrlxgYnr_1tUKrfhnW4_pD1EzTkAAJ5EGsbghcwU_hYgOwcJAiUAQADAgADeAADPQQ",
    "name": "تیشرت زنانه",
@@ -19,7 +19,8 @@
     "S": 0,
     "M": 2,
     "L": 6
-   }
+   },
+   "cat": "apparel"
   }
  },
  "overrides": {
