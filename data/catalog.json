@@ -1,15 +1,24 @@
 {
- "products": [],
- "soon": [],
- "cfg": {},
- "draft": {
-  "ts": 1793443459700,
-  "chat": "665175562",
-  "step": "confirm",
-  "d": {
-   "photo": "AgACAgQAAxkBAAIBOGrlxgYnr_1tUKrfhnW4_pD1EzTkAAJ5EGsbghcwU_hYgOwcJAiUAQADAgADeAADPQQ",
-   "name": "تیشرت زنانه",
+ "products": [
+  {
+   "id": "vx-pxpcb-v4",
+   "cat": "apparel",
+   "img": "media/vx-pxpcb-v4.jpg",
    "price": 2980000,
+   "oldPrice": 0,
+   "featured": true,
+   "badge": {
+    "fa": "جدید",
+    "en": "New"
+   },
+   "name": {
+    "fa": "تیشرت زنانه",
+    "en": "تیشرت زنانه"
+   },
+   "desc": {
+    "fa": "تیشرت زنانه ورتکس سری دوم در دو رنگ سفید و مشکی",
+    "en": "تیشرت زنانه ورتکس سری دوم در دو رنگ سفید و مشکی"
+   },
    "sizes": [
     "S",
     "M",
@@ -20,14 +29,13 @@
     "M": 2,
     "L": 6
    },
-   "cat": "apparel",
-   "desc": "تیشرت زنانه ورتکس سری دوم در دو رنگ سفید و مشکی",
-   "badge": {
-    "fa": "جدید",
-    "en": "New"
-   }
+   "ts": 1793443470899,
+   "active": true
   }
- },
+ ],
+ "soon": [],
+ "cfg": {},
+ "draft": null,
  "overrides": {
   "vx-chalk-001": {
    "price": 550000,
