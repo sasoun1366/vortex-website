@@ -3,13 +3,14 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793254207244,
+  "ts": 1793429248284,
   "chat": "5034689859",
-  "step": "price",
+  "step": "sizes",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAP9assZ_zv7NrvulPLxEG6b0fguKZ8AAiUPaxtF_1hSyU9UXouiYqUBAAMCAAN5AAM9BA",
-   "name": "Kir"
+   "name": "Kir",
+   "price": 1420000
   }
  },
  "overrides": {
