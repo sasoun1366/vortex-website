@@ -30,7 +30,9 @@
   },
   "en": {}
  },
- "images": {},
+ "images": {
+  "logo": "media/site/logo.png?v=mw33fa6b"
+ },
  "theme": {
   "accent": "#B3C37A",
   "bg": "#000000"
@@ -52,5 +54,5 @@
    "gallery"
   ]
  },
- "updated": 1791651739635
+ "updated": 1793855797524
 }
