@@ -30,9 +30,7 @@
   },
   "en": {}
  },
- "images": {
-  "logo": "media/site/logo.png?v=mw33hefm"
- },
+ "images": {},
  "theme": {
   "accent": "#B3C37A",
   "bg": "#000000"
@@ -54,5 +52,5 @@
    "gallery"
   ]
  },
- "updated": 1793855896955
+ "updated": 1793855919985
 }
