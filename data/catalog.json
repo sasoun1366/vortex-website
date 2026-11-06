@@ -108,6 +108,29 @@
     "L",
     "XL"
    ]
+  },
+  "vx-crop-001": {
+   "price": 2780000,
+   "oldPrice": 0,
+   "cat": "apparel",
+   "featured": true,
+   "name": {
+    "fa": "کراپ مشکی ورتکس Season 01 Issue No6",
+    "en": "Vortex Season 01 Issue No6 BLACK CROP"
+   },
+   "desc": {
+    "fa": "کراپ زنانه ورتکس مشکی Season 01 Issue No6\nپارچه‌ی نخ پنبه با گرماژ بالا",
+    "en": ""
+   },
+   "badge": {
+    "fa": "ناموجود",
+    "en": ""
+   },
+   "img": "assets/img/crop-tee.jpg",
+   "sizes": [
+    "S",
+    "M"
+   ]
   }
  },
  "hidden": []
