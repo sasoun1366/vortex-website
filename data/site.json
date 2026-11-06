@@ -32,16 +32,16 @@
  },
  "images": {},
  "theme": {
-  "accent": "#B3C37A",
-  "bg": "#000000"
+  "accent": "#7C8C4B",
+  "bg": "#0A0A0A"
  },
  "layout": {
   "order": [
+   "shop",
    "cats",
    "drop",
-   "shop",
-   "story",
    "howto",
+   "story",
    "soon",
    "gallery",
    "why",
@@ -49,8 +49,9 @@
   ],
   "hidden": [
    "howto",
-   "gallery"
+   "gallery",
+   "drop"
   ]
  },
- "updated": 1793855919985
+ "updated": 1793968956779
 }
