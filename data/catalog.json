@@ -68,20 +68,20 @@
  "draft": null,
  "overrides": {
   "vx-chalk-001": {
-   "price": 550000,
+   "price": 700000,
    "name": {
     "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر",
-    "en": ""
+    "en": "Vortex Liquid Chalk — 150 ml"
    },
    "oldPrice": 0,
    "cat": "gear",
    "featured": true,
    "desc": {
-    "fa": "",
+    "fa": "گچ مایع ورتکس ۱۵۰ میلی‌لیتر\nمناسب برای وزنه‌برداری‌، سخره نوردی، ژیمناستیک و کراسفیت\nخشک شدن سریع و ماندگاری بالا",
     "en": ""
    },
    "badge": {
-    "fa": "",
+    "fa": "پرفروش",
     "en": ""
    },
    "img": "assets/img/liquid-chalk.jpg"
