@@ -36,9 +36,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793957643136,
+  "ts": 1793957647550,
   "chat": "665175562",
-  "step": "cat",
+  "step": "desc",
   "d": {
    "photo": "AgACAgQAAxkBAAIBTmrtnpT43ncWC1yMEfYxi5u9ghYuAAJpDmsblydxU7SRRbf2Da3RAQADAgADdwADPQQ",
    "name": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
@@ -50,7 +50,8 @@
    "stock": {
     "L": 2,
     "XL": 0
-   }
+   },
+   "cat": "apparel"
   }
  },
  "overrides": {
