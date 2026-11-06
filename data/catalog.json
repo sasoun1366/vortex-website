@@ -36,12 +36,11 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793957524963,
+  "ts": 1793957526518,
   "chat": "665175562",
   "step": "name",
   "d": {
-   "featured": true,
-   "photo": "AgACAgQAAxkBAAIBTGrtnpSEmP7P60AJeo5OTJ81hYO1AAJnDmsblydxU47Z7UpFcN2qAQADAgADdwADPQQ"
+   "photo": "AgACAgQAAxkBAAIBTWrtnpSsTSGtCes2eLqyrpZrAAEGyQACaA5rG5cncVPaidsUYRbetwEAAwIAA3cAAz0E"
   }
  },
  "overrides": {
