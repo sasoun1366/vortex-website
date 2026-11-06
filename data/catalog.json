@@ -36,9 +36,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793957647550,
+  "ts": 1793957727789,
   "chat": "665175562",
-  "step": "desc",
+  "step": "en",
   "d": {
    "photo": "AgACAgQAAxkBAAIBTmrtnpT43ncWC1yMEfYxi5u9ghYuAAJpDmsblydxU7SRRbf2Da3RAQADAgADdwADPQQ",
    "name": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
@@ -51,7 +51,8 @@
     "L": 2,
     "XL": 0
    },
-   "cat": "apparel"
+   "cat": "apparel",
+   "desc": "تی‌شرت ورتکس میشکی Season 02 Issue ADT گلدوزی روی سینه مربوط به کالکشن مردانه‌ی این محصول و برای حمایت از بیماران سرطانی هست که در حال مبارزه با سرطان پروستات هستند. پارچه‌ی نخ پنبه با گرماژ بالا"
   }
  },
  "overrides": {
