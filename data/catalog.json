@@ -131,6 +131,25 @@
     "S",
     "M"
    ]
+  },
+  "vx-key-001": {
+   "price": 680000,
+   "oldPrice": 0,
+   "cat": "accessory",
+   "featured": true,
+   "name": {
+    "fa": "جاکلیدی ورتکس",
+    "en": "Vortex Lanyard"
+   },
+   "desc": {
+    "fa": "جاکلیدی ورتکس\nدارای گیره‌ی تاکتیکال قوی و تسمه‌ی محکم",
+    "en": ""
+   },
+   "badge": {
+    "fa": "ناموجود",
+    "en": ""
+   },
+   "img": "assets/img/keychain.jpg"
   }
  },
  "hidden": []
