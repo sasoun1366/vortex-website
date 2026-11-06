@@ -55,6 +55,32 @@
     "en": ""
    },
    "img": "assets/img/liquid-chalk.jpg"
+  },
+  "vx-tee-001": {
+   "price": 2980000,
+   "oldPrice": 0,
+   "cat": "apparel",
+   "featured": true,
+   "name": {
+    "fa": "تی‌شرت ورتکس میشکی Season 01 Issue No6",
+    "en": "Vortex Season 01 Issue No6"
+   },
+   "desc": {
+    "fa": "تی‌شرت ورتکس میشکی Season 01 Issue No6\nپارچه‌ی نخ پنبه با گرماژ بالا",
+    "en": ""
+   },
+   "badge": {
+    "fa": "ناموجود",
+    "en": ""
+   },
+   "img": "assets/img/tee.jpg",
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL"
+   ]
   }
  },
  "hidden": []
