@@ -31,18 +31,26 @@
    },
    "ts": 1793443470899,
    "active": true
-  }
- ],
- "soon": [],
- "cfg": {},
- "draft": {
-  "ts": 1793957740746,
-  "chat": "665175562",
-  "step": "confirm",
-  "d": {
-   "photo": "AgACAgQAAxkBAAIBTmrtnpT43ncWC1yMEfYxi5u9ghYuAAJpDmsblydxU7SRRbf2Da3RAQADAgADdwADPQQ",
-   "name": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
+  },
+  {
+   "id": "vx-p4ldi-5x",
+   "cat": "apparel",
+   "img": "media/vx-p4ldi-5x.jpg",
    "price": 2980000,
+   "oldPrice": 0,
+   "featured": true,
+   "badge": {
+    "fa": "پرفروش",
+    "en": "Best seller"
+   },
+   "name": {
+    "fa": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
+    "en": "تی‌شرت مشکی ورتکس Season 02 Issue ADT"
+   },
+   "desc": {
+    "fa": "تی‌شرت ورتکس میشکی Season 02 Issue ADT گلدوزی روی سینه مربوط به کالکشن مردانه‌ی این محصول و برای حمایت از بیماران سرطانی هست که در حال مبارزه با سرطان پروستات هستند. پارچه‌ی نخ پنبه با گرماژ بالا",
+    "en": "تی‌شرت ورتکس میشکی Season 02 Issue ADT گلدوزی روی سینه مربوط به کالکشن مردانه‌ی این محصول و برای حمایت از بیماران سرطانی هست که در حال مبارزه با سرطان پروستات هستند. پارچه‌ی نخ پنبه با گرماژ بالا"
+   },
    "sizes": [
     "L",
     "XL"
@@ -51,14 +59,13 @@
     "L": 2,
     "XL": 0
    },
-   "cat": "apparel",
-   "desc": "تی‌شرت ورتکس میشکی Season 02 Issue ADT گلدوزی روی سینه مربوط به کالکشن مردانه‌ی این محصول و برای حمایت از بیماران سرطانی هست که در حال مبارزه با سرطان پروستات هستند. پارچه‌ی نخ پنبه با گرماژ بالا",
-   "badge": {
-    "fa": "پرفروش",
-    "en": "Best seller"
-   }
+   "ts": 1793957755450,
+   "active": true
   }
- },
+ ],
+ "soon": [],
+ "cfg": {},
+ "draft": null,
  "overrides": {
   "vx-chalk-001": {
    "price": 550000,
