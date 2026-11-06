@@ -36,12 +36,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1793957608733,
+  "ts": 1793957619745,
   "chat": "665175562",
-  "step": "price",
+  "step": "sizes",
   "d": {
    "photo": "AgACAgQAAxkBAAIBTmrtnpT43ncWC1yMEfYxi5u9ghYuAAJpDmsblydxU7SRRbf2Da3RAQADAgADdwADPQQ",
-   "name": "تی‌شرت مشکی ورتکس Season 02 Issue ADT"
+   "name": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
+   "price": 2980000
   }
  },
  "overrides": {
