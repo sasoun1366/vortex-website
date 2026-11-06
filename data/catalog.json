@@ -75,11 +75,8 @@
    },
    "img": "assets/img/tee.jpg",
    "sizes": [
-    "S",
-    "M",
     "L",
-    "XL",
-    "XXL"
+    "XL"
    ]
   }
  },
