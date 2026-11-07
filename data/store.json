@@ -221,5 +221,16 @@
    "photoFileId": "",
    "ownerMsgId": 296
   }
+ },
+ "users": {
+  "989121234567": {
+   "uid": "4x364j5z1r3y4z",
+   "phone": "989121234567",
+   "name": "تست تستی",
+   "addresses": [],
+   "createdAt": 1794037480423,
+   "lastSeen": 1794037480423,
+   "orders": []
+  }
  }
 }
