@@ -1,34 +1,6 @@
 {
  "products": [
   {
-   "id": "vx-37520dd9",
-   "ts": 1794034452812,
-   "active": true,
-   "stock": {},
-   "cat": "apparel",
-   "price": 100000,
-   "oldPrice": 0,
-   "featured": true,
-   "badge": {
-    "fa": "",
-    "en": ""
-   },
-   "name": {
-    "fa": "تست گالری",
-    "en": "Gallery Test"
-   },
-   "desc": {
-    "fa": "",
-    "en": ""
-   },
-   "img": "media/vx-37520dd9-fdl3elguc.jpg",
-   "images": [
-    "media/vx-37520dd9-fdl3elguc.jpg",
-    "media/vx-37520dd9-5sy2vwht9.jpg"
-   ],
-   "sizes": []
-  },
-  {
    "id": "vx-a339b029",
    "ts": 1794034539148,
    "active": true,
