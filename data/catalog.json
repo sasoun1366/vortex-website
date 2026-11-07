@@ -1,35 +1,5 @@
 {
- "products": [
-  {
-   "id": "vx-ecfb3346",
-   "ts": 1794034603397,
-   "active": true,
-   "stock": {},
-   "cat": "apparel",
-   "price": 100000,
-   "oldPrice": 0,
-   "featured": true,
-   "badge": {
-    "fa": "",
-    "en": ""
-   },
-   "name": {
-    "fa": "تست گالری",
-    "en": "Gallery Test"
-   },
-   "desc": {
-    "fa": "",
-    "en": ""
-   },
-   "img": "media/vx-ecfb3346-x7231ko5s.jpg",
-   "images": [
-    "media/vx-ecfb3346-x7231ko5s.jpg",
-    "media/vx-ecfb3346-arcmx7p35.jpg",
-    "media/vx-ecfb3346-eptg69q31.jpg"
-   ],
-   "sizes": []
-  }
- ],
+ "products": [],
  "soon": [],
  "cfg": {},
  "draft": null,
