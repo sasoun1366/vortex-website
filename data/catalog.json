@@ -1,36 +1,6 @@
 {
  "products": [
   {
-   "id": "vx-p4ldi-5x",
-   "cat": "apparel",
-   "img": "media/vx-p4ldi-5x.jpg",
-   "price": 2980000,
-   "oldPrice": 0,
-   "featured": true,
-   "badge": {
-    "fa": "پرفروش",
-    "en": ""
-   },
-   "name": {
-    "fa": "تی‌شرت مشکی ورتکس Season 02 Issue ADT",
-    "en": "تی‌شرت مشکی ورتکس Season 02 Issue ADT"
-   },
-   "desc": {
-    "fa": "تی‌شرت مشکی ورتکس Season 02 Issue ADT\nبا گلدوزی مرد وزنه بردار که این سری برای حمایت از مردانی است که با سرطان پروستات مبارزه میکنند.\nADT هم نوعی درمان برای این سرطان می‌باشد.",
-    "en": ""
-   },
-   "sizes": [
-    "L",
-    "XL"
-   ],
-   "stock": {
-    "L": 2,
-    "XL": 0
-   },
-   "ts": 1793957755450,
-   "active": true
-  },
-  {
    "id": "vx-6f747033",
    "ts": 1794034162095,
    "active": true,
