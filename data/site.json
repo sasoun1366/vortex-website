@@ -16,7 +16,10 @@
   "passHash": {
    "salt": "6389212bff192bc13df8c781c6a3f567",
    "hash": "b9752b66e6ddd92cd3db16aa7241eea75a054ba637ff5def7ea905319e71bbd5"
-  }
+  },
+  "card": "6219-8619-0666-1052",
+  "cardMasked": "6219-****-****-1052",
+  "cardName": "حمید یل"
  },
  "texts": {
   "fa": {
@@ -53,5 +56,5 @@
    "drop"
   ]
  },
- "updated": 1793968956779
+ "updated": 1794034057721
 }
