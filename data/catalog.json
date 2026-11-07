@@ -42,8 +42,16 @@
    },
    "img": "assets/img/tee.jpg",
    "sizes": [
+    "S",
+    "M",
     "L",
-    "XL"
+    "XL",
+    "XXL"
+   ],
+   "images": [
+    "assets/img/tee.jpg",
+    "media/vx-tee-001-esdyfpfls.jpg",
+    "media/vx-tee-001-35fofhor2.jpg"
    ]
   },
   "vx-crop-001": {
