@@ -60,6 +60,33 @@
    },
    "ts": 1793957755450,
    "active": true
+  },
+  {
+   "id": "vx-6f747033",
+   "ts": 1794034162095,
+   "active": true,
+   "stock": {},
+   "cat": "apparel",
+   "price": 100000,
+   "oldPrice": 0,
+   "featured": true,
+   "badge": {
+    "fa": "",
+    "en": ""
+   },
+   "name": {
+    "fa": "تست گالری",
+    "en": "Gallery Test"
+   },
+   "desc": {
+    "fa": "",
+    "en": ""
+   },
+   "img": "media/vx-6f747033-kmca2d95b.jpg",
+   "images": [
+    "media/vx-6f747033-kmca2d95b.jpg"
+   ],
+   "sizes": []
   }
  ],
  "soon": [],
