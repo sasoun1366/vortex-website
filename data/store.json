@@ -321,6 +321,15 @@
    "createdAt": 1794038177172,
    "lastSeen": 1794038177172,
    "orders": []
+  },
+  "989990000012": {
+   "uid": "1q3w1i4d2u0r2i",
+   "phone": "989990000012",
+   "name": "Ali12",
+   "addresses": [],
+   "createdAt": 1794038193912,
+   "lastSeen": 1794038193912,
+   "orders": []
   }
  }
 }
