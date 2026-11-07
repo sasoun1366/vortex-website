@@ -220,6 +220,39 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 296
+  },
+  "VX-261107-2728": {
+   "code": "VX-261107-2728",
+   "ts": 1794041731404,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-wrap-001",
+     "name": "مچ‌بند تمرین ورتکس",
+     "size": "30cm",
+     "qty": 1,
+     "price": 690000
+    }
+   ],
+   "totals": {
+    "sub": 690000,
+    "ship": 250000,
+    "total": 940000
+   },
+   "buyer": {
+    "name": "ساسون شاقولیان",
+    "phone": "989054384220"
+   },
+   "note": "",
+   "uid": "3t55616j2z3h0s",
+   "payRef": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  },
  "users": {
