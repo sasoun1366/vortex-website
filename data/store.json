@@ -276,6 +276,15 @@
    "createdAt": 1794037790997,
    "lastSeen": 1794037790997,
    "orders": []
+  },
+  "989990000006": {
+   "uid": "3y5o2f0a692q6c",
+   "phone": "989990000006",
+   "name": "Ali6",
+   "addresses": [],
+   "createdAt": 1794037901979,
+   "lastSeen": 1794037901979,
+   "orders": []
   }
  }
 }
