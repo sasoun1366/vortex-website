@@ -319,8 +319,8 @@
     "username": "",
     "first_name": ""
    },
-   "status": "paycheck",
-   "tracking": "",
+   "status": "shipped",
+   "tracking": "2352458",
    "photoFileId": "",
    "ownerMsgId": 357
   }
