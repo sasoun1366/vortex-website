@@ -87,6 +87,34 @@
     "media/vx-6f747033-kmca2d95b.jpg"
    ],
    "sizes": []
+  },
+  {
+   "id": "vx-266a1431",
+   "ts": 1794034287853,
+   "active": true,
+   "stock": {},
+   "cat": "apparel",
+   "price": 100000,
+   "oldPrice": 0,
+   "featured": true,
+   "badge": {
+    "fa": "",
+    "en": ""
+   },
+   "name": {
+    "fa": "تست گالری",
+    "en": "Gallery Test"
+   },
+   "desc": {
+    "fa": "",
+    "en": ""
+   },
+   "img": "media/vx-266a1431-x0fjnqxnu.jpg",
+   "images": [
+    "media/vx-266a1431-x0fjnqxnu.jpg",
+    "media/vx-266a1431-e8ynz3yov.jpg"
+   ],
+   "sizes": []
   }
  ],
  "soon": [],
