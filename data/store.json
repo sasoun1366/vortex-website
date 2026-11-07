@@ -231,6 +231,15 @@
    "createdAt": 1794037480423,
    "lastSeen": 1794037510965,
    "orders": []
+  },
+  "989990000001": {
+   "uid": "424y470g4m4d0h",
+   "phone": "989990000001",
+   "name": "Ali Test",
+   "addresses": [],
+   "createdAt": 1794037578996,
+   "lastSeen": 1794037578996,
+   "orders": []
   }
  }
 }
