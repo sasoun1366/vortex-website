@@ -1,37 +1,6 @@
 {
  "products": [
   {
-   "id": "vx-pxpcb-v4",
-   "cat": "apparel",
-   "img": "media/vx-pxpcb-v4.jpg",
-   "price": 2980000,
-   "oldPrice": 0,
-   "featured": true,
-   "badge": {
-    "fa": "جدید",
-    "en": ""
-   },
-   "name": {
-    "fa": "تیشرت مشکی زنانه ورتکس Season 02 Issue CDK 4/6",
-    "en": "Vortex Season 02 Issue CDK 4/6 BLACK"
-   },
-   "desc": {
-    "fa": "تیشرت مشکی زنانه ورتکس Season 02 Issue CDK 4/6\nبا گلدوزی خانم ورزشکار که برای از حمایت بانوان درگیر سرطان سینه می‌باشد.\nCDK 4/6 نوعی درمان برای سرطان سینه می‌باشد.",
-    "en": ""
-   },
-   "sizes": [
-    "M",
-    "L"
-   ],
-   "stock": {
-    "S": 0,
-    "M": 2,
-    "L": 6
-   },
-   "ts": 1793443470899,
-   "active": true
-  },
-  {
    "id": "vx-p4ldi-5x",
    "cat": "apparel",
    "img": "media/vx-p4ldi-5x.jpg",
