@@ -254,6 +254,39 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 352
+  },
+  "VX-261107-6536": {
+   "code": "VX-261107-6536",
+   "ts": 1794041963210,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-crop-001",
+     "name": "کراپ مشکی ورتکس Season 01 Issue No6",
+     "size": "M",
+     "qty": 1,
+     "price": 2780000
+    }
+   ],
+   "totals": {
+    "sub": 2780000,
+    "ship": 250000,
+    "total": 3030000
+   },
+   "buyer": {
+    "name": "ساسون شاقولیان",
+    "phone": "989127949058"
+   },
+   "note": "",
+   "uid": "282462541w455y",
+   "payRef": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  },
  "users": {
