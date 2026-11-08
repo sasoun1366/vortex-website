@@ -301,5 +301,15 @@
    "orders": []
   }
  },
- "authOtps": {}
+ "authOtps": {
+  "989054384220": {
+   "name": "ساسون شاقولیان",
+   "digest": "9Zr4LBR4yOSFUHL0j_tbuJTqXE5EAhmTQJznuMyyzOs",
+   "sentAt": 1794136184766,
+   "expiresAt": 1794136484766,
+   "attempts": 0,
+   "day": "2026-11-08",
+   "sends": 1
+  }
+ }
 }
