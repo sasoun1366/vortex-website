@@ -289,6 +289,16 @@
     "VX-261107-6536"
    ],
    "phoneVerified": true
+  },
+  "989031200140": {
+   "uid": "002u145w620d3s",
+   "phone": "989031200140",
+   "name": "Hamid Yal",
+   "phoneVerified": true,
+   "addresses": [],
+   "createdAt": 1794134914964,
+   "lastSeen": 1794134914964,
+   "orders": []
   }
  },
  "authOtps": {}
