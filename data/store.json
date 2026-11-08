@@ -290,15 +290,5 @@
    ]
   }
  },
- "authOtps": {
-  "989127949058": {
-   "name": "ساسون شاقولیان",
-   "digest": "LrCxSNaBltAzB249o_piHhCA2IGlGAARlefv8W6y3vk",
-   "sentAt": 1794125106315,
-   "expiresAt": 1794125406315,
-   "attempts": 0,
-   "day": "2026-11-08",
-   "sends": 1
-  }
- }
+ "authOtps": {}
 }
