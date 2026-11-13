@@ -3,11 +3,12 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1794588714293,
+  "ts": 1794588774491,
   "chat": "665175562",
-  "step": "photo",
+  "step": "name",
   "d": {
-   "featured": true
+   "featured": true,
+   "photo": "AgACAgQAAxkBAAIBb2r3QGVYpL1tsWsclXqXs66K08jWAAJDE2sbzP7BU_0aMJgjHjmIAQADAgADdwADPQQ"
   }
  },
  "overrides": {
