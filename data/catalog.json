@@ -1,16 +1,24 @@
 {
- "products": [],
- "soon": [],
- "cfg": {},
- "draft": {
-  "ts": 1794588954695,
-  "chat": "665175562",
-  "step": "confirm",
-  "d": {
-   "featured": true,
-   "photo": "AgACAgQAAxkBAAIBb2r3QGVYpL1tsWsclXqXs66K08jWAAJDE2sbzP7BU_0aMJgjHjmIAQADAgADdwADPQQ",
-   "name": "تیشرت ورزشی مشکی ورتکس مدل intensity",
+ "products": [
+  {
+   "id": "vx-pxpg1-zq",
+   "cat": "apparel",
+   "img": "media/vx-pxpg1-zq.jpg",
    "price": 2980000,
+   "oldPrice": 0,
+   "featured": true,
+   "badge": {
+    "fa": "جدید",
+    "en": "New"
+   },
+   "name": {
+    "fa": "تیشرت ورزشی مشکی ورتکس مدل intensity",
+    "en": "تیشرت ورزشی مشکی ورتکس مدل intensity"
+   },
+   "desc": {
+    "fa": "تیشرت ورزشی مدل intensity با کیفیت بالا و وزنی سبک متناسب برای ورزش‌هایی با شدت بالا قابلیت نفوذپذیری هوا، سبک و خنک",
+    "en": "تیشرت ورزشی مدل intensity با کیفیت بالا و وزنی سبک متناسب برای ورزش‌هایی با شدت بالا قابلیت نفوذپذیری هوا، سبک و خنک"
+   },
    "sizes": [
     "L",
     "XL"
@@ -19,14 +27,13 @@
     "L": 5,
     "XL": 5
    },
-   "cat": "apparel",
-   "desc": "تیشرت ورزشی مدل intensity با کیفیت بالا و وزنی سبک متناسب برای ورزش‌هایی با شدت بالا قابلیت نفوذپذیری هوا، سبک و خنک",
-   "badge": {
-    "fa": "جدید",
-    "en": "New"
-   }
+   "ts": 1794588969385,
+   "active": true
   }
- },
+ ],
+ "soon": [],
+ "cfg": {},
+ "draft": null,
  "overrides": {
   "vx-chalk-001": {
    "price": 700000,
