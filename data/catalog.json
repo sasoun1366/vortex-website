@@ -3,9 +3,9 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1794588949387,
+  "ts": 1794588954695,
   "chat": "665175562",
-  "step": "badge",
+  "step": "confirm",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAIBb2r3QGVYpL1tsWsclXqXs66K08jWAAJDE2sbzP7BU_0aMJgjHjmIAQADAgADdwADPQQ",
@@ -20,7 +20,11 @@
     "XL": 5
    },
    "cat": "apparel",
-   "desc": "تیشرت ورزشی مدل intensity با کیفیت بالا و وزنی سبک متناسب برای ورزش‌هایی با شدت بالا قابلیت نفوذپذیری هوا، سبک و خنک"
+   "desc": "تیشرت ورزشی مدل intensity با کیفیت بالا و وزنی سبک متناسب برای ورزش‌هایی با شدت بالا قابلیت نفوذپذیری هوا، سبک و خنک",
+   "badge": {
+    "fa": "جدید",
+    "en": "New"
+   }
   }
  },
  "overrides": {
