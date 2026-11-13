@@ -34,7 +34,9 @@
   },
   "en": {}
  },
- "images": {},
+ "images": {
+  "logo": "media/site/logo.png?v=mwf8fdps"
+ },
  "theme": {
   "accent": "#7C8C4B",
   "bg": "#0A0A0A"
@@ -57,5 +59,5 @@
    "drop"
   ]
  },
- "updated": 1794127828757
+ "updated": 1794589794123
 }
