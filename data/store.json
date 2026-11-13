@@ -235,6 +235,16 @@
    "createdAt": 1794134914964,
    "lastSeen": 1794134914964,
    "orders": []
+  },
+  "989361912746": {
+   "uid": "1d514p1o5u3z4b",
+   "phone": "989361912746",
+   "name": "امیرعلی کلانتر",
+   "phoneVerified": true,
+   "addresses": [],
+   "createdAt": 1794594206607,
+   "lastSeen": 1794594206607,
+   "orders": []
   }
  },
  "authOtps": {}
