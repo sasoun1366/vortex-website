@@ -237,15 +237,5 @@
    "orders": []
   }
  },
- "authOtps": {
-  "989361912746": {
-   "name": "امیرعلی کلانتر",
-   "digest": "mUVsXZl7eY6fvr9yegK_IDstIAZFnQp7iGWB_f-e2eY",
-   "sentAt": 1794594189725,
-   "expiresAt": 1794594489725,
-   "attempts": 0,
-   "day": "2026-11-13",
-   "sends": 1
-  }
- }
+ "authOtps": {}
 }
