@@ -3,14 +3,22 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1794588851612,
+  "ts": 1794588877271,
   "chat": "665175562",
-  "step": "sizes",
+  "step": "cat",
   "d": {
    "featured": true,
    "photo": "AgACAgQAAxkBAAIBb2r3QGVYpL1tsWsclXqXs66K08jWAAJDE2sbzP7BU_0aMJgjHjmIAQADAgADdwADPQQ",
    "name": "تیشرت ورزشی مشکی ورتکس مدل intensity",
-   "price": 2980000
+   "price": 2980000,
+   "sizes": [
+    "L",
+    "XL"
+   ],
+   "stock": {
+    "L": 5,
+    "XL": 5
+   }
   }
  },
  "overrides": {
