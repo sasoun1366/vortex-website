@@ -34,12 +34,13 @@
  "soon": [],
  "cfg": {},
  "draft": {
-  "ts": 1794589014468,
+  "ts": 1794589029159,
   "chat": "665175562",
-  "step": "name",
+  "step": "price",
   "d": {
    "featured": true,
-   "photo": "AgACAgQAAxkBAAIBgWr3QVVYJsxr-3xn1Z5HUMlWhy1jAAJEE2sbzP7BU3ikzbN3gawaAQADAgADdwADPQQ"
+   "photo": "AgACAgQAAxkBAAIBgWr3QVVYJsxr-3xn1Z5HUMlWhy1jAAJEE2sbzP7BU3ikzbN3gawaAQADAgADdwADPQQ",
+   "name": "تیشرت ورزشی سفید ورتکس مدل intensity"
   }
  },
  "overrides": {
