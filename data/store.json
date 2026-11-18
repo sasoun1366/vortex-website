@@ -338,15 +338,5 @@
    ]
   }
  },
- "authOtps": {
-  "989909637316": {
-   "name": "محمد حسین",
-   "digest": "AnW7rth2JRHQgZG6ta7CcHWcwq4ok1PQ6VZourqnF2s",
-   "sentAt": 1794989974384,
-   "expiresAt": 1794990274384,
-   "attempts": 0,
-   "day": "2026-11-18",
-   "sends": 1
-  }
- }
+ "authOtps": {}
 }
