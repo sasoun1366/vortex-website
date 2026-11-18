@@ -120,7 +120,8 @@
    },
    "status": "new",
    "tracking": "",
-   "photoFileId": ""
+   "photoFileId": "",
+   "ownerMsgId": 404
   }
  },
  "users": {
