@@ -289,6 +289,16 @@
    "orders": [
     "VX-261117-2071"
    ]
+  },
+  "989909637316": {
+   "uid": "3t3x6n404v4a1u",
+   "phone": "989909637316",
+   "name": "محمد حسین",
+   "phoneVerified": true,
+   "addresses": [],
+   "createdAt": 1794988913299,
+   "lastSeen": 1794988913299,
+   "orders": []
   }
  },
  "authOtps": {}
