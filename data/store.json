@@ -87,6 +87,40 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 403
+  },
+  "VX-261118-3604": {
+   "code": "VX-261118-3604",
+   "ts": 1794989017928,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-p0xsz-ig",
+     "name": "تیشرت ورزشی سفید ورتکس مدل intensity",
+     "size": "XL",
+     "qty": 1,
+     "price": 2980000
+    }
+   ],
+   "totals": {
+    "sub": 2980000,
+    "ship": 250000,
+    "total": 3230000
+   },
+   "buyer": {
+    "name": "محمد حسین",
+    "phone": "989909637316",
+    "addr": "استان بوشهر.  شهر جم . روستای قائدی منزل شخصی همت ستوده"
+   },
+   "note": "",
+   "uid": "3t3x6n404v4a1u",
+   "payRef": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  },
  "users": {
