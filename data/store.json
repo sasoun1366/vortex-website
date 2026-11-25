@@ -155,7 +155,8 @@
    },
    "status": "new",
    "tracking": "",
-   "photoFileId": ""
+   "photoFileId": "",
+   "ownerMsgId": 405
   }
  },
  "users": {
