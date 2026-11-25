@@ -122,6 +122,40 @@
    "tracking": "",
    "photoFileId": "",
    "ownerMsgId": 404
+  },
+  "VX-261125-7091": {
+   "code": "VX-261125-7091",
+   "ts": 1795594524245,
+   "lang": "fa",
+   "items": [
+    {
+     "id": "vx-pxpg1-zq",
+     "name": "تیشرت ورزشی مشکی ورتکس مدل intensity",
+     "size": "XL",
+     "qty": 1,
+     "price": 2980000
+    }
+   ],
+   "totals": {
+    "sub": 2980000,
+    "ship": 250000,
+    "total": 3230000
+   },
+   "buyer": {
+    "name": "شهاب موثقی",
+    "phone": "989121373467",
+    "addr": "تهران پاسداران شمالی بالاتر از نوبنیاد نارنجستان سوم پلاک 10"
+   },
+   "note": "",
+   "uid": "65196d504y3r1h",
+   "payRef": "",
+   "tgUser": {
+    "username": "",
+    "first_name": ""
+   },
+   "status": "new",
+   "tracking": "",
+   "photoFileId": ""
   }
  },
  "users": {
