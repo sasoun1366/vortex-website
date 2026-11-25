@@ -421,15 +421,5 @@
    ]
   }
  },
- "authOtps": {
-  "989121373467": {
-   "name": "Shahab movasaghi",
-   "digest": "odzN8pUCZ0oFknMJdicgilaskiArT72SVSe38Qz9s7g",
-   "sentAt": 1795594604559,
-   "expiresAt": 1795594904559,
-   "attempts": 0,
-   "day": "2026-11-25",
-   "sends": 1
-  }
- }
+ "authOtps": {}
 }
