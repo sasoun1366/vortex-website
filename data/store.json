@@ -247,9 +247,12 @@
     "total": 3230000
    },
    "buyer": {
-    "name": "Shahab movasaghi",
-    "phone": "989121373467",
-    "addr": "پاسداران شمالی بالاتر از نوبنیاد نارنجستان سوم پلاک 10"
+    "name": "شهاب موثقی",
+    "phone": "09121373467",
+    "addr": "پاسداران شمالی بالاتر از نوبنیاد نارجستان سوم پلاک ۱۰",
+    "city": "تهران",
+    "address": "پاسداران شمالی بالاتر از نوبنیاد نارجستان سوم پلاک ۱۰",
+    "postal": ""
    },
    "note": "",
    "uid": "65196d504y3r1h",
@@ -258,7 +261,7 @@
     "username": "",
     "first_name": ""
    },
-   "status": "paid",
+   "status": "ready",
    "tracking": "",
    "photoFileId": "AgACAgQAAxkBAAIBnGsGmqTDws2rQmRPnHRgtUTsEJHoAAL6E2sb3Hg5UEID0v3QLCr8AQADAgADeQADPQQ",
    "ownerMsgId": 408,
