@@ -338,5 +338,15 @@
    ]
   }
  },
- "authOtps": {}
+ "authOtps": {
+  "989121373467": {
+   "name": "شهاب موثقی",
+   "digest": "KhZHJ03GTrYxToV07h-6YjgbEGc7DZ6yH1ApSu-MLqU",
+   "sentAt": 1795594035062,
+   "expiresAt": 1795594335062,
+   "attempts": 0,
+   "day": "2026-11-25",
+   "sends": 1
+  }
+ }
 }
