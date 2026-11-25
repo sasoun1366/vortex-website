@@ -190,7 +190,8 @@
    },
    "status": "new",
    "tracking": "",
-   "photoFileId": ""
+   "photoFileId": "",
+   "ownerMsgId": 406
   }
  },
  "users": {
