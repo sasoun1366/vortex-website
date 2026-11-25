@@ -336,6 +336,16 @@
    "orders": [
     "VX-261118-3604"
    ]
+  },
+  "989121373467": {
+   "uid": "65196d504y3r1h",
+   "phone": "989121373467",
+   "name": "شهاب موثقی",
+   "phoneVerified": true,
+   "addresses": [],
+   "createdAt": 1795594069023,
+   "lastSeen": 1795594069023,
+   "orders": []
   }
  },
  "authOtps": {}
